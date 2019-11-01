@@ -99,6 +99,7 @@ public class EventPicViewActivity extends BaseActivity implements View.OnClickLi
         super.onDestroy();
         //销毁页面，释放，内部的播放器被释放掉，同时如果在全屏、小窗口模式下都会退出
         VideoPlayerManager.instance().releaseVideoPlayer();
+        mController.unRegisterNetChangedReceiver();
     }
 
     @Override
