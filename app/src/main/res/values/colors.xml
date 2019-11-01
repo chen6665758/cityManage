@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#008577</color>
+    <color name="colorPrimaryDark">#00574B</color>
+    <color name="colorAccent">#D81B60</color>
+
+    <!--通用-->
+    <color name="white">#ffffff</color>
+    <color name="bg">#f2ecec</color>
+    <color name="recycleviewbg">#efefef</color>
+    <color name="BaoXiuTabSelTextColor">#29c885</color>
+
+    <!--标题栏背景色-->
+    <color name="MainTitleBackgroudColor">#3a98f1</color>
+
+    <!--登录-->
+    <color name="LoginTextColor">#d6d6d6</color>
+
+    <color name="lineColor">#eae6e6e6</color>
+
+
+    <!-- PhotoPicker 状态栏的颜色 -->
+    <color name="bga_pp_colorPrimaryDark">@color/MainTitleBackgroudColor</color>
+    <!-- PhotoPicker 导航栏的颜色 -->
+    <color name="bga_pp_navigationBarColor">@color/MainTitleBackgroudColor</color>
+    <!-- PhotoPicker Toolbar 的颜色 -->
+    <color name="bga_pp_colorPrimary">@color/MainTitleBackgroudColor</color>
+    <!-- 图片选择器库里所有Activity界面的背景色 -->
+    <color name="bga_pp_activity_bg">@android:color/white</color>
+    <!-- 预览界面底部背景色 -->
+    <color name="bga_pp_preview_bottom_bg">@color/bg</color>
+</resources>

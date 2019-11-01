@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<set xmlns:android="http://schemas.android.com/apk/res/android" >
+	<!--移动-->
+	<translate
+		android:duration="600"
+		android:fromXDelta="-100%"
+		android:toXDelta="0" />
+	<!--透明度-->
+	<alpha
+		android:duration="350"
+		android:fromAlpha="0.0"
+		android:toAlpha="1.0" />
+</set>

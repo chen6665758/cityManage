@@ -1,0 +1,413 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/bg"
+    tools:context=".EventCirculateDetailActivity">
+
+    <include
+        android:id="@+id/title_layout_1"
+        layout="@layout/title_layout_1" />
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/title_layout_1">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/txt_eventName"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:text="事件名称"
+                android:textSize="15sp"
+                android:textColor="#211e1e"
+                android:gravity="center"
+                android:background="@color/white"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:background="@color/white">
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp">
+
+                    <TextView
+                        android:id="@+id/txt_eventcode"
+                        android:layout_width="100dp"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="@dimen/ListItemMarginLeftRight"
+                        android:text="事件编码："
+                        android:textSize="15sp"
+                        android:textColor="#211e1e"/>
+
+                    <TextView
+                        android:id="@+id/txt_eventCodeName"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginLeft="30dp"
+                        android:layout_marginRight="@dimen/ListItemMarginLeftRight"
+                        android:layout_toRightOf="@+id/txt_eventcode"
+                        android:gravity="left|center_vertical"
+                        android:text="aaaaaaaaaa"
+                        android:textSize="15sp"
+                        android:textColor="#211e1e"/>
+
+                </RelativeLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="0.5dp"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginLeft="@dimen/ListItemMarginLeftRight"
+                    android:layout_marginRight="@dimen/ListItemMarginLeftRight"
+                    android:background="@color/lineColor" />
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp">
+
+                    <TextView
+                        android:id="@+id/txt_eventtype"
+                        android:layout_width="100dp"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="@dimen/ListItemMarginLeftRight"
+                        android:text="事件类别："
+                        android:textSize="15sp"
+                        android:textColor="#211e1e"/>
+
+                    <TextView
+                        android:id="@+id/txt_eventypeName"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginLeft="30dp"
+                        android:layout_marginRight="@dimen/ListItemMarginLeftRight"
+                        android:layout_toRightOf="@+id/txt_eventtype"
+                        android:gravity="left|center_vertical"
+                        android:text="aaaaaaaaaa"
+                        android:textSize="15sp"
+                        android:textColor="#211e1e"/>
+
+                </RelativeLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="0.5dp"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginLeft="@dimen/ListItemMarginLeftRight"
+                    android:layout_marginRight="@dimen/ListItemMarginLeftRight"
+                    android:background="@color/lineColor" />
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp">
+
+                    <TextView
+                        android:id="@+id/txt_report"
+                        android:layout_width="100dp"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="@dimen/ListItemMarginLeftRight"
+                        android:text="上报人："
+                        android:textSize="15sp"
+                        android:textColor="#211e1e"/>
+
+                    <TextView
+                        android:id="@+id/txt_reportName"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginLeft="30dp"
+                        android:layout_marginRight="@dimen/ListItemMarginLeftRight"
+                        android:layout_toRightOf="@+id/txt_report"
+                        android:gravity="left|center_vertical"
+                        android:text="aaaaaaaaaa"
+                        android:textSize="15sp"
+                        android:textColor="#211e1e"/>
+
+                </RelativeLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="0.5dp"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginLeft="@dimen/ListItemMarginLeftRight"
+                    android:layout_marginRight="@dimen/ListItemMarginLeftRight"
+                    android:background="@color/lineColor" />
+
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="0.5dp"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginLeft="@dimen/ListItemMarginLeftRight"
+                    android:layout_marginRight="@dimen/ListItemMarginLeftRight"
+                    android:background="@color/lineColor" />
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp">
+
+                    <TextView
+                        android:id="@+id/txt_grid"
+                        android:layout_width="100dp"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="@dimen/ListItemMarginLeftRight"
+                        android:text="网格名称："
+                        android:textSize="15sp"
+                        android:textColor="#211e1e"/>
+
+                    <TextView
+                        android:id="@+id/txt_gridName"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginLeft="30dp"
+                        android:layout_marginRight="@dimen/ListItemMarginLeftRight"
+                        android:layout_toRightOf="@+id/txt_grid"
+                        android:gravity="left|center_vertical"
+                        android:text="aaaaaaaaaa"
+                        android:textSize="15sp"
+                        android:textColor="#211e1e"/>
+
+                </RelativeLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="0.5dp"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginLeft="@dimen/ListItemMarginLeftRight"
+                    android:layout_marginRight="@dimen/ListItemMarginLeftRight"
+                    android:background="@color/lineColor" />
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp">
+
+                    <TextView
+                        android:id="@+id/txt_site"
+                        android:layout_width="100dp"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="@dimen/ListItemMarginLeftRight"
+                        android:text="发生位置："
+                        android:textSize="15sp"
+                        android:textColor="#211e1e"/>
+
+                    <TextView
+                        android:id="@+id/txt_siteValue"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginLeft="30dp"
+                        android:layout_marginRight="@dimen/ListItemMarginLeftRight"
+                        android:layout_toRightOf="@+id/txt_site"
+                        android:gravity="left|center_vertical"
+                        android:drawableRight="@mipmap/ico_mapposion"
+                        android:text="aaaaaaaaaa"
+                        android:textSize="15sp"
+                        android:textColor="#211e1e"/>
+
+                </RelativeLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="0.5dp"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginLeft="@dimen/ListItemMarginLeftRight"
+                    android:layout_marginRight="@dimen/ListItemMarginLeftRight"
+                    android:background="@color/lineColor" />
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp">
+
+                    <TextView
+                        android:id="@+id/txt_time"
+                        android:layout_width="100dp"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="@dimen/ListItemMarginLeftRight"
+                        android:text="发生时间："
+                        android:textSize="15sp"
+                        android:textColor="#211e1e"/>
+
+                    <TextView
+                        android:id="@+id/txt_timeValue"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginLeft="30dp"
+                        android:layout_marginRight="@dimen/ListItemMarginLeftRight"
+                        android:layout_toRightOf="@+id/txt_time"
+                        android:gravity="left|center_vertical"
+                        android:text="aaaaaaaaaa"
+                        android:textSize="15sp"
+                        android:textColor="#211e1e"/>
+
+                </RelativeLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="0.5dp"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginLeft="@dimen/ListItemMarginLeftRight"
+                    android:layout_marginRight="@dimen/ListItemMarginLeftRight"
+                    android:background="@color/lineColor" />
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:minHeight="40dp">
+
+                    <TextView
+                        android:id="@+id/txt_info"
+                        android:layout_width="100dp"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="@dimen/ListItemMarginLeftRight"
+                        android:text="问题描述："
+                        android:textSize="15sp"
+                        android:textColor="#211e1e"/>
+
+                    <TextView
+                        android:id="@+id/txt_infoValue"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:minHeight="40dp"
+                        android:layout_marginLeft="30dp"
+                        android:layout_marginRight="@dimen/ListItemMarginLeftRight"
+                        android:layout_toRightOf="@+id/txt_info"
+                        android:gravity="left|center_vertical"
+                        android:text="aaaaaaaaaa"
+                        android:textSize="15sp"
+                        android:textColor="#211e1e"/>
+
+                </RelativeLayout>
+
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:paddingBottom="10dp"
+                android:background="@color/white"
+                android:orientation="vertical">
+
+                <RelativeLayout
+                    android:id="@+id/rela_detail"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="15dp"
+                    android:layout_marginBottom="5dp"
+                    android:layout_marginLeft="@dimen/ListItemMarginLeftRight"
+                    android:layout_marginRight="@dimen/ListItemMarginLeftRight">
+
+                    <ImageView
+                        android:id="@+id/img_name"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@mipmap/ico_eventflow"/>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="事件流程"
+                        android:layout_toRightOf="@+id/img_name"
+                        android:layout_marginLeft="8dp"
+                        android:textColor="@color/MainTitleBackgroudColor"/>
+                    <ImageView
+                        android:id="@+id/img_detail"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@mipmap/ico_eventflowdown"
+                        android:layout_alignParentRight="true"/>
+
+
+                </RelativeLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="2dp"
+                    android:background="@color/MainTitleBackgroudColor"
+                    android:layout_marginLeft="@dimen/ListItemMarginLeftRight"
+                    android:layout_marginRight="@dimen/ListItemMarginLeftRight"/>
+
+                <com.cg.citymanage.customs.ListViewForScrollView
+                    android:id="@+id/lv_eventdetail"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:divider="@null"
+                    android:dividerHeight="0dp"
+                    android:visibility="gone">
+
+                </com.cg.citymanage.customs.ListViewForScrollView>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:paddingBottom="10dp"
+                android:background="@color/white"
+                android:orientation="vertical">
+
+                <RelativeLayout
+                    android:id="@+id/rela_Impatientdetail"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="15dp"
+                    android:layout_marginBottom="5dp"
+                    android:layout_marginLeft="@dimen/ListItemMarginLeftRight"
+                    android:layout_marginRight="@dimen/ListItemMarginLeftRight">
+
+                    <ImageView
+                        android:id="@+id/img_Impatientname"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@mipmap/ico_eventflow"/>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="催办流程"
+                        android:layout_toRightOf="@+id/img_Impatientname"
+                        android:layout_marginLeft="8dp"
+                        android:textColor="@color/MainTitleBackgroudColor"/>
+                    <ImageView
+                        android:id="@+id/img_Impatientdetail"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@mipmap/ico_eventflowdown"
+                        android:layout_alignParentRight="true"/>
+
+
+                </RelativeLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="2dp"
+                    android:background="@color/MainTitleBackgroudColor"
+                    android:layout_marginLeft="@dimen/ListItemMarginLeftRight"
+                    android:layout_marginRight="@dimen/ListItemMarginLeftRight"/>
+
+                <com.cg.citymanage.customs.ListViewForScrollView
+                    android:id="@+id/lv_eventImpatientdetail"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:divider="@null"
+                    android:dividerHeight="0dp"
+                    android:visibility="gone">
+
+                </com.cg.citymanage.customs.ListViewForScrollView>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </ScrollView>
+
+</RelativeLayout>

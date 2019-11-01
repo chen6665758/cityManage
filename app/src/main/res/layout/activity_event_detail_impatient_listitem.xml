@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/ListItemMarginLeftRight"
+        android:layout_marginRight="@dimen/ListItemMarginLeftRight">
+
+        <ImageView
+            android:id="@+id/img_flag"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentTop="true"
+            android:layout_alignBottom="@+id/linear_info"/>
+        <LinearLayout
+            android:id="@+id/linear_info"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@+id/img_flag"
+            android:layout_marginLeft="6dp"
+            android:layout_marginTop="5dp"
+            android:orientation="vertical"
+            android:background="@drawable/ico_eventflowbg">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="0dp"
+                android:layout_marginLeft="10dp">
+                <TextView
+                    android:layout_width="80dp"
+                    android:layout_height="wrap_content"
+                    android:text="催办环节："
+                    android:textSize="12sp"
+                    android:textColor="#4a4747"/>
+
+                <TextView
+                    android:id="@+id/txt_eventLink"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="结果反馈"
+                    android:textSize="12sp"
+                    android:textColor="#4a4747"/>
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="6dp"
+                android:layout_marginLeft="10dp">
+                <TextView
+                    android:layout_width="80dp"
+                    android:layout_height="wrap_content"
+                    android:text="催办人："
+                    android:textSize="12sp"
+                    android:textColor="#4a4747"/>
+
+                <TextView
+                    android:id="@+id/txt_eventImpatienter"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="刘总"
+                    android:textSize="12sp"
+                    android:textColor="#4a4747"/>
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="6dp"
+                android:layout_marginLeft="10dp">
+                <TextView
+                    android:layout_width="80dp"
+                    android:layout_height="wrap_content"
+                    android:text="被催办人："
+                    android:textSize="12sp"
+                    android:textColor="#4a4747"/>
+
+                <TextView
+                    android:id="@+id/txt_eventpImpatienter"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="李四"
+                    android:textSize="12sp"
+                    android:textColor="#4a4747"/>
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="6dp"
+                android:layout_marginLeft="10dp">
+                <TextView
+                    android:layout_width="80dp"
+                    android:layout_height="wrap_content"
+                    android:text="处理时间："
+                    android:textSize="12sp"
+                    android:textColor="#4a4747"/>
+
+                <TextView
+                    android:id="@+id/txt_eventHandleTime"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="2019-10-24"
+                    android:textSize="12sp"
+                    android:textColor="#4a4747"/>
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="6dp"
+                android:layout_marginLeft="10dp">
+                <TextView
+                    android:layout_width="80dp"
+                    android:layout_height="wrap_content"
+                    android:text="处理意见："
+                    android:textSize="12sp"
+                    android:textColor="#4a4747"/>
+
+                <TextView
+                    android:id="@+id/txt_eventInfo"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="处理意见"
+                    android:textSize="12sp"
+                    android:textColor="#4a4747"/>
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/txt_btnDetail"
+                android:layout_width="match_parent"
+                android:layout_marginTop="3dp"
+                android:layout_height="20dp"
+                android:layout_marginRight="10dp"
+                android:gravity="right|center_vertical"
+                android:text="详细信息"/>
+
+        </LinearLayout>
+    </RelativeLayout>
+
+</LinearLayout>

@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:orientation="vertical"
+        android:background="@drawable/listitembg">
+
+        <RelativeLayout
+            android:id="@+id/rela_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp">
+            <TextView
+                android:id="@+id/txt_eventName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="15sp"
+                android:textColor="#211e1e"
+                android:text="事件名称"/>
+            <TextView
+                android:id="@+id/txt_eventTime"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="2019-10-24"
+                android:textSize="12sp"
+                android:textColor="#211e1e"
+                android:layout_alignParentRight="true"/>
+        </RelativeLayout>
+
+        <LinearLayout
+            android:id="@+id/linear_link"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_below="@+id/rela_name">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="当前环节："
+                android:textSize="12sp"
+                android:textColor="#2d2b2b"/>
+            <TextView
+                android:id="@+id/txt_eventLink"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="结果反馈"
+                android:textSize="12sp"
+                android:textColor="#2d2b2b"/>
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/txt_eventInfo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginBottom="15dp"
+            android:layout_below="@+id/linear_link"
+            android:text="2030320191021001:施工废弃料"
+            android:textSize="12sp"
+            android:textColor="#2d2b2b"/>
+
+        <ImageView
+            android:id="@+id/img_isImp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:visibility="gone"
+            android:src="@mipmap/loginlogo"/>
+
+    </RelativeLayout>
+
+</LinearLayout>

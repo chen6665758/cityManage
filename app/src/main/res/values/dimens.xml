@@ -1,0 +1,14 @@
+<resources>
+    <dimen name="fab_margin">16dp</dimen>
+
+    <!--标题栏-->
+    <dimen name="MainTitleHeight">48dp</dimen>
+    <dimen name="MainTitleMarginLeftRight">20dp</dimen>
+    <dimen name="MainTitleCenterTextSize">18sp</dimen>
+
+    <!--首页面-->
+    <dimen name="MainInfoMarginTopBottom">13dp</dimen>
+
+
+    <dimen name="ListItemMarginLeftRight">15dp</dimen>
+</resources>

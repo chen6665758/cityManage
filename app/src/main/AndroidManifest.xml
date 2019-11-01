@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.cg.citymanage">
+
+    <!-- 允许程序访问有关GSM网络信息 -->
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <!-- 允许访问网络 -->
+    <uses-permission android:name="android.permission.INTERNET" />
+    <!-- 访问电话状态 -->
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <!-- 允许程序写入外部存储，如SD卡上写文件 -->
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <!-- 允许程序读取外部存储 -->
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+
+    <!-- GIS 天地图使用 -->
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.CALL_PHONE" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+
+    <!-- 录音，麦克风 -->
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+
+    <application
+        android:name=".untils.myApplication"
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme">
+        <activity
+            android:name=".StartActivity"
+            android:screenOrientation="portrait">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".TextActivity" />
+
+        <meta-data
+            android:name="design_width_in_dp"
+            android:value="360" />
+        <meta-data
+            android:name="design_height_in_dp"
+            android:value="640" />
+
+        <activity
+            android:name=".MainActivity"
+            android:screenOrientation="portrait" />
+
+        <meta-data
+            android:name="com.tianditu.apikey"
+            android:value="035972404fa9af81e3d3494f1dd712a3" />
+
+        <activity android:name=".SoundRecordingActivity" />
+        <activity
+            android:name=".LoginActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name=".EventReportActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".EventOverviewActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".EventOverviewListActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".EventOverviewDetailActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".EventPicViewActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".EventTransmitActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".EventTransmitDetailActivity"
+            android:screenOrientation="portrait" />
+        <activity android:name=".EventPartakeActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".EventPartakeDetailActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".EventImpatientActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".EventImpatientDetailActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".EventWaitActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".EventWaitDetailActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".EventCirculatedActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".EventCirculateDetailActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".MapSelectActivity"
+            android:screenOrientation="portrait"></activity>
+    </application>
+
+</manifest>
