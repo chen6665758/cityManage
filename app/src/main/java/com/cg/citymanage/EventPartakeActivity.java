@@ -175,13 +175,15 @@ public class EventPartakeActivity extends BaseActivity implements View.OnClickLi
                                         model.setEventName(child.getString("eventTitle"));
                                         model.setEventTime(TextUtils.isEmpty(child.getString("createTime")) ? "" :
                                                 myUntils.StringPattern(child.getString("createTime"),"yyyy-MM-dd HH:mm:ss","yyyy-MM-dd"));
-                                        model.setEventInfo(child.getString("eventCode"));
-                                        model.setEventLink("");
+                                        model.setEventInfo(child.getString("eventCode")  + " " + child.getString("eventTypeName"));
+                                        model.setEventLink(child.getString("eventStatus"));
                                         model.setImpatient(false);
                                         list_data.add(model);
                                     }
                                     eAdapter.notifyDataSetChanged();
 
+                                }else{
+                                    myUntils.showToast(mContext,"没有新的事件了！");
                                 }
 
                             }else{
@@ -239,20 +241,4 @@ public class EventPartakeActivity extends BaseActivity implements View.OnClickLi
         }
     }
 
-
-    public void tempData()
-    {
-        for(int i=0;i<10;i++)
-        {
-            EventListModel model = new EventListModel();
-            model.setEventId(String.valueOf(i+1));
-            model.setEventName("参与第" + i + "事件");
-            model.setEventTime("2019-10-" + (i+1));
-            model.setEventLink("结果反馈" + i);
-            model.setEventInfo("203032019102100"+i+":参与事件");
-            list_data.add(model);
-        }
-
-        eAdapter.notifyDataSetChanged();
-    }
 }
