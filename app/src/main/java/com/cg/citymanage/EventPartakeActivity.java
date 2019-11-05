@@ -177,7 +177,7 @@ public class EventPartakeActivity extends BaseActivity implements View.OnClickLi
                                                 myUntils.StringPattern(child.getString("createTime"),"yyyy-MM-dd HH:mm:ss","yyyy-MM-dd"));
                                         model.setEventInfo(child.getString("eventCode")  + " " + child.getString("eventTypeName"));
                                         model.setEventLink(child.getString("eventStatus"));
-                                        model.setImpatient(false);
+                                        model.setIsImpatient("9");
                                         list_data.add(model);
                                     }
                                     eAdapter.notifyDataSetChanged();

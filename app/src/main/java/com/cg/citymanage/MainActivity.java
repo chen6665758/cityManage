@@ -330,7 +330,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                     public void onSuccess(Response<String> response) {
                         //注意这里已经是在主线程了
                         String data = response.body();//这个就是返回来的结果
-                        Log.e("MainActivity.java(onSuccess)", "行数: 330  data:" + data);
+                        //Log.e("MainActivity.java(onSuccess)", "行数: 330  data:" + data);
                         try {
                             JSONObject json = new JSONObject(data);
                             String resultCode = json.getString("code");

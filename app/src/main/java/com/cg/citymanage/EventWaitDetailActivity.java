@@ -48,6 +48,9 @@ import java.util.List;
 */
 public class EventWaitDetailActivity extends BaseActivity implements View.OnClickListener {
 
+    private String eventID = "0";           //事件id
+    private String eventWaitStatus;         //事件状态 0:不实关停 1:属实提案 2:申请结案 3：立案 4：退回 5：通知协办 6：派遣执法
+
     /**
      * 标题栏
      */
@@ -209,31 +212,52 @@ public class EventWaitDetailActivity extends BaseActivity implements View.OnClic
                 break;
             //不实关停
             case R.id.btn_stop:
-
+                eventWaitStatus = "0";
+                bundle.putString("eventId",eventID);
+                bundle.putString("eventWaitStatus",eventWaitStatus);
+                Jump_intent(EventWaitSubmitActivity.class,bundle);
                 break;
             //属实提案
             case R.id.btn_proposal:
-
+                eventWaitStatus = "1";
+                bundle.putString("eventId",eventID);
+                bundle.putString("eventWaitStatus",eventWaitStatus);
+                Jump_intent(EventWaitSubmitActivity.class,bundle);
                 break;
             //申请结案
             case R.id.btn_close:
-
+                eventWaitStatus = "2";
+                bundle.putString("eventId",eventID);
+                bundle.putString("eventWaitStatus",eventWaitStatus);
+                Jump_intent(EventWaitSubmitActivity.class,bundle);
                 break;
             //立案
             case R.id.btn_Filing:
-
+                eventWaitStatus = "3";
+                bundle.putString("eventId",eventID);
+                bundle.putString("eventWaitStatus",eventWaitStatus);
+                Jump_intent(EventWaitSubmitActivity.class,bundle);
                 break;
             //退回
             case R.id.btn_back:
-
+                eventWaitStatus = "4";
+                bundle.putString("eventId",eventID);
+                bundle.putString("eventWaitStatus",eventWaitStatus);
+                Jump_intent(EventWaitSubmitActivity.class,bundle);
                 break;
             //通知协办
             case R.id.btn_notice:
-
+                eventWaitStatus = "5";
+                bundle.putString("eventId",eventID);
+                bundle.putString("eventWaitStatus",eventWaitStatus);
+                Jump_intent(EventWaitSubmitActivity.class,bundle);
                 break;
             //派遣执法
             case R.id.btn_dispatch:
-
+                eventWaitStatus = "6";
+                bundle.putString("eventId",eventID);
+                bundle.putString("eventWaitStatus",eventWaitStatus);
+                Jump_intent(EventWaitSubmitActivity.class,bundle);
                 break;
         }
     }
