@@ -215,6 +215,9 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                     case "3":
                         Jump_intent(EventPartakeActivity.class,bundle);
                         break;
+                    case "9":
+                        Jump_intent(InformationActivity.class,bundle);
+                        break;
                 }
             }
         });
@@ -327,7 +330,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                     public void onSuccess(Response<String> response) {
                         //注意这里已经是在主线程了
                         String data = response.body();//这个就是返回来的结果
-
+                        Log.e("MainActivity.java(onSuccess)", "行数: 330  data:" + data);
                         try {
                             JSONObject json = new JSONObject(data);
                             String resultCode = json.getString("code");
@@ -340,7 +343,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 
                                     MainMenuModel model = new MainMenuModel();
                                     if("1".equals(child.getString("id")) || "13".equals(child.getString("id")) || "14".equals(child.getString("id"))
-                                            || "19".equals(child.getString("id")) || "2".equals(child.getString("id")) || "3".equals(child.getString("id")))
+                                            || "19".equals(child.getString("id")) || "2".equals(child.getString("id")) || "3".equals(child.getString("id"))
+                                            || "9".equals(child.getString("id")))
                                     {
                                         model.setMenuId(child.getString("id"));
                                         model.setMenuName(child.getString("name"));
