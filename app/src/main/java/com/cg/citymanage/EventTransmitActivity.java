@@ -172,7 +172,7 @@ public class EventTransmitActivity extends BaseActivity implements View.OnClickL
                                         model.setEventName(child.getString("eventTitle"));
                                         model.setEventTime(TextUtils.isEmpty(child.getString("createTime")) ? "" :
                                                 myUntils.StringPattern(child.getString("createTime"),"yyyy-MM-dd HH:mm:ss","yyyy-MM-dd"));
-                                        model.setEventInfo(child.getString("eventCode"));
+                                        model.setEventInfo(child.getString("eventCode") + " " + child.getString("eventTypeName"));
                                         model.setEventLink(child.getString("eventStatus"));
                                         model.setImpatient(false);
                                         list_data.add(model);
