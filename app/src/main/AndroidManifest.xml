@@ -33,7 +33,8 @@
         android:theme="@style/AppTheme">
         <activity
             android:name=".StartActivity"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait"
+            android:theme="@style/startTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -84,23 +85,42 @@
         <activity
             android:name=".EventTransmitDetailActivity"
             android:screenOrientation="portrait" />
-        <activity android:name=".EventPartakeActivity"
+        <activity
+            android:name=".EventPartakeActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".EventPartakeDetailActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".EventImpatientActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".EventImpatientDetailActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".EventWaitActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".EventWaitDetailActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".EventCirculatedActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".EventCirculateDetailActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".MapSelectActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".InformationActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".InformationDetailActivity"
+            android:screenOrientation="portrait" />
+        <activity android:name=".InformationReplyActivity"
             android:screenOrientation="portrait"/>
-        <activity android:name=".EventPartakeDetailActivity"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".EventImpatientActivity"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".EventImpatientDetailActivity"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".EventWaitActivity"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".EventWaitDetailActivity"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".EventCirculatedActivity"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".EventCirculateDetailActivity"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".MapSelectActivity"
+        <activity android:name=".EventWaitSubmitActivity"
             android:screenOrientation="portrait"></activity>
     </application>
 
