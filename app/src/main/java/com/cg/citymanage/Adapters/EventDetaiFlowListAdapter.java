@@ -2,6 +2,7 @@ package com.cg.citymanage.Adapters;
 
 import android.content.Context;
 import android.content.Intent;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -70,7 +71,7 @@ public class EventDetaiFlowListAdapter extends BaseAdapter {
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(final int position, View convertView, ViewGroup parent) {
 
         myViewHolder mHolder;
         if(convertView == null)
@@ -103,14 +104,21 @@ public class EventDetaiFlowListAdapter extends BaseAdapter {
             mHolder.img_flag.setImageResource(R.drawable.ico_eventflow2);
         }
 
-        mHolder.txt_btnDetail.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent();
-                intent.setClass(mContext,EventPicViewActivity.class);
-                mContext.startActivity(intent);
-            }
-        });
+        if(!TextUtils.isEmpty(list_data.get(position).getEventEnclosure())) {
+
+            mHolder.txt_btnDetail.setVisibility(View.VISIBLE);
+            mHolder.txt_btnDetail.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent();
+                    intent.putExtra("ids",list_data.get(position).getEventEnclosure());
+                    intent.setClass(mContext, EventPicViewActivity.class);
+                    mContext.startActivity(intent);
+                }
+            });
+        }else{
+            mHolder.txt_btnDetail.setVisibility(View.GONE);
+        }
 
         return convertView;
     }
