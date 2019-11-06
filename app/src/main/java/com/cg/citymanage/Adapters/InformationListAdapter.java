@@ -3,28 +3,25 @@ package com.cg.citymanage.Adapters;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.cg.citymanage.R;
-import com.cg.citymanage.models.EventListModel;
+import com.cg.citymanage.models.InformationListModel;
 
 import java.util.List;
 
+public class InformationListAdapter extends RecyclerView.Adapter<InformationListAdapter.myViewHolder> {
 
-public class EventOverviewListAdpater extends RecyclerView.Adapter<EventOverviewListAdpater.myViewHolder> {
-
-    private List<EventListModel> list_data;
     private Context mContext;
+    private List<InformationListModel> list_data;
     private LayoutInflater inflater;
 
-    public EventOverviewListAdpater(List<EventListModel> list_data, Context mContext) {
-        this.list_data = list_data;
+    public InformationListAdapter(Context mContext, List<InformationListModel> list_data) {
         this.mContext = mContext;
+        this.list_data = list_data;
         this.inflater = LayoutInflater.from(mContext);
     }
 
@@ -32,7 +29,7 @@ public class EventOverviewListAdpater extends RecyclerView.Adapter<EventOverview
     @Override
     public myViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
 
-        View view = inflater.inflate(R.layout.activity_eventoverview_listitem,viewGroup,false);
+        View view = inflater.inflate(R.layout.activity_information_listitem,viewGroup,false);
 
         return new myViewHolder(view);
     }
@@ -40,23 +37,8 @@ public class EventOverviewListAdpater extends RecyclerView.Adapter<EventOverview
     @Override
     public void onBindViewHolder(@NonNull final myViewHolder myViewHolder, int i) {
 
-        myViewHolder.txt_eventName.setText(list_data.get(i).getEventName());
-        myViewHolder.txt_eventTime.setText(list_data.get(i).getEventTime());
-        myViewHolder.txt_eventLink.setText(list_data.get(i).getEventLink());
-        myViewHolder.txt_eventInfo.setText(list_data.get(i).getEventInfo());
-
-        if(!"9".equals(list_data.get(i).getIsImpatient()))
-        {
-            myViewHolder.img_isImp.setVisibility(View.VISIBLE);
-            if("0".equals(list_data.get(i).getIsImpatient()))
-            {
-                myViewHolder.img_isImp.setImageResource(R.mipmap.ico_impatient);
-            }else{
-                myViewHolder.img_isImp.setImageResource(R.mipmap.ico_impatiented);
-            }
-        }else{
-            myViewHolder.img_isImp.setVisibility(View.GONE);
-        }
+        myViewHolder.txt_infoTitle.setText(list_data.get(i).getInfoTitle());
+        myViewHolder.txt_infoTime.setText(list_data.get(i).getInfoTime());
 
         // 如果设置了回调，则设置点击事件
         if (mOnItemClickLitener != null)
@@ -82,20 +64,14 @@ public class EventOverviewListAdpater extends RecyclerView.Adapter<EventOverview
 
     class myViewHolder extends RecyclerView.ViewHolder{
 
-        TextView txt_eventName;
-        TextView txt_eventTime;
-        TextView txt_eventLink;
-        TextView txt_eventInfo;
-        ImageView img_isImp;
+        TextView txt_infoTitle;
+        TextView txt_infoTime;
 
         public myViewHolder(@NonNull View itemView) {
             super(itemView);
 
-            txt_eventName = (TextView)itemView.findViewById(R.id.txt_eventName);
-            txt_eventTime = (TextView)itemView.findViewById(R.id.txt_eventTime);
-            txt_eventLink = (TextView)itemView.findViewById(R.id.txt_eventLink);
-            txt_eventInfo = (TextView)itemView.findViewById(R.id.txt_eventInfo);
-            img_isImp = (ImageView)itemView.findViewById(R.id.img_isImp);
+            txt_infoTitle = (TextView)itemView.findViewById(R.id.txt_infoTitle);
+            txt_infoTime = (TextView)itemView.findViewById(R.id.txt_infoTime);
         }
     }
 

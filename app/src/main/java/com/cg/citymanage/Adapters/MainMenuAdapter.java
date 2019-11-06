@@ -141,6 +141,9 @@ public class MainMenuAdapter extends RecyclerView.Adapter<MainMenuAdapter.myView
             case "3":
                 picId = R.mipmap.ico_maineventwork;
                 break;
+            case "9":
+                picId = R.mipmap.ico_maininformation;
+                break;
         }
 
         return picId;
