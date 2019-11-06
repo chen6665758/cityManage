@@ -128,7 +128,7 @@ public class EventCirculatedActivity extends BaseActivity implements View.OnClic
         eAdapter.setOnItemClickLitener(new EventOverviewListAdpater.OnItemClickLitener() {
             @Override
             public void OnItemClick(View view, int positon) {
-
+                bundle.putString("title",list_data.get(positon).getEventName());
                 bundle.putString("eventId",list_data.get(positon).getEventId());
                 Jump_intent(EventCirculateDetailActivity.class,bundle);
             }
