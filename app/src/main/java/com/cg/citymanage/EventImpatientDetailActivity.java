@@ -211,7 +211,6 @@ public class EventImpatientDetailActivity extends BaseActivity implements View.O
                         try {
                             JSONObject json = new JSONObject(data);
                             String resultCode = json.getString("code");
-                            Log.e("EventImpatientDetail", "行数: 199  data:" + data);
                             if(resultCode.equals("2000"))
                             {
                                 JSONObject childData = json.getJSONObject("data");
@@ -272,7 +271,7 @@ public class EventImpatientDetailActivity extends BaseActivity implements View.O
 
                         }catch (Exception ex)
                         {
-                            Log.e("EventPartakeDetail", "行数: 248  ex:" + ex.getMessage());
+                            Log.e("EventImpatient", "行数: 274  ex:" + ex.getMessage());
                             myUntils.showToast(mContext,"请检查网络是否正常链接！");
                             return;
                         }
@@ -283,7 +282,7 @@ public class EventImpatientDetailActivity extends BaseActivity implements View.O
                     public void onError(Response<String> response) {
                         super.onError(response);
                         progress_Dialog.dismiss();
-                        Log.e("EventPartakeDetail", "行数: 259  error:" + response.body());
+                        Log.e("EventImpatient", "行数: 285  error:" + response.body());
                     }
                 });
     }
@@ -337,7 +336,7 @@ public class EventImpatientDetailActivity extends BaseActivity implements View.O
 
                         }catch (Exception ex)
                         {
-                            Log.e("EventPartakeDetail", "行数: 314  ex:" + ex.getMessage());
+                            Log.e("EventImpatient", "行数: 339  ex:" + ex.getMessage());
                             myUntils.showToast(mContext,"请检查网络是否正常链接！");
                             return;
                         }
@@ -347,7 +346,7 @@ public class EventImpatientDetailActivity extends BaseActivity implements View.O
                     @Override
                     public void onError(Response<String> response) {
                         super.onError(response);
-                        Log.e("EventPartakeDetail", "行数: 324  error:" + response.body());
+                        Log.e("EventImpatient", "行数: 349  error:" + response.body());
                     }
                 });
     }
