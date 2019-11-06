@@ -129,6 +129,7 @@ public class EventImpatientActivity extends BaseActivity implements View.OnClick
             public void OnItemClick(View view, int positon) {
 
                 bundle.putString("eventId",list_data.get(positon).getEventId());
+                bundle.putString("isImpatient",list_data.get(positon).getIsImpatient());
                 Jump_intent(EventImpatientDetailActivity.class,bundle);
             }
         });
