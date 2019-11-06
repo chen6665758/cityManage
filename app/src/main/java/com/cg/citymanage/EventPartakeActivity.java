@@ -131,6 +131,7 @@ public class EventPartakeActivity extends BaseActivity implements View.OnClickLi
             public void OnItemClick(View view, int positon) {
 
                 bundle.putString("eventId",list_data.get(positon).getEventId());
+                bundle.putString("title",list_data.get(positon).getEventName());
                 Jump_intent(EventPartakeDetailActivity.class,bundle);
             }
         });

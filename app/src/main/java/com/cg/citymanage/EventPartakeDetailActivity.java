@@ -61,6 +61,7 @@ public class EventPartakeDetailActivity extends BaseActivity implements View.OnC
 
     private String appToken;
     private String eventId;
+    private String title;
     private String lng;
     private String lat;
 
@@ -73,6 +74,7 @@ public class EventPartakeDetailActivity extends BaseActivity implements View.OnC
     /**
      * 详细信息
      */
+    private TextView txt_eventName;
     private LinearLayout linear_event;
     private TextView txt_eventCodeName;
     private TextView txt_eventypeName;
@@ -111,6 +113,7 @@ public class EventPartakeDetailActivity extends BaseActivity implements View.OnC
         mContext = this;
         appToken = mSharedPreferences.getString("appToken","");
         eventId = getIntent().getStringExtra("eventId");
+        title = getIntent().getStringExtra("title");
         initControls();
     }
 
@@ -131,6 +134,8 @@ public class EventPartakeDetailActivity extends BaseActivity implements View.OnC
         title_textview.setText("参与事件");
 
         //详细信息
+        txt_eventName = (TextView)findViewById(R.id.txt_eventName);
+        txt_eventName.setText(title);
         linear_event = (LinearLayout)findViewById(R.id.linear_event);
         txt_eventCodeName = (TextView)findViewById(R.id.txt_eventCodeName);
         txt_eventypeName = (TextView)findViewById(R.id.txt_eventypeName);
