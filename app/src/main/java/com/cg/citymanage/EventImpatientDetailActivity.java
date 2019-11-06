@@ -62,6 +62,7 @@ public class EventImpatientDetailActivity extends BaseActivity implements View.O
     private String appToken;
     private String eventId;
     private String isImpatient;
+    private String title;
     private String lng;
     private String lat;
 
@@ -74,6 +75,7 @@ public class EventImpatientDetailActivity extends BaseActivity implements View.O
     /**
      * 详细信息
      */
+    private TextView txt_eventName;
     private LinearLayout linear_event;
     private TextView txt_eventCodeName;
     private TextView txt_eventypeName;
@@ -121,6 +123,7 @@ public class EventImpatientDetailActivity extends BaseActivity implements View.O
         appToken = mSharedPreferences.getString("appToken","");
         eventId = getIntent().getStringExtra("eventId");
         isImpatient = getIntent().getStringExtra("isImpatient");
+        title = getIntent().getStringExtra("title");
         initControls();
     }
 
@@ -141,6 +144,8 @@ public class EventImpatientDetailActivity extends BaseActivity implements View.O
         title_textview.setText("催办事件");
 
         //详细信息
+        txt_eventName = (TextView)findViewById(R.id.txt_eventName);
+        txt_eventName.setText(title);
         linear_event = (LinearLayout)findViewById(R.id.linear_event);
         txt_eventCodeName = (TextView)findViewById(R.id.txt_eventCodeName);
         txt_eventypeName = (TextView)findViewById(R.id.txt_eventypeName);
