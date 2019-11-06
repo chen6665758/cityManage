@@ -8,6 +8,7 @@ public class EventFlowListModel {
     private String eventFlowHandler;
     private String eventFlowHandleTime;
     private String eventFlowInfo;
+    private String eventEnclosure;
 
     public EventFlowListModel() {
     }
@@ -58,5 +59,13 @@ public class EventFlowListModel {
 
     public void setEventStreet(String eventFlowStreet) {
         this.eventFlowStreet = eventFlowStreet;
+    }
+
+    public String getEventEnclosure() {
+        return eventEnclosure;
+    }
+
+    public void setEventEnclosure(String eventEnclosure) {
+        this.eventEnclosure = eventEnclosure;
     }
 }

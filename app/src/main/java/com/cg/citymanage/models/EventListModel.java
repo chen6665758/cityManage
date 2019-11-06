@@ -34,7 +34,7 @@ public class EventListModel {
     private String eventTime;
     private String eventLink;
     private String eventInfo;
-    private boolean isImpatient;
+    private String isImpatient;
 
     public EventListModel() {
     }
@@ -79,11 +79,11 @@ public class EventListModel {
         this.eventId = eventId;
     }
 
-    public boolean isImpatient() {
+    public String getIsImpatient() {
         return isImpatient;
     }
 
-    public void setImpatient(boolean impatient) {
-        isImpatient = impatient;
+    public void setIsImpatient(String isImpatient) {
+        this.isImpatient = isImpatient;
     }
 }
