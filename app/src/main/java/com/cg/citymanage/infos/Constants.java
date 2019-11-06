@@ -50,6 +50,20 @@ public class Constants {
 
     //参与事件列表接口
     public static String EVENTPARTAKELIST_URL = MAIN_URL + "api/query_event";
+    //事件传阅列表接口
+    public static String EVENTTRANSMIT_URL = MAIN_URL + "api/toViewEventList";
+    //被传阅事件列表
+    public static String EVENTCIRCULATED_URL = MAIN_URL + "api/showViewEvent";
+    //待办事件列表
+    public static String EVENTEVENTWAIT_URL = MAIN_URL + "api/getTaskList";
+    //催办事件
+    public static String EVENTIMPATIENT_URL = MAIN_URL + "api/timeManage";
+    //事件详情页事件流程列表接口
+    public static String EVENTDETAIL_URL = MAIN_URL + "api/eventPartakeInfo";
+    //事件中催办事件详情列表接口
+    public static String EVENTIMPATIENTDETAIL_URL = MAIN_URL + "api/eventHasten";
+    //事件中详情页事件流程列表中附件接口
+    public static String EVENTDETAILENCLOSURE_URL = MAIN_URL + "api/getEventAccessory";
 
 
     //升级下载的文件名

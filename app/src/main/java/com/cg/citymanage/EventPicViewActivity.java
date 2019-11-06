@@ -5,13 +5,24 @@ import android.graphics.drawable.AnimationDrawable;
 import android.media.MediaPlayer;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.cg.citymanage.infos.Constants;
+import com.cg.citymanage.untils.myUntils;
+import com.lzy.okgo.OkGo;
+import com.lzy.okgo.callback.StringCallback;
+import com.lzy.okgo.model.Response;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.yczbj.ycvideoplayerlib.constant.ConstantKeys;
 import org.yczbj.ycvideoplayerlib.controller.VideoPlayerController;
 import org.yczbj.ycvideoplayerlib.manager.VideoPlayerManager;
@@ -52,6 +63,12 @@ import cn.bingoogolapple.photopicker.widget.BGASortableNinePhotoLayout;
 */
 public class EventPicViewActivity extends BaseActivity implements View.OnClickListener,BGASortableNinePhotoLayout.Delegate {
 
+    private String appToken;
+    private String ids;
+    private int EnclosureNumber = 0;
+    private String[] arrayIds;
+    private int loadNumber = 0;      //附件加载数据
+
     /**
      * 标题栏
      */
@@ -61,29 +78,44 @@ public class EventPicViewActivity extends BaseActivity implements View.OnClickLi
     /**
      * 图片
      */
+    private LinearLayout linear_pic;
     private BGASortableNinePhotoLayout snpl_moment_add_photos;
     private int RC_PHOTO_PREVIEW = 102;
+    private boolean isVisiblePic = false;
 
     /**
      * 视频
      */
+    private LinearLayout linear_video;
     private VideoPlayer video_player;
     private VideoPlayerController mController;
+    private boolean isVisibleVideo = false;
 
     /**
      * 音频
      */
+    private LinearLayout linear_voice;
     private RelativeLayout rela_voiceplay;
     private ImageView img_play;
     private AnimationDrawable animationDrawable;
     private MediaPlayer mediaPlayer;
+    private boolean isVisibleVoice = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         mContext = this;
-
+        appToken = mSharedPreferences.getString("appToken","");
+        ids = getIntent().getStringExtra("ids");
+        if(ids.contains(","))
+        {
+            arrayIds = ids.split(",");
+            EnclosureNumber = arrayIds.length;
+        }else{
+            arrayIds = new String[]{"ids"};
+            EnclosureNumber = 1;
+        }
         initControls();
     }
 
@@ -138,19 +170,22 @@ public class EventPicViewActivity extends BaseActivity implements View.OnClickLi
         title_textview.setText("事件显示");
 
         //图片
+        linear_pic = (LinearLayout)findViewById(R.id.linear_pic);
         snpl_moment_add_photos = (BGASortableNinePhotoLayout)findViewById(R.id.snpl_moment_add_photos);
         snpl_moment_add_photos.setDelegate(this);
-        snpl_moment_add_photos.addLastItem("http://img.taopic.com/uploads/allimg/140326/235113-1403260QA519.jpg");
-        snpl_moment_add_photos.addLastItem("http://img.taopic.com/uploads/allimg/140326/235113-1403260I33562.jpg");
+        //snpl_moment_add_photos.addLastItem("http://img.taopic.com/uploads/allimg/140326/235113-1403260QA519.jpg");
+        //snpl_moment_add_photos.addLastItem("http://img.taopic.com/uploads/allimg/140326/235113-1403260I33562.jpg");
 
         //视频
+        linear_voice = (LinearLayout)findViewById(R.id.linear_voice);
+        linear_video = (LinearLayout)findViewById(R.id.linear_video);
         video_player = (VideoPlayer)findViewById(R.id.video_player);
         //设置播放类型
         // IjkPlayer or MediaPlayer
         video_player.setPlayerType(ConstantKeys.IjkPlayerType.TYPE_IJK);
         video_player.continueFromLastPosition(false);
         video_player.setBackgroundColor("#000000");
-        video_player.setUp("/storage/emulated/0/DCIM/Camera/VID_20191023_103406.3gp",null);
+        //video_player.setUp("/storage/emulated/0/DCIM/Camera/VID_20191023_103406.3gp",null);
         //创建视频控制器
         mController = new VideoPlayerController(this);
         //设置视频控制器
@@ -161,6 +196,88 @@ public class EventPicViewActivity extends BaseActivity implements View.OnClickLi
         rela_voiceplay.setOnClickListener(this);
         img_play = (ImageView)findViewById(R.id.img_play);
 
+
+        initData();
+    }
+
+    /**
+     * 加载网络数据
+     */
+    private void initData()
+    {
+        for(int i=0;i<arrayIds.length;i++) {
+            OkGo.<String>post(Constants.EVENTDETAILENCLOSURE_URL)
+                    .tag(this)//
+                    .params("access_token", appToken)
+                    .params("eventAccessoryIds", arrayIds[i])
+                    .execute(new StringCallback() {
+                        @Override
+                        public void onSuccess(Response<String> response) {
+                             loadNumber++;
+
+                            String data = response.body();//这个就是返回来的结果
+                            try {
+                                JSONObject json = new JSONObject(data);
+                                String resultCode = json.getString("code");
+
+                                if (resultCode.equals("2000")) {
+
+                                    JSONArray child = json.getJSONArray("data");
+                                    if(child.length() > 0) {
+
+                                        JSONObject object = child.getJSONObject(0);
+
+                                        if ("1".equals(object.getString("accessoryType"))) {
+                                            isVisiblePic = true;
+                                            snpl_moment_add_photos.addLastItem(object.getString("accessoryPath"));
+                                        } else if ("2".equals(object.getString("accessoryType"))) {
+                                            isVisibleVideo = true;
+                                            video_player.setUp(object.getString("accessoryPath"), null);
+                                        } else if ("3".equals(object.getString("accessoryType"))) {
+                                            isVisibleVoice = true;
+                                            playVoice(object.getString("accessoryPath"));
+                                        }
+                                    }
+                                } else {
+                                    myUntils.showToast(mContext, json.getString("message"));
+                                }
+
+                                if(loadNumber == EnclosureNumber)
+                                {
+                                    if(!isVisiblePic)
+                                    {
+                                        linear_pic.setVisibility(View.GONE);
+                                        snpl_moment_add_photos.setVisibility(View.GONE);
+                                    }
+
+                                    if(!isVisibleVideo)
+                                    {
+                                        linear_video.setVisibility(View.GONE);
+                                        video_player.setVisibility(View.GONE);
+                                    }
+
+                                    if(!isVisibleVoice)
+                                    {
+                                        linear_voice.setVisibility(View.GONE);
+                                        rela_voiceplay.setVisibility(View.GONE);
+                                    }
+                                }
+
+                            } catch (Exception ex) {
+                                Log.e("EventPartakeDetail", "行数: 248  ex:" + ex.getMessage());
+                                myUntils.showToast(mContext, "请检查网络是否正常链接！");
+                                return;
+                            }
+
+                        }
+
+                        @Override
+                        public void onError(Response<String> response) {
+                            super.onError(response);
+                            Log.e("EventPartakeDetail", "行数: 259  error:" + response.body());
+                        }
+                    });
+        }
     }
 
     @Override
