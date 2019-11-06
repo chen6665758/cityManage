@@ -25,4 +25,12 @@
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
+    <!-- 为start页面，也就是启动页设置一下背景色或是背景图，这样这张图片取代白屏 -->
+    <style name="startTheme" parent="AppTheme">
+
+        <item name="android:windowBackground">@color/MainTitleBackgroudColor</item>
+        <item name="android:windowTranslucentStatus">true</item>
+        <item name="android:windowTranslucentNavigation">true</item>
+    </style>
+
 </resources>
