@@ -2,6 +2,7 @@ package com.cg.citymanage.untils;
 
 import android.app.Application;
 
+import com.cg.citymanage.services.InitIntentService;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.cache.CacheEntity;
 import com.lzy.okgo.cache.CacheMode;
@@ -52,10 +53,12 @@ public class myApplication extends Application {
         /**
          * 设置今日头条的一些设置
          */
-        initAutoSize();
+        //initAutoSize();
 
         //OKGO网络加载框架初始化
-        initOKGO();
+        //initOKGO();
+
+        InitIntentService.start(this);
     }
 
     /**
