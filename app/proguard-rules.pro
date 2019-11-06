@@ -165,6 +165,7 @@
 -keep class com.cg.citymanage.models.** { *; }
 -keep class com.cg.citymanage.utils.** { *; }
 -keep class com.cg.citymanage.wxapi.** { *; }
+#-keep class com.cg.citymanage.services.**{*;}
 #
 
 
