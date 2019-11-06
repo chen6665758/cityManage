@@ -1,0 +1,255 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/bg"
+    tools:context=".EventWaitSubmitActivity">
+
+    <include
+        android:id="@+id/title_layout_1"
+        layout="@layout/title_layout_1" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/title_layout_1"
+        android:layout_above="@+id/linear_add">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:layout_marginBottom="10dp"
+            android:orientation="vertical">
+
+            <!--事件选择-->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
+                android:orientation="vertical">
+
+
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp">
+
+                    <TextView
+                        android:id="@+id/txt_bigType"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="@dimen/ListItemMarginLeftRight"
+                        android:text="处理部门：" />
+
+                    <TextView
+                        android:id="@+id/txt_processingDepartment"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginRight="@dimen/ListItemMarginLeftRight"
+                        android:layout_toRightOf="@+id/txt_bigType"
+                        android:drawableRight="@mipmap/ico_eventjt"
+                        android:gravity="center" />
+
+                </RelativeLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="0.5dp"
+                    android:background="@color/lineColor" />
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:focusable="true"
+                    android:paddingRight="8dp"
+                    android:focusableInTouchMode="true">
+
+                    <TextView
+                        android:id="@+id/txt_content"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginLeft="@dimen/ListItemMarginLeftRight"
+                        android:text="处理描述：" />
+
+                    <EditText
+                        android:id="@+id/edit_processDescribe"
+                        android:layout_width="match_parent"
+                        android:layout_height="100dp"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginRight="@dimen/ListItemMarginLeftRight"
+                        android:layout_toRightOf="@+id/txt_content"
+                        android:background="@null"
+                        android:gravity="left"
+                        android:hint="请输入信息内容"
+                        android:textSize="14sp"
+                        android:minLines="5" />
+                </RelativeLayout>
+
+            </LinearLayout>
+
+            <!--照像，音频，视频-->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:background="@color/white"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:id="@+id/linear_pic"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:gravity="center">
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginBottom="10dp"
+                        android:src="@mipmap/ico_camera"/>
+                </LinearLayout>
+                <LinearLayout
+                    android:id="@+id/linear_video"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:gravity="center">
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginBottom="10dp"
+                        android:src="@mipmap/ico_voide"/>
+                </LinearLayout>
+                <LinearLayout
+                    android:id="@+id/linear_voice"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:gravity="center">
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginBottom="10dp"
+                        android:src="@mipmap/ico_voice"/>
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <!--照片，视频，音频显示-->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="1dp"
+                android:background="@color/white"
+                android:orientation="vertical"
+                android:paddingBottom="10dp"
+                >
+
+                <!--照片-->
+                <cn.bingoogolapple.photopicker.widget.BGASortableNinePhotoLayout
+                    android:id="@+id/snpl_moment_add_photos"
+                    style="@style/WrapWrap"
+                    android:layout_margin="10dp"
+                    app:bga_snpl_deleteDrawable="@mipmap/bga_pp_ic_delete"
+                    app:bga_snpl_deleteDrawableOverlapQuarter="false"
+                    app:bga_snpl_editable="true"
+                    app:bga_snpl_itemCornerRadius="0dp"
+                    app:bga_snpl_itemSpanCount="3"
+                    app:bga_snpl_itemWhiteSpacing="4dp"
+                    app:bga_snpl_itemWidth="0dp"
+                    app:bga_snpl_maxItemCount="3"
+                    app:bga_snpl_otherWhiteSpacing="100dp"
+                    app:bga_snpl_placeholderDrawable="@mipmap/bga_pp_ic_holder_light"
+                    app:bga_snpl_plusDrawable="@mipmap/bga_pp_ic_plus"
+                    app:bga_snpl_plusEnable="false"
+                    app:bga_snpl_sortable="true" />
+
+                <!--录像-->
+                <RelativeLayout
+                    android:id="@+id/rela_video"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/ListItemMarginLeftRight"
+                    android:layout_marginRight="@dimen/ListItemMarginLeftRight"
+                    android:visibility="gone">
+                    <org.yczbj.ycvideoplayerlib.player.VideoPlayer
+                        android:id="@+id/video_player"
+                        android:layout_width="match_parent"
+                        android:layout_height="150dp"
+                        />
+                    <ImageView
+                        android:id="@+id/img_videoDel"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:src="@mipmap/ico_delete"/>
+                </RelativeLayout>
+
+                <!--录音功能-->
+                <RelativeLayout
+                    android:id="@+id/rela_voice"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/ListItemMarginLeftRight"
+                    android:layout_marginRight="@dimen/ListItemMarginLeftRight"
+                    android:visibility="gone">
+
+                    <RelativeLayout
+                        android:id="@+id/rela_voiceplay"
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp"
+                        android:background="@drawable/img_notes_characteristicintroduction">
+                        <ImageView
+                            android:id="@+id/img_play"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerVertical="true"
+                            android:layout_marginLeft="20dp"
+                            android:background="@drawable/animation_speak"/>
+                    </RelativeLayout>
+
+                    <ImageView
+                        android:id="@+id/img_voiceDel"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:src="@mipmap/ico_delete"/>
+
+                </RelativeLayout>
+            </LinearLayout>
+
+
+
+        </LinearLayout>
+    </ScrollView>
+
+    <LinearLayout
+        android:id="@+id/linear_add"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_alignParentBottom="true"
+        android:background="@color/white">
+
+        <Button
+            android:id="@+id/btn_eventWaitProcess"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:background="@drawable/btnbgblue1"
+            android:text="确定"
+            android:textColor="@color/white"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:textSize="16sp"
+            android:layout_gravity="center"
+            />
+
+    </LinearLayout>
+</RelativeLayout>

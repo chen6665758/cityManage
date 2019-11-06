@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/bg"
+    tools:context=".InformationDetailActivity">
+
+    <include
+        android:id="@+id/title_layout_1"
+        layout="@layout/title_layout_1" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/title_layout_1"
+        android:layout_above="@+id/linear_bottom">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="18dp"
+            android:layout_marginRight="18dp"
+            android:paddingBottom="20dp"
+            android:background="@mipmap/ico_ann_detal_bg"
+            >
+
+            <TextView
+                android:id="@+id/txt_infoTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="什么是 Service"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="20dp"
+                android:textSize="18sp"
+                android:textColor="#000000"
+                android:textStyle="bold"/>
+            <TextView
+                android:id="@+id/txt_infoTime"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_below="@+id/txt_infoTitle"
+                android:layout_marginTop="5dp"
+                android:text="2019-11-04 15:25:11"/>
+            <TextView
+                android:id="@+id/txt_infoContent"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/txt_infoTime"
+                android:layout_marginTop="10dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:text="最近微博上忽然流出三段李小璐和PGone的同框视频，看起来应该是在拍抖音。
+PGone很快回应称，“这可怕的圈子你们想象不到。为什么去年在抖音拍的视频没有任何外传的前提下会被放出来还没有logo？为什么我名字一直上不了热搜这次突然上了？这后面到底谁在操作？”最近微博上忽然流出三段李小璐和PGone的同框视频，看起来应该是在拍抖音。
+PGone很快回应称，“这可怕的圈子你们想象不到。为什么去年在抖音拍的视频没有任何外传的前提下会被放出来还没有logo？为什么我名字一直上不了热搜这次突然上了？这后面到底谁在操作？”最近微博上忽然流出三段李小璐和PGone的同框视频，看起来应该是在拍抖音。
+PGone很快回应称，“这可怕的圈子你们想象不到。为什么去年在抖音拍的视频没有任何外传的前提下会被放出来还没有logo？为什么我名字一直上不了热搜这次突然上了？这后面到底谁在操作？”最近微博上忽然流出三段李小璐和PGone的同框视频，看起来应该是在拍抖音。
+PGone很快回应称，“这可怕的圈子你们想象不到。为什么去年在抖音拍的视频没有任何外传的前提下会被放出来还没有logo？为什么我名字一直上不了热搜这次突然上了？这后面到底谁在操作？”"/>
+
+            <TextView
+                android:id="@+id/txt_other"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/txt_infoContent"
+                android:layout_marginTop="20dp"
+                android:layout_marginRight="20dp"
+                android:layout_alignParentRight="true"
+                android:text="查看附件"
+                android:textSize="14sp"
+                android:textColor="#ff1b1b"/>
+
+        </RelativeLayout>
+
+    </ScrollView>
+
+    <LinearLayout
+        android:id="@+id/linear_bottom"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="@color/white">
+        <Button
+            android:id="@+id/btn_reply"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:background="@drawable/btnbgblue1"
+            android:textColor="@color/white"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:layout_marginBottom="10dp"
+            android:layout_marginTop="10dp"
+            android:textSize="16sp"
+            android:text="回复"/>
+    </LinearLayout>
+
+</RelativeLayout>

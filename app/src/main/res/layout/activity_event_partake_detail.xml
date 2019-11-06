@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/bg">
@@ -54,7 +55,7 @@
                         android:layout_marginRight="@dimen/ListItemMarginLeftRight"
                         android:layout_toRightOf="@+id/txt_eventcode"
                         android:gravity="left|center_vertical"
-                        android:text="aaaaaaaaaa"
+                        android:text=""
                         android:textSize="15sp"
                         android:textColor="#211e1e"/>
 
@@ -90,7 +91,7 @@
                         android:layout_marginRight="@dimen/ListItemMarginLeftRight"
                         android:layout_toRightOf="@+id/txt_eventtype"
                         android:gravity="left|center_vertical"
-                        android:text="aaaaaaaaaa"
+                        android:text=""
                         android:textSize="15sp"
                         android:textColor="#211e1e"/>
 
@@ -126,7 +127,7 @@
                         android:layout_marginRight="@dimen/ListItemMarginLeftRight"
                         android:layout_toRightOf="@+id/txt_report"
                         android:gravity="left|center_vertical"
-                        android:text="aaaaaaaaaa"
+                        android:text=""
                         android:textSize="15sp"
                         android:textColor="#211e1e"/>
 
@@ -161,7 +162,7 @@
                         android:layout_marginRight="@dimen/ListItemMarginLeftRight"
                         android:layout_toRightOf="@+id/txt_handle"
                         android:gravity="left|center_vertical"
-                        android:text="aaaaaaaaaa"
+                        android:text=""
                         android:textSize="15sp"
                         android:textColor="#211e1e"/>
 
@@ -196,7 +197,7 @@
                         android:layout_marginRight="@dimen/ListItemMarginLeftRight"
                         android:layout_toRightOf="@+id/txt_grid"
                         android:gravity="left|center_vertical"
-                        android:text="aaaaaaaaaa"
+                        android:text=""
                         android:textSize="15sp"
                         android:textColor="#211e1e"/>
 
@@ -232,7 +233,7 @@
                         android:layout_toRightOf="@+id/txt_site"
                         android:gravity="left|center_vertical"
                         android:drawableRight="@mipmap/ico_mapposion"
-                        android:text="aaaaaaaaaa"
+                        android:text=""
                         android:textSize="15sp"
                         android:textColor="#211e1e"/>
 
@@ -267,7 +268,7 @@
                         android:layout_marginRight="@dimen/ListItemMarginLeftRight"
                         android:layout_toRightOf="@+id/txt_time"
                         android:gravity="left|center_vertical"
-                        android:text="aaaaaaaaaa"
+                        android:text=""
                         android:textSize="15sp"
                         android:textColor="#211e1e"/>
 
@@ -304,7 +305,7 @@
                         android:layout_marginRight="@dimen/ListItemMarginLeftRight"
                         android:layout_toRightOf="@+id/txt_info"
                         android:gravity="left|center_vertical"
-                        android:text="aaaaaaaaaa"
+                        android:text=""
                         android:textSize="15sp"
                         android:textColor="#211e1e"/>
 
@@ -314,6 +315,7 @@
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/linear_event"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
@@ -372,6 +374,7 @@
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/linear_impatient"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"

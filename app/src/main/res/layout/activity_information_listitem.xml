@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:orientation="vertical"
+        android:background="@drawable/listitembg">
+
+        <RelativeLayout
+            android:id="@+id/rela_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="10dp"
+            >
+            <TextView
+                android:id="@+id/txt_infoTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="15sp"
+                android:textColor="#211e1e"
+                android:text="事件名称"/>
+
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/txt_infoTime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="2019-10-24"
+            android:textSize="12sp"
+            android:textColor="#211e1e"
+            android:layout_marginRight="10dp"
+            android:layout_marginBottom="10dp"
+            android:layout_below="@+id/rela_name"
+            android:layout_alignParentRight="true"/>
+
+
+
+    </RelativeLayout>
+
+</LinearLayout>
