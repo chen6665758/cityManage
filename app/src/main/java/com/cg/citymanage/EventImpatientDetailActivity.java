@@ -151,6 +151,7 @@ public class EventImpatientDetailActivity extends BaseActivity implements View.O
         txt_eventypeName = (TextView)findViewById(R.id.txt_eventypeName);
         txt_reportName = (TextView)findViewById(R.id.txt_reportName);
         txt_siteValue = (TextView)findViewById(R.id.txt_siteValue);
+        txt_siteValue.setOnClickListener(this);
         txt_timeValue = (TextView)findViewById(R.id.txt_timeValue);
         txt_infoValue = (TextView)findViewById(R.id.txt_infoValue);
 
@@ -394,6 +395,25 @@ public class EventImpatientDetailActivity extends BaseActivity implements View.O
                 } else {
                     img_Impatientdetail.setImageResource(R.mipmap.ico_eventflowup);
                     lv_eventImpatientdetail.setVisibility(View.VISIBLE);
+                }
+                break;
+            //显示地图信息页
+            case R.id.txt_siteValue:
+                try {
+                    double dlnt = Double.valueOf(lng);
+                    double dlat = Double.valueOf(lat);
+                    if(dlnt==0 || dlat==0)
+                    {
+                        myUntils.showToast(mContext,"对不起，坐标数据有误，请与管理员联系确认此事件正确性！");
+                    }
+                    else{
+                        bundle.putDouble("lng",dlnt);
+                        bundle.putDouble("lat",dlat);
+                        Jump_intent(MapViewActivity.class,bundle);
+                    }
+                }catch (Exception ex)
+                {
+                    myUntils.showToast(mContext,"对不起，坐标数据有误，请与管理员联系确认此事件正确性！");
                 }
                 break;
 
