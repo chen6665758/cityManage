@@ -16,10 +16,12 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
 import com.cg.citymanage.Adapters.EventReporterListAdpater;
+import com.cg.citymanage.customs.MyLoading;
 import com.cg.citymanage.infos.Constants;
 import com.cg.citymanage.models.EventReporterModel;
 import com.cg.citymanage.untils.OnViewGlobalLayoutListener;
 import com.cg.citymanage.untils.myUntils;
+import com.google.gson.JsonObject;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.callback.StringCallback;
 import com.lzy.okgo.model.Response;
@@ -66,15 +68,20 @@ public class EventReceiverSelectDialogFragment  extends DialogFragment {
 
     private String appToken;
     private String btnName;    //按钮显示的文字
-    private int type;          //类别，0：事件中选择接收人  1:待办事件中处理部门多选
+    private int type;          //类别，0：事件中选择接收人
+    private String getIds;     //用户已经选择的接收人id
+    private String[] arrayIds; //将传过来的接收人id,转化为列表
 
-    public static EventReceiverSelectDialogFragment newInstance(String appToken,String btnName,int type) {
+    public MyLoading progress_Dialog;
+
+    public static EventReceiverSelectDialogFragment newInstance(String appToken,String btnName,int type,String getIds) {
 
         EventReceiverSelectDialogFragment b = new EventReceiverSelectDialogFragment();
         Bundle args = new Bundle();
         args.putString("appToken",appToken);
         args.putString("btnName",btnName);
         args.putInt("type",type);
+        args.putString("getIds",getIds);
         b.setArguments(args);
         return b;
     }
@@ -87,6 +94,20 @@ public class EventReceiverSelectDialogFragment  extends DialogFragment {
         appToken = getArguments().getString("appToken");
         btnName = getArguments().getString("btnName");
         type = getArguments().getInt("type");
+        getIds = getArguments().getString("getIds");
+        if(!TextUtils.isEmpty(getIds))
+        {
+            if(getIds.contains(","))
+            {
+                arrayIds = getIds.split(",");
+            }else{
+                arrayIds = new String[]{getIds};
+            }
+        }else{
+            arrayIds = new String[]{};
+        }
+
+        progress_Dialog = MyLoading.createDialog(getContext());
     }
 
     @Nullable
@@ -108,7 +129,7 @@ public class EventReceiverSelectDialogFragment  extends DialogFragment {
         rv_report = (RecyclerView)view.findViewById(R.id.rv_report);
         rv_report.setLayoutManager(new LinearLayoutManager(getContext()));
         list_data = new ArrayList<>();
-        temp();
+        //temp();
         eAdapter = new EventReporterListAdpater(getContext(),list_data);
         rv_report.setAdapter(eAdapter);
         eAdapter.setOnItemClickLitener(new EventReporterListAdpater.OnItemClickLitener() {
@@ -125,17 +146,32 @@ public class EventReceiverSelectDialogFragment  extends DialogFragment {
         btn_transmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String temp = "";
+                String tempId = "";
+                String tempName ="";
                 for(EventReporterModel model : list_data)
                 {
                     if(model.isSel())
                     {
-                        temp += model.getReporterName() + ",";
+                        tempId += model.getReporterId() + ",";
+                        tempName += model.getReporterName() + ",";
                     }
                 }
 
-                mOnItemClickLitener.OnItemClick(v,temp);
+
+                String Ids = "";
+                String Names = "";
+                if(!TextUtils.isEmpty(tempId))
+                {
+                    Ids = tempId.substring(0, tempId.length() - 1);
+                }
+                if(!TextUtils.isEmpty(tempName))
+                {
+                    Names = tempName.substring(0, tempName.length() - 1);
+                }
+
+                mOnItemClickLitener.OnItemClick(v, Ids,Names);
                 dismiss();
+
             }
         });
     }
@@ -145,7 +181,7 @@ public class EventReceiverSelectDialogFragment  extends DialogFragment {
      */
     public interface OnItemClickLitener
     {
-        void OnItemClick(View view, String str);
+        void OnItemClick(View view, String id,String name);
     }
 
     private OnItemClickLitener mOnItemClickLitener;
@@ -161,25 +197,46 @@ public class EventReceiverSelectDialogFragment  extends DialogFragment {
      */
     private void initEvenData(){
 
+        progress_Dialog.show();
 
-        OkGo.<String>post(Constants.EVENTWAITDEP_URL)
+        OkGo.<String>post(Constants.EVENTRANSMITER_URL)
                 .tag(this)//
                 .params("access_token", appToken)
-                .params("outcome",btnName)
                 .execute(new StringCallback() {
                     @Override
                     public void onSuccess(Response<String> response) {
+
+                        progress_Dialog.dismiss();
 
                         String data = response.body();//这个就是返回来的结果
                         try {
                             JSONObject json = new JSONObject(data);
                             String resultCode = json.getString("code");
 
-                            Log.e("EventReceiverSelect", "行数: 175  data:" + data);
 
                             if(resultCode.equals("2000"))
                             {
+                                JSONArray array = json.getJSONArray("data");
+                                if(array.length() > 0)
+                                {
+                                    for(int i=0;i<array.length();i++)
+                                    {
+                                        JSONObject object = array.getJSONObject(i);
+                                        EventReporterModel model = new EventReporterModel();
+                                        model.setReporterId(object.getString("id"));
+                                        model.setReporterName(object.getString("name"));
+                                        if(arrayIds.length > 0) {
+                                            for (int j = 0; j < arrayIds.length; j++) {
+                                                if (arrayIds[j].equals(object.getString("id"))) {
+                                                    model.setSel(true);
+                                                }
+                                            }
+                                        }
 
+                                        list_data.add(model);
+                                    }
+                                    eAdapter.notifyDataSetChanged();
+                                }
                             }else{
                                 myUntils.showToast(getContext(),json.getString("message"));
                             }
@@ -197,21 +254,10 @@ public class EventReceiverSelectDialogFragment  extends DialogFragment {
                     @Override
                     public void onError(Response<String> response) {
                         super.onError(response);
+                        progress_Dialog.dismiss();
                         Log.e("EventReceiveSelect", "行数: 196  error:" + response.body());
                     }
                 });
     }
 
-    private void temp()
-    {
-        for(int i=0;i<10;i++)
-        {
-            EventReporterModel model = new EventReporterModel();
-            model.setReporterId(String.valueOf(i+1));
-            model.setReporterName("传阅人_" + i);
-            model.setSel(false);
-
-            list_data.add(model);
-        }
-    }
 }

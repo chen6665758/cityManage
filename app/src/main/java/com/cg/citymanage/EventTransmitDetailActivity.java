@@ -64,6 +64,7 @@ public class EventTransmitDetailActivity extends BaseActivity implements View.On
     private String title;
     private String lng = "0";
     private String lat = "0";
+    private String empId;        //传阅人id
 
     /**
      * 标题栏
@@ -145,6 +146,7 @@ public class EventTransmitDetailActivity extends BaseActivity implements View.On
         txt_eventypeName = (TextView)findViewById(R.id.txt_eventypeName);
         txt_reportName = (TextView)findViewById(R.id.txt_reportName);
         txt_siteValue = (TextView)findViewById(R.id.txt_siteValue);
+        txt_siteValue.setOnClickListener(this);
         txt_timeValue = (TextView)findViewById(R.id.txt_timeValue);
         txt_infoValue = (TextView)findViewById(R.id.txt_infoValue);
 
@@ -177,6 +179,7 @@ public class EventTransmitDetailActivity extends BaseActivity implements View.On
         img_ReceiverAdd = (ImageView)findViewById(R.id.img_ReceiverAdd);
         img_ReceiverAdd.setOnClickListener(this);
         txt_ReceiverName = (TextView)findViewById(R.id.txt_ReceiverName);
+        txt_ReceiverName.setOnClickListener(this);
 
         //提交事件
         btn_transmit = (Button)findViewById(R.id.btn_transmit);
@@ -225,23 +228,64 @@ public class EventTransmitDetailActivity extends BaseActivity implements View.On
                     lv_eventImpatientdetail.setVisibility(View.VISIBLE);
                 }
                 break;
+            //显示地图
+            case R.id.txt_siteValue:
+                try {
+                    double dlnt = Double.valueOf(lng);
+                    double dlat = Double.valueOf(lat);
+                    if(dlnt==0 || dlat==0)
+                    {
+                        myUntils.showToast(mContext,"对不起，坐标数据有误，请与管理员联系确认此事件正确性！");
+                    }
+                    else{
+                        bundle.putDouble("lng",dlnt);
+                        bundle.putDouble("lat",dlat);
+                        Jump_intent(MapViewActivity.class,bundle);
+                    }
+                }catch (Exception ex)
+                {
+                    myUntils.showToast(mContext,"对不起，坐标数据有误，请与管理员联系确认此事件正确性！");
+                }
+                break;
             //选择传阅人
             case R.id.img_ReceiverAdd:
-                EventReceiverSelectDialogFragment eDialog = EventReceiverSelectDialogFragment.newInstance("","",0);
-                eDialog.show(getSupportFragmentManager(),"选择传阅人");
-                eDialog.setOnItemClickLitener(new EventReceiverSelectDialogFragment.OnItemClickLitener() {
-                    @Override
-                    public void OnItemClick(View view, String str) {
-                        txt_ReceiverName.setText(str);
-                    }
-                });
+                showReceiverDialog();
+                break;
+            //选择传阅人
+            case R.id.txt_ReceiverName:
+                showReceiverDialog();
                 break;
             //提交事件
             case R.id.btn_transmit:
-
+                if(TextUtils.isEmpty(empId))
+                {
+                    myUntils.showToast(mContext,"请选择传阅人！");
+                }else {
+                    submitTransmit();
+                }
                 break;
+
+
         }
     }
+
+    /**
+     * 显示选择传阅人的弹窗
+     */
+    private void showReceiverDialog()
+    {
+        EventReceiverSelectDialogFragment eDialog = EventReceiverSelectDialogFragment.newInstance(appToken,"",0,empId);
+        eDialog.show(getSupportFragmentManager(),"选择传阅人");
+        eDialog.setOnItemClickLitener(new EventReceiverSelectDialogFragment.OnItemClickLitener() {
+            @Override
+            public void OnItemClick(View view, String id, String name) {
+                empId = id;
+                txt_ReceiverName.setText(name);
+
+            }
+        });
+    }
+
 
     /**
      * 加载事件的详细信息
@@ -404,33 +448,49 @@ public class EventTransmitDetailActivity extends BaseActivity implements View.On
                 });
     }
 
-
-    public void temp()
+    /**
+     * 提交传阅人
+     */
+    private void submitTransmit()
     {
-        for(int i=0;i<5;i++)
-        {
-            EventFlowListModel model = new EventFlowListModel();
-            model.setEventFlowId(String.valueOf(i+1));
-            model.setEventFlowLink("环节" + i);
-            model.setEventFlowHandler("处理人" + i);
-            model.setEventStreet("处理街巷" + i);
-            model.setEventFlowHandleTime("处理时间" + i);
-            model.setEventFlowInfo("处理意见" + i);
-            list_data.add(model);
-        }
+        OkGo.<String>post(Constants.EVENTRANSMITSUBMIT_URL)
+                .tag(this)//
+                .params("access_token", appToken)
+                .params("eventId",eventId)
+                .params("empId", empId)
+                .execute(new StringCallback() {
+                    @Override
+                    public void onSuccess(Response<String> response) {
+
+                        String data = response.body();//这个就是返回来的结果
+                        try {
+                            JSONObject json = new JSONObject(data);
+                            String resultCode = json.getString("code");
+
+                            if(resultCode.equals("2000"))
+                            {
+                                myUntils.showToast(mContext,"传阅成功！");
+                                finish();
+                            }else{
+                                myUntils.showToast(mContext,json.getString("message"));
+                            }
+
+
+                        }catch (Exception ex)
+                        {
+                            Log.e("EventImpatientDetail", "行数: 459  ex:" + ex.getMessage());
+                            myUntils.showToast(mContext,"请检查网络是否正常链接！");
+                            return;
+                        }
+
+                    }
+
+                    @Override
+                    public void onError(Response<String> response) {
+                        super.onError(response);
+                        Log.e("EventImpatientDetail", "行数: 469  error:" + response.body());
+                    }
+                });
     }
 
-    public void temp1(){
-        for(int i = 0;i<5;i++)
-        {
-            EventImpatientListModel model = new EventImpatientListModel();
-            model.setEventImpatientId(String.valueOf(i+1));
-            model.setEventImpatientLink("催办环节" + i);
-            model.setEventImpatienter("催办人" + i);
-            model.setEventpImpatienter("被催办人" + i);
-            model.setEventImpatientTime("催办时间" + i);
-            model.setEventImpatientInfo("处理意见" + i);
-            list_idata.add(model);
-        }
-    }
 }
