@@ -6,6 +6,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,8 +16,16 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
 import com.cg.citymanage.Adapters.EventReporterListAdpater;
+import com.cg.citymanage.infos.Constants;
 import com.cg.citymanage.models.EventReporterModel;
 import com.cg.citymanage.untils.OnViewGlobalLayoutListener;
+import com.cg.citymanage.untils.myUntils;
+import com.lzy.okgo.OkGo;
+import com.lzy.okgo.callback.StringCallback;
+import com.lzy.okgo.model.Response;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -55,10 +64,17 @@ public class EventReceiverSelectDialogFragment  extends DialogFragment {
     private EventReporterListAdpater eAdapter;
     private Button btn_transmit;
 
-    public static EventReceiverSelectDialogFragment newInstance() {
+    private String appToken;
+    private String btnName;    //按钮显示的文字
+    private int type;          //类别，0：事件中选择接收人  1:待办事件中处理部门多选
+
+    public static EventReceiverSelectDialogFragment newInstance(String appToken,String btnName,int type) {
 
         EventReceiverSelectDialogFragment b = new EventReceiverSelectDialogFragment();
         Bundle args = new Bundle();
+        args.putString("appToken",appToken);
+        args.putString("btnName",btnName);
+        args.putInt("type",type);
         b.setArguments(args);
         return b;
     }
@@ -67,6 +83,10 @@ public class EventReceiverSelectDialogFragment  extends DialogFragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        appToken = getArguments().getString("appToken");
+        btnName = getArguments().getString("btnName");
+        type = getArguments().getInt("type");
     }
 
     @Nullable
@@ -99,6 +119,7 @@ public class EventReceiverSelectDialogFragment  extends DialogFragment {
                 eAdapter.notifyItemChanged(positon);
             }
         });
+        initEvenData();
 
         btn_transmit = (Button)view.findViewById(R.id.btn_transmit);
         btn_transmit.setOnClickListener(new View.OnClickListener() {
@@ -134,6 +155,52 @@ public class EventReceiverSelectDialogFragment  extends DialogFragment {
         this.mOnItemClickLitener = mOnItemClickLitener;
     }
 
+
+    /**
+     * 加载事件的详细信息
+     */
+    private void initEvenData(){
+
+
+        OkGo.<String>post(Constants.EVENTWAITDEP_URL)
+                .tag(this)//
+                .params("access_token", appToken)
+                .params("outcome",btnName)
+                .execute(new StringCallback() {
+                    @Override
+                    public void onSuccess(Response<String> response) {
+
+                        String data = response.body();//这个就是返回来的结果
+                        try {
+                            JSONObject json = new JSONObject(data);
+                            String resultCode = json.getString("code");
+
+                            Log.e("EventReceiverSelect", "行数: 175  data:" + data);
+
+                            if(resultCode.equals("2000"))
+                            {
+
+                            }else{
+                                myUntils.showToast(getContext(),json.getString("message"));
+                            }
+
+
+                        }catch (Exception ex)
+                        {
+                            Log.e("EventReceiveSelect", "行数: 187  ex:" + ex.getMessage());
+                            myUntils.showToast(getContext(),"请检查网络是否正常链接！");
+                            return;
+                        }
+
+                    }
+
+                    @Override
+                    public void onError(Response<String> response) {
+                        super.onError(response);
+                        Log.e("EventReceiveSelect", "行数: 196  error:" + response.body());
+                    }
+                });
+    }
 
     private void temp()
     {

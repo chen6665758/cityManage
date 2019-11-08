@@ -9,8 +9,10 @@ import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -19,8 +21,13 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.cg.citymanage.infos.Constants;
 import com.cg.citymanage.untils.myUntils;
+import com.lzy.okgo.OkGo;
+import com.lzy.okgo.callback.StringCallback;
+import com.lzy.okgo.model.Response;
 
+import org.json.JSONObject;
 import org.yczbj.ycvideoplayerlib.constant.ConstantKeys;
 import org.yczbj.ycvideoplayerlib.controller.VideoPlayerController;
 import org.yczbj.ycvideoplayerlib.manager.VideoPlayerManager;
@@ -28,6 +35,7 @@ import org.yczbj.ycvideoplayerlib.player.VideoPlayer;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.List;
 
 import cn.bingoogolapple.photopicker.activity.BGAPhotoPickerActivity;
 import cn.bingoogolapple.photopicker.activity.BGAPhotoPickerPreviewActivity;
@@ -64,6 +72,14 @@ import static com.cg.citymanage.untils.CameraUntils.getImageAbsolutePath;
 */
 public class EventWaitSubmitActivity extends BaseActivity implements View.OnClickListener,BGASortableNinePhotoLayout.Delegate {
 
+    private String appToken;
+    private String taskId;                    //流程实例
+    private String eventWaitStatus;           //事件名称，上一页按钮显示名字
+    private String assignee;                  //处理部门人员id
+    private List<String> imgFile;             //图片地址
+    private String vedioFile;                 //视频地址
+    private String audioFile;                 //音频地址
+
     /**
      * 标题栏
      */
@@ -73,6 +89,7 @@ public class EventWaitSubmitActivity extends BaseActivity implements View.OnClic
     /**
      * 事件处理项
      */
+    private RelativeLayout rela_processingDepartment;
     private TextView txt_processingDepartment;
     private EditText edit_processDescribe;
 
@@ -108,14 +125,24 @@ public class EventWaitSubmitActivity extends BaseActivity implements View.OnClic
     private MediaPlayer mediaPlayer;
     private ImageView img_voiceDel;
 
+    /**
+     * 事件处理提交
+     */
+    private Button btn_eventWaitProcess;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         mContext = this;
-
+        appToken = mSharedPreferences.getString("appToken","");
         //权限的设置
         myUntils.JudgePermission(this,mContext,"您拒绝了相机功能，拍照等功能将无法使用！",Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA);
+
+        taskId = getIntent().getStringExtra("taskId");
+        eventWaitStatus = getIntent().getStringExtra("eventWaitStatus");
+
+        imgFile = new ArrayList<>();
 
         initControls();
     }
@@ -171,9 +198,10 @@ public class EventWaitSubmitActivity extends BaseActivity implements View.OnClic
         title_left_btn = (ImageButton)findViewById(R.id.title_left_btn);
         title_left_btn.setOnClickListener(this);
         title_textview = (TextView) findViewById(R.id.title_textview);
-        title_textview.setText("待办事件 - 处理");
+        title_textview.setText(eventWaitStatus + "处理");
 
         //事件处理项
+        rela_processingDepartment = (RelativeLayout)findViewById(R.id.rela_processingDepartment);
         txt_processingDepartment = (TextView)findViewById(R.id.txt_processingDepartment);
         txt_processingDepartment.setOnClickListener(this);
         edit_processDescribe = (EditText)findViewById(R.id.edit_processDescribe);
@@ -194,7 +222,8 @@ public class EventWaitSubmitActivity extends BaseActivity implements View.OnClic
         video_player.setPlayerType(ConstantKeys.IjkPlayerType.TYPE_IJK);
         video_player.continueFromLastPosition(false);
         video_player.setBackgroundColor("#000000");
-        video_player.setUp("/storage/emulated/0/DCIM/Camera/VID_20191023_103406.3gp",null);
+        //video_player.setUp("/storage/emulated/0/DCIM/Camera/VID_20191023_103406.3gp",null);
+
         //创建视频控制器
         mController = new VideoPlayerController(this);
         //设置视频控制器
@@ -213,6 +242,24 @@ public class EventWaitSubmitActivity extends BaseActivity implements View.OnClic
         img_play = (ImageView)findViewById(R.id.img_play);
         img_voiceDel = (ImageView)findViewById(R.id.img_voiceDel);
         img_voiceDel.setOnClickListener(this);
+
+        VisibleSelect();
+
+        //事件处理提交
+        btn_eventWaitProcess = (Button)findViewById(R.id.btn_eventWaitProcess);
+        btn_eventWaitProcess.setText(eventWaitStatus);
+        btn_eventWaitProcess.setOnClickListener(this);
+    }
+
+    /**
+     * 判断是否显示处理部门
+     */
+    private void VisibleSelect()
+    {
+        if("立案".equals(eventWaitStatus) || "属实提案".equals(eventWaitStatus) || "申请结案".equals(eventWaitStatus))
+        {
+            rela_processingDepartment.setVisibility(View.VISIBLE);
+        }
     }
 
     @Override
@@ -237,39 +284,56 @@ public class EventWaitSubmitActivity extends BaseActivity implements View.OnClic
                 break;
             //事件部门选择
             case R.id.txt_processingDepartment:
-
+                EventReportTypeDialogFragment eDialog = EventReportTypeDialogFragment.newInstance("3","0",appToken,eventWaitStatus);
+                eDialog.show(getSupportFragmentManager(),eventWaitStatus);
+                eDialog.setOnItemClickLitener(new EventReportTypeDialogFragment.OnItemClickLitener() {
+                    @Override
+                    public void OnItemClick(View view, String EventTypeId, String EventTypeName) {
+                        txt_processingDepartment.setText(EventTypeName);
+                        assignee = EventTypeId;
+                    }
+                });
                 break;
             //图片添加
             case R.id.linear_pic:
-                if(myUntils.checkGalleryPermission(mContext,EventWaitSubmitActivity.this,Manifest.permission.WRITE_EXTERNAL_STORAGE) &&
-                        myUntils.checkGalleryPermission(mContext,EventWaitSubmitActivity.this,Manifest.permission.CAMERA) )
+
+                if(imgFile.size() > 2)
                 {
-                    if(mPhotosSnpl.getData().size() >= 3)
-                    {
-                        myUntils.showToast(mContext,"图片最多只能上传三张！");
-                        return;
-                    }else {
-                        choicePhotoWrapper();
+                    myUntils.showToast(mContext, "图片最多只能上传三张！");
+                }else {
+                    if (myUntils.checkGalleryPermission(mContext, EventWaitSubmitActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE) &&
+                            myUntils.checkGalleryPermission(mContext, EventWaitSubmitActivity.this, Manifest.permission.CAMERA)) {
+                        if (mPhotosSnpl.getData().size() >= 3) {
+                            myUntils.showToast(mContext, "图片最多只能上传三张！");
+                            return;
+                        } else {
+                            choicePhotoWrapper();
+                        }
+                    } else {
+                        //权限的设置
+                        myUntils.JudgePermission(this, mContext, "您拒绝了相机功能，拍照等功能将无法使用！", Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA);
                     }
-                }else{
-                    //权限的设置
-                    myUntils.JudgePermission(this,mContext,"您拒绝了相机功能，拍照等功能将无法使用！",Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA);
                 }
                 break;
             //视频添加
             case R.id.linear_video:
-                if(myUntils.checkGalleryPermission(mContext,EventWaitSubmitActivity.this,Manifest.permission.WRITE_EXTERNAL_STORAGE) &&
-                        myUntils.checkGalleryPermission(mContext,EventWaitSubmitActivity.this,Manifest.permission.CAMERA))
+                if(!TextUtils.isEmpty(vedioFile))
                 {
-                    Intent intent=new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
-                    intent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY,0);
-                    //好使
-                    intent.putExtra(MediaStore.EXTRA_SIZE_LIMIT,10485760L);
-                    intent.putExtra(MediaStore.EXTRA_DURATION_LIMIT,10);
-                    startActivityForResult(intent,VIDEO_CAPTURE);
-                }else{
-                    //权限的设置
-                    myUntils.JudgePermission(this,mContext,"您拒绝了相机功能，拍照等功能将无法使用！",Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA);
+                    myUntils.showToast(mContext, "视频只能上传一个！");
+
+                }else {
+                    if (myUntils.checkGalleryPermission(mContext, EventWaitSubmitActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE) &&
+                            myUntils.checkGalleryPermission(mContext, EventWaitSubmitActivity.this, Manifest.permission.CAMERA)) {
+                        Intent intent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
+                        intent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 0);
+                        //好使
+                        intent.putExtra(MediaStore.EXTRA_SIZE_LIMIT, 10485760L);
+                        intent.putExtra(MediaStore.EXTRA_DURATION_LIMIT, 10);
+                        startActivityForResult(intent, VIDEO_CAPTURE);
+                    } else {
+                        //权限的设置
+                        myUntils.JudgePermission(this, mContext, "您拒绝了相机功能，拍照等功能将无法使用！", Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA);
+                    }
                 }
                 break;
             //视频关闭按钮
@@ -281,14 +345,20 @@ public class EventWaitSubmitActivity extends BaseActivity implements View.OnClic
                     public void OnItemClick(View view, int positon) {
                         videoPath = "";
                         rela_video.setVisibility(View.GONE);
+                        vedioFile = "";
                     }
                 });
                 break;
             //添加音频
             case R.id.linear_voice:
-                Intent intent = new Intent();
-                intent.setClass(EventWaitSubmitActivity.this,SoundRecordingActivity.class);
-                startActivityForResult(intent,VOICE_CODE,bundle);
+                if(!TextUtils.isEmpty(audioFile))
+                {
+                    myUntils.showToast(mContext, "音频只能上传一个！");
+                }else {
+                    Intent intent = new Intent();
+                    intent.setClass(EventWaitSubmitActivity.this, SoundRecordingActivity.class);
+                    startActivityForResult(intent, VOICE_CODE, bundle);
+                }
                 break;
             //播放音频
             case R.id.rela_voiceplay:
@@ -296,7 +366,7 @@ public class EventWaitSubmitActivity extends BaseActivity implements View.OnClic
                     playVoice(voicePath);
                 }catch (Exception ex)
                 {
-                    Log.e("EventReport", "行数: 278  ex:" + ex.getMessage());
+                    Log.e("EventWaitSubmit", "行数: 369  ex:" + ex.getMessage());
                 }
                 break;
             //删除音频
@@ -308,8 +378,30 @@ public class EventWaitSubmitActivity extends BaseActivity implements View.OnClic
                     public void OnItemClick(View view, int positon) {
                         rela_voice.setVisibility(View.GONE);
                         voicePath = "";
+                        audioFile = "";
                     }
                 });
+            //事件处理提交
+            case R.id.btn_eventWaitProcess:
+
+
+                String comment = edit_processDescribe.getText().toString();
+                String imgFiles = "";
+                if(imgFile.size() > 0) {
+                    for (int i = 0; i < imgFile.size(); i++) {
+                        imgFiles += imgFile.get(i) + ",";
+                    }
+                    imgFiles = imgFiles.substring(0,imgFiles.length()-1);
+
+                }
+                if(TextUtils.isEmpty(comment))
+                {
+                    myUntils.showToast(mContext,"对不起，处理意见不能为空");
+                    return;
+                }else{
+                    SumitData(comment,imgFiles);
+                }
+                break;
         }
     }
 
@@ -343,6 +435,7 @@ public class EventWaitSubmitActivity extends BaseActivity implements View.OnClic
     @Override
     public void onClickDeleteNinePhotoItem(BGASortableNinePhotoLayout sortableNinePhotoLayout, View view, int position, String model, ArrayList<String> models) {
         mPhotosSnpl.removeItem(position);
+        imgFile.remove(position);
     }
 
     @Override
@@ -363,7 +456,11 @@ public class EventWaitSubmitActivity extends BaseActivity implements View.OnClic
     }
 
 
-
+    /**
+     * 视频播放
+     * @param path                视频地址
+     * @throws Exception
+     */
     private void playVoice(String path) throws Exception {
         if ("".equals(path)) {
             Toast.makeText(mContext, "路径不能为空", Toast.LENGTH_LONG).show();
@@ -435,7 +532,10 @@ public class EventWaitSubmitActivity extends BaseActivity implements View.OnClic
         if (resultCode == RESULT_OK && requestCode == RC_CHOOSE_PHOTO) {
             mPhotosSnpl.addMoreData(BGAPhotoPickerActivity.getSelectedPhotos(data));
 
-            Log.e("EventWaitSubmit", "行数: 438  data:" + mPhotosSnpl.getData().toString());
+            for(int i=0;i<mPhotosSnpl.getData().size();i++) {
+                File file = new File(mPhotosSnpl.getData().get(i));
+                upLoadFile(file, "1");
+            }
 
         } else if (requestCode == RC_PHOTO_PREVIEW) {
             mPhotosSnpl.setData(BGAPhotoPickerPreviewActivity.getSelectedPhotos(data));
@@ -445,19 +545,141 @@ public class EventWaitSubmitActivity extends BaseActivity implements View.OnClic
             String mVideoPath = getImageAbsolutePath(EventWaitSubmitActivity.this,videoUri);
             videoPath = mVideoPath;
             rela_video.setVisibility(View.VISIBLE);
-            video_player.setUp(mVideoPath,null);
+            //video_player.setUp(mVideoPath,null);
+            File vfile = new File(mVideoPath);
+            upLoadFile(vfile,"2");
         } else if(resultCode==RESULT_OK && requestCode == VOICE_CODE)
         {
             voicePath = data.getStringExtra("sPath");
             if(!"".equals(voicePath))
             {
+                File afile = new File(voicePath);
+                upLoadFile(afile,"3");
                 rela_voice.setVisibility(View.VISIBLE);
 
             }else{
                 myUntils.showToast(mContext,"没有采集到音频文件，请重新采集！");
                 return;
             }
-            Log.e("EventWaitSubmit", "行数: 460  voicePath:" + voicePath);
+            Log.e("EventWaitSubmit", "行数: 564  voicePath:" + voicePath);
         }
+    }
+
+    /**
+     * 上传文件
+     * @param file                         文件
+     * @param accessoryType                文件分类 1图片 2视频 3音频
+     */
+    private void upLoadFile(File file, final String accessoryType)
+    {
+        progress_Dialog.show();
+        OkGo.<String>post(Constants.FILEUPLOAD_URL)
+                .tag(this)//
+                .params("access_token", appToken)
+                .params("upLoadFile",file)
+                .params("accessoryType",accessoryType)
+                .execute(new StringCallback() {
+                    @Override
+                    public void onSuccess(Response<String> response) {
+                        progress_Dialog.dismiss();
+                        String data = response.body();//这个就是返回来的结果
+                        try {
+                            JSONObject json = new JSONObject(data);
+                            String resultCode = json.getString("code");
+
+                            Log.e("EventWaitSubmit", "行数: 590  data:" + data);
+
+                            if(resultCode.equals("2000"))
+                            {
+
+                                JSONObject object = json.getJSONObject("data");
+
+                                if("1".equals(accessoryType))
+                                {
+                                    imgFile.add(object.getString("eventAccessoryId"));
+
+                                }else if("2".equals(accessoryType))
+                                {
+                                    vedioFile = object.getString("eventAccessoryId");
+                                    video_player.setUp(object.getString("accessoryPath"),null);
+                                }else if("3".equals(accessoryType))
+                                {
+                                    audioFile = object.getString("eventAccessoryId");
+                                }
+                            }else{
+                                myUntils.showToast(mContext,json.getString("message"));
+                            }
+
+
+                        }catch (Exception ex)
+                        {
+                            Log.e("EventWaitSubmit", "行数: 617  ex:" + ex.getMessage());
+                            myUntils.showToast(mContext,"请检查网络是否正常链接！");
+                            return;
+                        }
+
+                    }
+
+                    @Override
+                    public void onError(Response<String> response) {
+                        super.onError(response);
+                        Log.e("EventWaitSubmit", "行数: 626  error:" + response.body());
+                    }
+                });
+    }
+
+
+    private void SumitData(String comment,String imgFiles)
+    {
+        Log.e("EventWaitSubmit", "行数: 384  taskId:" + taskId);
+        Log.e("EventWaitSubmit", "行数: 384  outcome:" + eventWaitStatus);
+        Log.e("EventWaitSubmit", "行数: 384  comment:" + comment);
+        Log.e("EventWaitSubmit", "行数: 384  assignee:" + assignee);
+        Log.e("EventWaitSubmit", "行数: 384  imgFile:" +  imgFiles);
+        Log.e("EventWaitSubmit", "行数: 384  vedioFile:" +  vedioFile);
+        Log.e("EventWaitSubmit", "行数: 384  audioFile:" +  audioFile);
+        OkGo.<String>post(Constants.EVENTWAITSUBMIT_URL)
+                .tag(this)//
+                .params("access_token", appToken)
+                .params("outcome",eventWaitStatus)
+                .params("comment",comment)
+                .params("assignee",assignee)
+                .params("imgFile",imgFiles)
+                .params("vedioFile",vedioFile)
+                .params("audioFile",audioFile)
+                .execute(new StringCallback() {
+                    @Override
+                    public void onSuccess(Response<String> response) {
+
+                        String data = response.body();//这个就是返回来的结果
+                        try {
+                            JSONObject json = new JSONObject(data);
+                            String resultCode = json.getString("code");
+
+                            Log.e("EventWaitSubmit", "行数: 641  data:" + data);
+
+                            if(resultCode.equals("2000"))
+                            {
+
+                            }else{
+                                myUntils.showToast(mContext,json.getString("message"));
+                            }
+
+
+                        }catch (Exception ex)
+                        {
+                            Log.e("EventWaitSubmit", "行数: 671  ex:" + ex.getMessage());
+                            myUntils.showToast(mContext,"请检查网络是否正常链接！");
+                            return;
+                        }
+
+                    }
+
+                    @Override
+                    public void onError(Response<String> response) {
+                        super.onError(response);
+                        Log.e("EventWaitSubmit", "行数: 681  error:" + response.body());
+                    }
+                });
     }
 }

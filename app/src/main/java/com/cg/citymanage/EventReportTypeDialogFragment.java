@@ -14,8 +14,16 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 
 import com.cg.citymanage.Adapters.EventReportTypeAdapter;
+import com.cg.citymanage.infos.Constants;
 import com.cg.citymanage.models.EventTypeModel;
 import com.cg.citymanage.untils.OnViewGlobalLayoutListener;
+import com.cg.citymanage.untils.myUntils;
+import com.lzy.okgo.OkGo;
+import com.lzy.okgo.callback.StringCallback;
+import com.lzy.okgo.model.Response;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -49,19 +57,24 @@ import java.util.List;
 */
 public class EventReportTypeDialogFragment extends DialogFragment {
 
-    private String ertype;                 //事件上报中事件的类别，0：事件分类  1：事件大类  2：事件小类
+    private String ertype;                 //事件上报中事件的类别，0：事件分类  1：事件大类  2：事件小类 3:待办事件选人
     private String parentType;             //父类id
+    private String appToken;
+    private String btnName;    //按钮显示的文字
+
 
     private ListView lv_er;
     private List<EventTypeModel> list_data;
     private EventReportTypeAdapter eAdapter;
 
-    public static EventReportTypeDialogFragment newInstance(String ertype,String parentType) {
+    public static EventReportTypeDialogFragment newInstance(String ertype,String parentType,String appToken,String btnName) {
 
         EventReportTypeDialogFragment b = new EventReportTypeDialogFragment();
         Bundle args = new Bundle();
         args.putString("ertype", ertype);
         args.putString("parentType", parentType);
+        args.putString("appToken",appToken);
+        args.putString("btnName",btnName);
         b.setArguments(args);
         return b;
     }
@@ -74,6 +87,8 @@ public class EventReportTypeDialogFragment extends DialogFragment {
 
         ertype = getArguments().getString("ertype");
         parentType = getArguments().getString("parentType");
+        appToken = getArguments().getString("appToken");
+        btnName = getArguments().getString("btnName");
     }
 
     @Nullable
@@ -94,18 +109,91 @@ public class EventReportTypeDialogFragment extends DialogFragment {
 
         lv_er = (ListView)view.findViewById(R.id.lv_er);
         list_data = new ArrayList<>();
-        tempData();
+        //tempData();
         eAdapter = new EventReportTypeAdapter(getContext(),list_data);
         lv_er.setAdapter(eAdapter);
         lv_er.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Log.e("EventReport", "行数: 69  数据：" + list_data.get(position).getEventTypeName());
-                mOnItemClickLitener.OnItemClick(view,list_data.get(position).getEventTypeName());
+
+                mOnItemClickLitener.OnItemClick(view,list_data.get(position).getEventTypeId(),list_data.get(position).getEventTypeName());
                 dismiss();
             }
         });
 
+        initData();
+
+    }
+
+    /**
+     * 加载数据
+     */
+    private void initData()
+    {
+        if("3".equals(ertype))
+        {
+            initEvenData();
+        }else{
+            tempData();
+        }
+    }
+
+    /**
+     * 加载待办事件的处理部门
+     */
+    private void initEvenData(){
+
+        OkGo.<String>post(Constants.EVENTWAITDEP_URL)
+                .tag(this)//
+                .params("access_token", appToken)
+                .params("outcome",btnName)
+                .execute(new StringCallback() {
+                    @Override
+                    public void onSuccess(Response<String> response) {
+
+                        String data = response.body();//这个就是返回来的结果
+                        try {
+                            JSONObject json = new JSONObject(data);
+                            String resultCode = json.getString("code");
+
+                            if(resultCode.equals("2000"))
+                            {
+                                JSONObject childData = json.getJSONObject("data");
+                                JSONArray array = childData.getJSONArray("personTree");
+                                if(array.length() > 0)
+                                {
+                                    for(int i=0;i<array.length();i++) {
+                                        JSONObject object = array.getJSONObject(i);
+                                        EventTypeModel model = new EventTypeModel();
+                                        model.setEventTypeId(object.getString("id"));
+                                        model.setEventTypeName(object.getString("name"));
+                                        list_data.add(model);
+                                    }
+                                    eAdapter.notifyDataSetChanged();
+                                }else{
+                                    myUntils.showToast(getContext(),"对不起，没有可以选择的部门！");
+                                    dismiss();
+                                }
+                            }else{
+                                myUntils.showToast(getContext(),json.getString("message"));
+                            }
+
+
+                        }catch (Exception ex)
+                        {
+                            Log.e("EventReportDialog", "行数: 187  ex:" + ex.getMessage());
+                            myUntils.showToast(getContext(),"请检查网络是否正常链接！");
+                            return;
+                        }
+
+                    }
+
+                    @Override
+                    public void onError(Response<String> response) {
+                        super.onError(response);
+                        Log.e("EventReportDialog", "行数: 196  error:" + response.body());
+                    }
+                });
     }
 
     /**
@@ -113,7 +201,7 @@ public class EventReportTypeDialogFragment extends DialogFragment {
      */
     public interface OnItemClickLitener
     {
-        void OnItemClick(View view, String EventTypeName);
+        void OnItemClick(View view,String EventTypeId, String EventTypeName);
     }
 
     private OnItemClickLitener mOnItemClickLitener;

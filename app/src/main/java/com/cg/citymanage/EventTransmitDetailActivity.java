@@ -202,7 +202,7 @@ public class EventTransmitDetailActivity extends BaseActivity implements View.On
                 break;
             //选择传阅人
             case R.id.img_ReceiverAdd:
-                EventReceiverSelectDialogFragment eDialog = EventReceiverSelectDialogFragment.newInstance();
+                EventReceiverSelectDialogFragment eDialog = EventReceiverSelectDialogFragment.newInstance("","",0);
                 eDialog.show(getSupportFragmentManager(),"选择传阅人");
                 eDialog.setOnItemClickLitener(new EventReceiverSelectDialogFragment.OnItemClickLitener() {
                     @Override

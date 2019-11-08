@@ -239,34 +239,34 @@ public class EventReportActivity extends BaseActivity implements View.OnClickLis
                 break;
             //事件分类选择框
             case R.id.txt_typeName:
-                EventReportTypeDialogFragment tDialog = EventReportTypeDialogFragment.newInstance("0","");
+                EventReportTypeDialogFragment tDialog = EventReportTypeDialogFragment.newInstance("0","","","");
                 tDialog.show(getSupportFragmentManager(),"事件分类");
                 tDialog.setOnItemClickLitener(new EventReportTypeDialogFragment.OnItemClickLitener() {
                     @Override
-                    public void OnItemClick(View view, String EventTypeName) {
-                        txt_typeName.setText(EventTypeName);
+                    public void OnItemClick(View view, String EventTypeId, String EventTypeName) {
+
                     }
                 });
                 break;
             //事件大类选择框
             case R.id.txt_bigTypeName:
-                EventReportTypeDialogFragment bDialog = EventReportTypeDialogFragment.newInstance("1","");
+                EventReportTypeDialogFragment bDialog = EventReportTypeDialogFragment.newInstance("1","","","");
                 bDialog.show(getSupportFragmentManager(),"事件大类");
                 bDialog.setOnItemClickLitener(new EventReportTypeDialogFragment.OnItemClickLitener() {
                     @Override
-                    public void OnItemClick(View view, String EventTypeName) {
-                        txt_bigTypeName.setText(EventTypeName);
+                    public void OnItemClick(View view, String EventTypeId, String EventTypeName) {
+
                     }
                 });
                 break;
             //事件小类选择框
             case R.id.txt_smallTypeName:
-                EventReportTypeDialogFragment sDialog = EventReportTypeDialogFragment.newInstance("2","");
+                EventReportTypeDialogFragment sDialog = EventReportTypeDialogFragment.newInstance("2","","","");
                 sDialog.show(getSupportFragmentManager(),"事件小类");
                 sDialog.setOnItemClickLitener(new EventReportTypeDialogFragment.OnItemClickLitener() {
                     @Override
-                    public void OnItemClick(View view, String EventTypeName) {
-                        txt_smallTypeName.setText(EventTypeName);
+                    public void OnItemClick(View view, String EventTypeId, String EventTypeName) {
+
                     }
                 });
                 break;

@@ -3,18 +3,30 @@ package com.cg.citymanage;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.cg.citymanage.Adapters.EventDetaiFlowListAdapter;
 import com.cg.citymanage.Adapters.EventDetailImpatientListAdpater;
 import com.cg.citymanage.customs.ListViewForScrollView;
+import com.cg.citymanage.infos.Constants;
 import com.cg.citymanage.models.EventFlowListModel;
 import com.cg.citymanage.models.EventImpatientListModel;
+import com.cg.citymanage.untils.myUntils;
+import com.lzy.okgo.OkGo;
+import com.lzy.okgo.callback.StringCallback;
+import com.lzy.okgo.model.Response;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -48,8 +60,13 @@ import java.util.List;
 */
 public class EventWaitDetailActivity extends BaseActivity implements View.OnClickListener {
 
-    private String eventID = "0";           //事件id
+    private String appToken;
+    private String eventId;
+    private String title;
+    private String lng = "0";
+    private String lat = "0";
     private String eventWaitStatus;         //事件状态 0:不实关停 1:属实提案 2:申请结案 3：立案 4：退回 5：通知协办 6：派遣执法
+    private String taskId;                  //流程实例,传到提交页面
 
     /**
      * 标题栏
@@ -60,6 +77,8 @@ public class EventWaitDetailActivity extends BaseActivity implements View.OnClic
     /**
      * 详细信息
      */
+    private TextView txt_eventName;
+    private LinearLayout linear_event;
     private TextView txt_eventCodeName;
     private TextView txt_eventypeName;
     private TextView txt_reportName;
@@ -80,6 +99,7 @@ public class EventWaitDetailActivity extends BaseActivity implements View.OnClic
     /**
      * 催办流程
      */
+    private LinearLayout linear_impatient;
     private RelativeLayout rela_Impatientdetail;
     private ImageView img_Impatientdetail;
 
@@ -103,7 +123,9 @@ public class EventWaitDetailActivity extends BaseActivity implements View.OnClic
         super.onCreate(savedInstanceState);
 
         mContext = this;
-
+        appToken = mSharedPreferences.getString("appToken","");
+        eventId = getIntent().getStringExtra("eventId");
+        title = getIntent().getStringExtra("title");
         initControls();
     }
 
@@ -124,10 +146,14 @@ public class EventWaitDetailActivity extends BaseActivity implements View.OnClic
         title_textview.setText("待办事件");
 
         //详细信息
+        txt_eventName = (TextView)findViewById(R.id.txt_eventName);
+        txt_eventName.setText(title);
+        linear_event = (LinearLayout)findViewById(R.id.linear_event);
         txt_eventCodeName = (TextView)findViewById(R.id.txt_eventCodeName);
         txt_eventypeName = (TextView)findViewById(R.id.txt_eventypeName);
         txt_reportName = (TextView)findViewById(R.id.txt_reportName);
         txt_siteValue = (TextView)findViewById(R.id.txt_siteValue);
+        txt_siteValue.setOnClickListener(this);
         txt_timeValue = (TextView)findViewById(R.id.txt_timeValue);
         txt_infoValue = (TextView)findViewById(R.id.txt_infoValue);
 
@@ -138,20 +164,23 @@ public class EventWaitDetailActivity extends BaseActivity implements View.OnClic
 
         lv_eventdetail = (ListViewForScrollView)findViewById(R.id.lv_eventdetail);
         list_data = new ArrayList<>();
-        temp();
+        //temp();
         eAdapter = new EventDetaiFlowListAdapter(mContext,list_data);
         lv_eventdetail.setAdapter(eAdapter);
+        initEvenData();
 
         //催办流程
+        linear_impatient = (LinearLayout)findViewById(R.id.linear_impatient);
         rela_Impatientdetail = (RelativeLayout)findViewById(R.id.rela_Impatientdetail);
         rela_Impatientdetail.setOnClickListener(this);
         img_Impatientdetail = (ImageView)findViewById(R.id.img_Impatientdetail);
 
         lv_eventImpatientdetail = (ListViewForScrollView)findViewById(R.id.lv_eventImpatientdetail);
         list_idata = new ArrayList<>();
-        temp1();
+        //temp1();
         eiAdapter = new EventDetailImpatientListAdpater(mContext,list_idata);
         lv_eventImpatientdetail.setAdapter(eiAdapter);
+        initImpatientData();
 
         //操作按钮
         btn_stop = (Button)findViewById(R.id.btn_stop);
@@ -168,6 +197,215 @@ public class EventWaitDetailActivity extends BaseActivity implements View.OnClic
         btn_notice.setOnClickListener(this);
         btn_dispatch = (Button)findViewById(R.id.btn_dispatch);
         btn_dispatch.setOnClickListener(this);
+    }
+
+
+    /**
+     * 加载事件的详细信息
+     */
+    private void initEvenData(){
+        progress_Dialog.show();
+        OkGo.<String>post(Constants.EVENTWAITDETAIL_URL)
+                .tag(this)//
+                .params("access_token", appToken)
+                .params("eventId",eventId)
+                .execute(new StringCallback() {
+                    @Override
+                    public void onSuccess(Response<String> response) {
+                        //注意这里已经是在主线程了
+                        progress_Dialog.dismiss();
+                        String data = response.body();//这个就是返回来的结果
+                        try {
+                            JSONObject json = new JSONObject(data);
+                            String resultCode = json.getString("code");
+
+
+                            if(resultCode.equals("2000"))
+                            {
+                                JSONObject childData = json.getJSONObject("data");
+                                //事件信息
+                                JSONObject info = childData.getJSONObject("CgEvent");
+                                txt_eventCodeName.setText(info.getString("eventCode"));
+                                txt_eventypeName.setText(info.getString("eventTypeName"));
+                                txt_reportName.setText(info.getString("empName"));
+//                                txt_handleName.setText(childData.getString("cgEmp"));
+//                                txt_gridName.setText(info.getString("gridName"));
+                                txt_siteValue.setText(info.getString("eventLocation"));
+                                txt_timeValue.setText(info.getString("cdate"));
+                                txt_infoValue.setText(info.getString("eventContent"));
+
+                                lng = info.getString("lng");
+                                lat = info.getString("lat");
+
+                                JSONArray outcomeList = info.getJSONArray("outcomeList");
+                                VisibleBtn(outcomeList);
+
+                                taskId = info.getString("taskId");
+
+                                //事件流程数据
+                                JSONArray eventList = childData.getJSONArray("CommentBean");
+                                if(eventList.length() > 0)
+                                {
+                                    linear_event.setVisibility(View.VISIBLE);
+
+                                    for(int i=0;i<eventList.length();i++) {
+
+                                        JSONObject event = eventList.getJSONObject(i);
+                                        String[] userinfo = event.getString("userId").split("_");
+                                        EventFlowListModel model = new EventFlowListModel();
+                                        model.setEventFlowId(String.valueOf(i+1));
+                                        model.setEventFlowLink(userinfo[1]);
+                                        model.setEventStreet(userinfo[0]);
+                                        model.setEventFlowHandler(userinfo[2]);
+                                        model.setEventFlowHandleTime(TextUtils.isEmpty(event.getString("time")) ? "" :
+                                                myUntils.StringPattern(event.getString("time"),"yyyy年MM月dd日 HH时mm分ss秒","yyyy-MM-dd HH:mm:ss"));
+                                        model.setEventFlowInfo(event.getString("fullMessage"));
+
+                                        if(userinfo.length > 3)
+                                        {
+                                            model.setEventEnclosure(userinfo[3]);
+
+                                        }else{
+                                            model.setEventEnclosure("");
+                                        }
+
+                                        list_data.add(model);
+                                    }
+                                    eAdapter.notifyDataSetChanged();
+
+                                }else{
+                                    linear_event.setVisibility(View.GONE);
+                                }
+
+//                                EventFlowListModel
+                            }else{
+                                myUntils.showToast(mContext,json.getString("message"));
+                            }
+
+
+                        }catch (Exception ex)
+                        {
+                            Log.e("EventWaitDetail", "行数: 248  ex:" + ex.getMessage());
+                            myUntils.showToast(mContext,"请检查网络是否正常链接！");
+                            return;
+                        }
+
+                    }
+
+                    @Override
+                    public void onError(Response<String> response) {
+                        super.onError(response);
+                        progress_Dialog.dismiss();
+                        Log.e("EventWaitDetail", "行数: 259  error:" + response.body());
+                    }
+                });
+    }
+
+    /**
+     * 催办流程数据
+     */
+    private void initImpatientData()
+    {
+        OkGo.<String>post(Constants.EVENTIMPATIENTDETAIL_URL)
+                .tag(this)//
+                .params("access_token", appToken)
+                .params("eventId",eventId)
+                .execute(new StringCallback() {
+                    @Override
+                    public void onSuccess(Response<String> response) {
+                        //注意这里已经是在主线程了
+                        progress_Dialog.dismiss();
+                        String data = response.body();//这个就是返回来的结果
+                        try {
+                            JSONObject json = new JSONObject(data);
+                            String resultCode = json.getString("code");
+                            //Log.e("EventPartakeDetail", "行数: 283  data:" + data);
+                            if(resultCode.equals("2000"))
+                            {
+                                JSONArray array = json.getJSONArray("data");
+                                if(array.length()>0)
+                                {
+                                    linear_impatient.setVisibility(View.VISIBLE);
+                                    for(int i=0;i<array.length();i++)
+                                    {
+                                        JSONObject child = array.getJSONObject(i);
+                                        EventImpatientListModel model = new EventImpatientListModel();
+                                        model.setEventImpatientId(String.valueOf(i+1));
+                                        model.setEventImpatientLink(child.getString("hastenFrequency"));
+                                        model.setEventImpatienter(child.getString("empName"));
+                                        model.setEventpImpatienter(child.getString("hastenEmpName"));
+                                        model.setEventImpatientTime(child.getString("cdate"));
+                                        model.setEventImpatientInfo(child.getString("hastenContent"));
+
+                                        list_idata.add(model);
+                                    }
+                                    eiAdapter.notifyDataSetChanged();
+                                }else{
+                                    linear_impatient.setVisibility(View.GONE);
+                                }
+                            }else{
+                                myUntils.showToast(mContext,json.getString("message"));
+                            }
+
+
+                        }catch (Exception ex)
+                        {
+                            Log.e("EventPartakeDetail", "行数: 314  ex:" + ex.getMessage());
+                            myUntils.showToast(mContext,"请检查网络是否正常链接！");
+                            return;
+                        }
+
+                    }
+
+                    @Override
+                    public void onError(Response<String> response) {
+                        super.onError(response);
+                        Log.e("EventPartakeDetail", "行数: 324  error:" + response.body());
+                    }
+                });
+    }
+
+    /**
+     * 判断按钮显示情况
+     * @param array
+     */
+    private void VisibleBtn(JSONArray array)
+    {
+        if(array.length() > 0)
+        {
+            for(int i=0;i<array.length();i++)
+            {
+                try {
+
+                    if("不实关停".equals(array.getString(i)))
+                    {
+                        btn_stop.setVisibility(View.VISIBLE);
+                    }else if("属实提案".equals(array.getString(i)))
+                    {
+                        btn_proposal.setVisibility(View.VISIBLE);
+                    }else if("申请结案".equals(array.getString(i)))
+                    {
+                        btn_close.setVisibility(View.VISIBLE);
+                    }else if("立案".equals(array.getString(i)))
+                    {
+                        btn_Filing.setVisibility(View.VISIBLE);
+                    }else if("退回".equals(array.getString(i)))
+                    {
+                        btn_back.setVisibility(View.VISIBLE);
+                    }else if("通知协办".equals(array.getString(i)))
+                    {
+                        btn_notice.setVisibility(View.VISIBLE);
+                    }else if("派遣执法".equals(array.getString(i)))
+                    {
+                        btn_dispatch.setVisibility(View.VISIBLE);
+                    }
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+            }
+        }
     }
 
     @Override
@@ -212,83 +450,73 @@ public class EventWaitDetailActivity extends BaseActivity implements View.OnClic
                 break;
             //不实关停
             case R.id.btn_stop:
-                eventWaitStatus = "0";
-                bundle.putString("eventId",eventID);
+                eventWaitStatus = "不实关停";
+                bundle.putString("taskId",taskId);
                 bundle.putString("eventWaitStatus",eventWaitStatus);
                 Jump_intent(EventWaitSubmitActivity.class,bundle);
                 break;
             //属实提案
             case R.id.btn_proposal:
-                eventWaitStatus = "1";
-                bundle.putString("eventId",eventID);
+                eventWaitStatus = "属实提案";
+                bundle.putString("taskId",taskId);
                 bundle.putString("eventWaitStatus",eventWaitStatus);
                 Jump_intent(EventWaitSubmitActivity.class,bundle);
                 break;
             //申请结案
             case R.id.btn_close:
-                eventWaitStatus = "2";
-                bundle.putString("eventId",eventID);
+                eventWaitStatus = "申请结案";
+                bundle.putString("taskId",taskId);
                 bundle.putString("eventWaitStatus",eventWaitStatus);
                 Jump_intent(EventWaitSubmitActivity.class,bundle);
                 break;
             //立案
             case R.id.btn_Filing:
-                eventWaitStatus = "3";
-                bundle.putString("eventId",eventID);
+                eventWaitStatus = "立案";
+                bundle.putString("taskId",taskId);
                 bundle.putString("eventWaitStatus",eventWaitStatus);
                 Jump_intent(EventWaitSubmitActivity.class,bundle);
                 break;
             //退回
             case R.id.btn_back:
-                eventWaitStatus = "4";
-                bundle.putString("eventId",eventID);
+                eventWaitStatus = "退回";
+                bundle.putString("taskId",taskId);
                 bundle.putString("eventWaitStatus",eventWaitStatus);
                 Jump_intent(EventWaitSubmitActivity.class,bundle);
                 break;
             //通知协办
             case R.id.btn_notice:
-                eventWaitStatus = "5";
-                bundle.putString("eventId",eventID);
+                eventWaitStatus = "通知协办";
+                bundle.putString("taskId",taskId);
                 bundle.putString("eventWaitStatus",eventWaitStatus);
                 Jump_intent(EventWaitSubmitActivity.class,bundle);
                 break;
             //派遣执法
             case R.id.btn_dispatch:
-                eventWaitStatus = "6";
-                bundle.putString("eventId",eventID);
+                eventWaitStatus = "派遣执法";
+                bundle.putString("taskId",taskId);
                 bundle.putString("eventWaitStatus",eventWaitStatus);
                 Jump_intent(EventWaitSubmitActivity.class,bundle);
+                break;
+            //显示地图信息页
+            case R.id.txt_siteValue:
+                try {
+                    double dlnt = Double.valueOf(lng);
+                    double dlat = Double.valueOf(lat);
+                    if(dlnt==0 || dlat==0)
+                    {
+                        myUntils.showToast(mContext,"对不起，坐标数据有误，请与管理员联系确认此事件正确性！");
+                    }
+                    else{
+                        bundle.putDouble("lng",dlnt);
+                        bundle.putDouble("lat",dlat);
+                        Jump_intent(MapViewActivity.class,bundle);
+                    }
+                }catch (Exception ex)
+                {
+                    myUntils.showToast(mContext,"对不起，坐标数据有误，请与管理员联系确认此事件正确性！");
+                }
                 break;
         }
     }
 
-
-    public void temp()
-    {
-        for(int i=0;i<5;i++)
-        {
-            EventFlowListModel model = new EventFlowListModel();
-            model.setEventFlowId(String.valueOf(i+1));
-            model.setEventFlowLink("环节" + i);
-            model.setEventFlowHandler("处理人" + i);
-            model.setEventStreet("处理街巷" + i);
-            model.setEventFlowHandleTime("处理时间" + i);
-            model.setEventFlowInfo("处理意见" + i);
-            list_data.add(model);
-        }
-    }
-
-    public void temp1(){
-        for(int i = 0;i<5;i++)
-        {
-            EventImpatientListModel model = new EventImpatientListModel();
-            model.setEventImpatientId(String.valueOf(i+1));
-            model.setEventImpatientLink("催办环节" + i);
-            model.setEventImpatienter("催办人" + i);
-            model.setEventpImpatienter("被催办人" + i);
-            model.setEventImpatientTime("催办时间" + i);
-            model.setEventImpatientInfo("处理意见" + i);
-            list_idata.add(model);
-        }
-    }
 }

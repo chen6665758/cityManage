@@ -127,7 +127,7 @@ public class EventWaitActivity extends BaseActivity implements View.OnClickListe
         eAdapter.setOnItemClickLitener(new EventOverviewListAdpater.OnItemClickLitener() {
             @Override
             public void OnItemClick(View view, int positon) {
-
+                bundle.putString("title",list_data.get(positon).getEventName());
                 bundle.putString("eventId",list_data.get(positon).getEventId());
                 Jump_intent(EventWaitDetailActivity.class,bundle);
             }
@@ -157,6 +157,8 @@ public class EventWaitActivity extends BaseActivity implements View.OnClickListe
                         //注意这里已经是在主线程了
                         progress_Dialog.dismiss();
                         String data = response.body();
+
+
                         try {
                             JSONObject json = new JSONObject(data);
                             String resultCode = json.getString("code");
