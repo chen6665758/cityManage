@@ -19,6 +19,7 @@ import com.cg.citymanage.customs.ListViewForScrollView;
 import com.cg.citymanage.infos.Constants;
 import com.cg.citymanage.models.EventFlowListModel;
 import com.cg.citymanage.models.EventImpatientListModel;
+import com.cg.citymanage.untils.LiveDataBus;
 import com.cg.citymanage.untils.myUntils;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.callback.StringCallback;
@@ -419,39 +420,62 @@ public class EventImpatientDetailActivity extends BaseActivity implements View.O
 
             //提交事件
             case R.id.btn_impatient:
-
+                String message = edit_HandlingOpinions.getText().toString();
+                if(TextUtils.isEmpty(message))
+                {
+                    myUntils.showToast(mContext,"处理意见不能为空！");
+                }else{
+                    submitImpatient(message);
+                }
                 break;
         }
     }
 
-    public void temp()
+    /**
+     * 提交催办意见
+     * @param message       处理意见
+     */
+    private void submitImpatient(String message)
     {
-        for(int i=0;i<5;i++)
-        {
-            EventFlowListModel model = new EventFlowListModel();
-            model.setEventFlowId(String.valueOf(i+1));
-            model.setEventFlowLink("环节" + i);
-            model.setEventFlowHandler("处理人" + i);
-            model.setEventStreet("处理街巷" + i);
-            model.setEventFlowHandleTime("处理时间" + i);
-            model.setEventFlowInfo("处理意见" + i);
-            list_data.add(model);
-        }
-    }
+        OkGo.<String>post(Constants.EVENTIMPATIENTSUMIT_URL)
+                .tag(this)//
+                .params("access_token", appToken)
+                .params("eventId",eventId)
+                .params("message",message)
+                .execute(new StringCallback() {
+                    @Override
+                    public void onSuccess(Response<String> response) {
 
-    public void temp1(){
-        for(int i = 0;i<5;i++)
-        {
-            EventImpatientListModel model = new EventImpatientListModel();
-            model.setEventImpatientId(String.valueOf(i+1));
-            model.setEventImpatientLink("催办环节" + i);
-            model.setEventImpatienter("催办人" + i);
-            model.setEventpImpatienter("被催办人" + i);
-            model.setEventImpatientTime("催办时间" + i);
-            model.setEventImpatientInfo("处理意见" + i);
-            list_idata.add(model);
-        }
-    }
+                        String data = response.body();//这个就是返回来的结果
+                        try {
+                            JSONObject json = new JSONObject(data);
+                            String resultCode = json.getString("errcode");
 
+                            if(resultCode.equals("0"))
+                            {
+                                LiveDataBus.get().with("EventImpatient").setValue(true);
+                                myUntils.showToast(mContext,"催办成功！");
+                                finish();
+                            }else{
+                                myUntils.showToast(mContext,json.getString("p2pdata"));
+                            }
+
+
+                        }catch (Exception ex)
+                        {
+                            Log.e("EventImpatientDetail", "行数: 459  ex:" + ex.getMessage());
+                            myUntils.showToast(mContext,"请检查网络是否正常链接！");
+                            return;
+                        }
+
+                    }
+
+                    @Override
+                    public void onError(Response<String> response) {
+                        super.onError(response);
+                        Log.e("EventImpatientDetail", "行数: 469  error:" + response.body());
+                    }
+                });
+    }
 
 }
