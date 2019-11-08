@@ -248,6 +248,7 @@
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/linear_event"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
@@ -306,6 +307,7 @@
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/linear_impatient"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
@@ -388,6 +390,7 @@
             android:layout_marginBottom="10dp"
             android:textSize="16sp"
             android:layout_gravity="center"
+            android:visibility="gone"
             />
 
         <Button
@@ -403,7 +406,8 @@
             android:layout_marginTop="10dp"
             android:layout_marginBottom="10dp"
             android:textSize="16sp"
-            android:layout_gravity="center"/>
+            android:layout_gravity="center"
+            android:visibility="gone"/>
 
         <Button
             android:id="@+id/btn_close"
@@ -418,7 +422,8 @@
             android:layout_marginTop="10dp"
             android:layout_marginBottom="10dp"
             android:textSize="16sp"
-            android:layout_gravity="center"/>
+            android:layout_gravity="center"
+            android:visibility="gone"/>
 
         <Button
             android:id="@+id/btn_Filing"
@@ -433,7 +438,8 @@
             android:layout_marginTop="10dp"
             android:layout_marginBottom="10dp"
             android:textSize="16sp"
-            android:layout_gravity="center"/>
+            android:layout_gravity="center"
+            android:visibility="gone"/>
 
         <Button
             android:id="@+id/btn_back"
@@ -448,7 +454,8 @@
             android:layout_marginTop="10dp"
             android:layout_marginBottom="10dp"
             android:textSize="16sp"
-            android:layout_gravity="center"/>
+            android:layout_gravity="center"
+            android:visibility="gone"/>
 
         <Button
             android:id="@+id/btn_notice"
@@ -463,7 +470,8 @@
             android:layout_marginTop="10dp"
             android:layout_marginBottom="10dp"
             android:textSize="16sp"
-            android:layout_gravity="center"/>
+            android:layout_gravity="center"
+            android:visibility="gone"/>
 
         <Button
             android:id="@+id/btn_dispatch"
@@ -478,7 +486,8 @@
             android:layout_marginTop="10dp"
             android:layout_marginBottom="10dp"
             android:textSize="16sp"
-            android:layout_gravity="center"/>
+            android:layout_gravity="center"
+            android:visibility="gone"/>
 
     </LinearLayout>
 
