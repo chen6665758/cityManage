@@ -118,9 +118,14 @@
         <activity
             android:name=".InformationDetailActivity"
             android:screenOrientation="portrait" />
-        <activity android:name=".InformationReplyActivity"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".EventWaitSubmitActivity"
+        <activity
+            android:name=".InformationReplyActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".EventWaitSubmitActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:screenOrientation="portrait" />
+        <activity android:name=".MapViewActivity"
             android:screenOrientation="portrait"></activity>
     </application>
 
