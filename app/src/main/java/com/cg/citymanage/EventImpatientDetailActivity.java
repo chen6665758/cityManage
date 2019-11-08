@@ -449,15 +449,15 @@ public class EventImpatientDetailActivity extends BaseActivity implements View.O
                         String data = response.body();//这个就是返回来的结果
                         try {
                             JSONObject json = new JSONObject(data);
-                            String resultCode = json.getString("errcode");
+                            String resultCode = json.getString("code");
 
-                            if(resultCode.equals("0"))
+                            if(resultCode.equals("2000"))
                             {
                                 LiveDataBus.get().with("EventImpatient").setValue(true);
                                 myUntils.showToast(mContext,"催办成功！");
                                 finish();
                             }else{
-                                myUntils.showToast(mContext,json.getString("p2pdata"));
+                                myUntils.showToast(mContext,json.getString("message"));
                             }
 
 
