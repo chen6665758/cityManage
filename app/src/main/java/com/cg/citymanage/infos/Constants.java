@@ -56,6 +56,12 @@ public class Constants {
     public static String EVENTCIRCULATED_URL = MAIN_URL + "api/showViewEvent";
     //待办事件列表
     public static String EVENTEVENTWAIT_URL = MAIN_URL + "api/getTaskList";
+    //待办事件详情页面接口
+    public static String EVENTWAITDETAIL_URL = MAIN_URL + "api/reEventInfo";
+    //待办事件详情回复值中，处理部分部门接口
+    public static String EVENTWAITDEP_URL = MAIN_URL + "api/toEmpTree6";
+    //待办事件详情中，处理内容回复的接口
+    public static String EVENTWAITSUBMIT_URL = MAIN_URL + "api/completeTask";
     //催办事件
     public static String EVENTIMPATIENT_URL = MAIN_URL + "api/timeManage";
     //事件详情页事件流程列表接口
@@ -64,6 +70,11 @@ public class Constants {
     public static String EVENTIMPATIENTDETAIL_URL = MAIN_URL + "api/eventHasten";
     //事件中详情页事件流程列表中附件接口
     public static String EVENTDETAILENCLOSURE_URL = MAIN_URL + "api/getEventAccessory";
+
+
+
+    //文件上传接口
+    public static String FILEUPLOAD_URL = MAIN_URL + "api/upLoad/upLoadFile";
 
 
     //升级下载的文件名
