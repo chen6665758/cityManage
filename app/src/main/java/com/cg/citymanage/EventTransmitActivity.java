@@ -129,6 +129,7 @@ public class EventTransmitActivity extends BaseActivity implements View.OnClickL
             public void OnItemClick(View view, int positon) {
 
                 bundle.putString("eventId",list_data.get(positon).getEventId());
+                bundle.putString("title",list_data.get(positon).getEventName());
                 Jump_intent(EventTransmitDetailActivity.class,bundle);
             }
         });
