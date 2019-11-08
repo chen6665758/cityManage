@@ -7,7 +7,6 @@ import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Environment;
 import android.provider.MediaStore;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
@@ -226,6 +225,7 @@ public class EventWaitSubmitActivity extends BaseActivity implements View.OnClic
 
         //创建视频控制器
         mController = new VideoPlayerController(this);
+        mController.setTitle("");
         //设置视频控制器
         video_player.setController(mController);
 
@@ -561,7 +561,6 @@ public class EventWaitSubmitActivity extends BaseActivity implements View.OnClic
                 myUntils.showToast(mContext,"没有采集到音频文件，请重新采集！");
                 return;
             }
-            Log.e("EventWaitSubmit", "行数: 564  voicePath:" + voicePath);
         }
     }
 
@@ -587,7 +586,6 @@ public class EventWaitSubmitActivity extends BaseActivity implements View.OnClic
                             JSONObject json = new JSONObject(data);
                             String resultCode = json.getString("code");
 
-                            Log.e("EventWaitSubmit", "行数: 590  data:" + data);
 
                             if(resultCode.equals("2000"))
                             {
@@ -628,19 +626,17 @@ public class EventWaitSubmitActivity extends BaseActivity implements View.OnClic
                 });
     }
 
-
+    /**
+     * 提交待办处理事件
+     * @param comment            待办意见
+     * @param imgFiles           图片列表
+     */
     private void SumitData(String comment,String imgFiles)
     {
-        Log.e("EventWaitSubmit", "行数: 384  taskId:" + taskId);
-        Log.e("EventWaitSubmit", "行数: 384  outcome:" + eventWaitStatus);
-        Log.e("EventWaitSubmit", "行数: 384  comment:" + comment);
-        Log.e("EventWaitSubmit", "行数: 384  assignee:" + assignee);
-        Log.e("EventWaitSubmit", "行数: 384  imgFile:" +  imgFiles);
-        Log.e("EventWaitSubmit", "行数: 384  vedioFile:" +  vedioFile);
-        Log.e("EventWaitSubmit", "行数: 384  audioFile:" +  audioFile);
         OkGo.<String>post(Constants.EVENTWAITSUBMIT_URL)
                 .tag(this)//
                 .params("access_token", appToken)
+                .params("taskId",taskId)
                 .params("outcome",eventWaitStatus)
                 .params("comment",comment)
                 .params("assignee",assignee)
@@ -656,11 +652,11 @@ public class EventWaitSubmitActivity extends BaseActivity implements View.OnClic
                             JSONObject json = new JSONObject(data);
                             String resultCode = json.getString("code");
 
-                            Log.e("EventWaitSubmit", "行数: 641  data:" + data);
 
                             if(resultCode.equals("2000"))
                             {
-
+                                myUntils.showToast(mContext,eventWaitStatus + "处理成功！");
+                                finish();
                             }else{
                                 myUntils.showToast(mContext,json.getString("message"));
                             }
