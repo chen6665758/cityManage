@@ -176,7 +176,13 @@ public class EventWaitActivity extends BaseActivity implements View.OnClickListe
                                                 myUntils.StringPattern(child.getString("createTime"),"yyyy-MM-dd HH:mm:ss","yyyy-MM-dd"));
                                         model.setEventInfo(child.getString("eventCode") + " " + child.getString("eventTypeName"));
                                         model.setEventLink(child.getString("eventStatus"));
-                                        model.setIsImpatient("9");
+                                        //Log.e("EventWaitActivity.java(onSuccess)", "行数: 179  urgeStatus:" + child.getString("urgeStatus"));
+                                        if("1".equals(child.getString("urgeStatus")))
+                                        {
+                                            model.setIsImpatient("1");
+                                        }else {
+                                            model.setIsImpatient("9");
+                                        }
                                         list_data.add(model);
                                     }
                                     eAdapter.notifyDataSetChanged();
