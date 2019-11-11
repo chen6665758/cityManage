@@ -13,6 +13,7 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -73,6 +74,12 @@ import static com.cg.citymanage.untils.CameraUntils.getImageAbsolutePath;
 public class EventReportActivity extends BaseActivity implements View.OnClickListener,BGASortableNinePhotoLayout.Delegate {
 
     private String appToken;
+    private String lng;                  //经度
+    private String lat;                  //纬度
+    private String messageTitle;         //事件标题
+    private String messageContent;       //事件描述
+    private String gridId;               //网络id
+    private String eventLocation;        //详细地址
 
     /**
      * 标题栏
@@ -87,12 +94,16 @@ public class EventReportActivity extends BaseActivity implements View.OnClickLis
     private TextView txt_bigTypeName;
     private TextView txt_smallTypeName;
     private TextView txt_siteValue;
+    private TextView txt_gridValue;
     private int MAP_CODE = 105;
 
     private String typeId;            //事件类别id
     private String typeBigId;         //事件大类id
     private String typeSmallId;       //事件小类id
-    private String typeNodeId;        //节点id
+
+    private EditText txt_addressValue;
+    private EditText txt_titleValue;
+    private EditText txt_contentValue;
 
     /**
      * 添加图片
@@ -210,6 +221,11 @@ public class EventReportActivity extends BaseActivity implements View.OnClickLis
         txt_smallTypeName.setOnClickListener(this);
         txt_siteValue = (TextView)findViewById(R.id.txt_siteValue);
         txt_siteValue.setOnClickListener(this);
+        txt_gridValue = (TextView)findViewById(R.id.txt_gridValue);
+
+        txt_addressValue = (EditText)findViewById(R.id.txt_addressValue);
+        txt_titleValue = (EditText)findViewById(R.id.txt_titleValue);
+        txt_contentValue = (EditText)findViewById(R.id.txt_contentValue);
 
         //添加图片
         linear_pic = (LinearLayout)findViewById(R.id.linear_pic);
@@ -411,10 +427,57 @@ public class EventReportActivity extends BaseActivity implements View.OnClickLis
                 Log.e("EventReportActivity.java(onClick)", "行数: 411  typeId:" + typeId);
                 Log.e("EventReportActivity.java(onClick)", "行数: 412  typeBigId:" + typeBigId);
                 Log.e("EventReportActivity.java(onClick)", "行数: 413  typeSmallId:" + typeSmallId);
-                Log.e("EventReportActivity.java(onClick)", "行数: 414  typeNodeId:" + typeNodeId);
                 Log.e("EventReportActivity.java(onClick)", "行数: 415  imgFile:" + imgFile.toString());
                 Log.e("EventReportActivity.java(onClick)", "行数: 416  vedioFile:" + vedioFile);
                 Log.e("EventReportActivity.java(onClick)", "行数: 417  audioFile:" + audioFile);
+
+                if(TextUtils.isEmpty(typeSmallId))
+                {
+                    myUntils.showToast(mContext,"请选择事件类别！");
+                    return;
+                }
+
+                gridId = txt_gridValue.getText().toString();
+                gridId = "第二网络";
+                lng = "575215.42774951";
+                lat = "5167223.4071475";
+                if(TextUtils.isEmpty(gridId) || TextUtils.isEmpty(lng) || TextUtils.isEmpty(lat))
+                {
+                    myUntils.showToast(mContext,"所属网格不能为空！");
+                    return;
+                }
+
+                eventLocation = txt_addressValue.getText().toString();
+                if(TextUtils.isEmpty(eventLocation))
+                {
+                    myUntils.showToast(mContext,"详细地址不能为空！");
+                    return;
+                }
+
+                messageTitle = txt_titleValue.getText().toString();
+                if(TextUtils.isEmpty(messageTitle))
+                {
+                    myUntils.showToast(mContext,"事件标题不能为空！");
+                    return;
+                }
+
+                messageContent = txt_contentValue.getText().toString();
+                if(TextUtils.isEmpty(messageContent))
+                {
+                    myUntils.showToast(mContext,"事件描述不能为空！");
+                    return;
+                }
+
+                String imgFiles = "";
+                if(imgFile.size() > 0) {
+                    for (int i = 0; i < imgFile.size(); i++) {
+                        imgFiles += imgFile.get(i) + ",";
+                    }
+                    imgFiles = imgFiles.substring(0,imgFiles.length()-1);
+
+                }
+
+                reportSubmit(gridId,messageTitle,messageContent,imgFiles);
                 break;
         }
     }
@@ -642,5 +705,59 @@ public class EventReportActivity extends BaseActivity implements View.OnClickLis
         {
 
         }
+    }
+
+
+    private void reportSubmit(String gridId,String messageTitle,String messageContent,String imgFils)
+    {
+        OkGo.<String>post(Constants.EVENTREPORTADD_URL)
+                .tag(this)//
+                .params("access_token", appToken)
+                .params("lng",lng)
+                .params("lat",lat)
+                .params("eventTypeId",typeSmallId)
+                .params("messageTitle",messageTitle)
+                .params("messageContent",messageContent)
+                .params("gridId",gridId)
+                .params("eventLocation",eventLocation)
+                .params("imgFile",imgFils)
+                .params("vedioFile",vedioFile)
+                .params("audioFile",audioFile)
+                .execute(new StringCallback() {
+                    @Override
+                    public void onSuccess(Response<String> response) {
+
+                        String data = response.body();//这个就是返回来的结果
+                        Log.e("EventReportActivity.java(onSuccess)", "行数: 729  data:" + data);
+
+                        try {
+                            JSONObject json = new JSONObject(data);
+                            String resultCode = json.getString("code");
+
+                            if(resultCode.equals("2000"))
+                            {
+                                myUntils.showToast(mContext,"事件上传处理成功！");
+                                Jump_intent(EventWaitActivity.class,bundle);
+                                finish();
+                            }else{
+                                myUntils.showToast(mContext,json.getString("message"));
+                            }
+
+
+                        }catch (Exception ex)
+                        {
+                            Log.e("EventWaitSubmit", "行数: 671  ex:" + ex.getMessage());
+                            myUntils.showToast(mContext,"请检查网络是否正常链接！");
+                            return;
+                        }
+
+                    }
+
+                    @Override
+                    public void onError(Response<String> response) {
+                        super.onError(response);
+                        Log.e("EventWaitSubmit", "行数: 681  error:" + response.body());
+                    }
+                });
     }
 }

@@ -223,7 +223,7 @@ public class MapSelectActivity extends BaseActivity implements View.OnClickListe
         Log.e("ThreeActivity", "行数: 154  distanceQuery");
         QueryByDistanceParameters p = new QueryByDistanceParameters();
 
-        p.distance = 250; //必设，查询距离，单位为地理单位
+        p.distance = 500; //必设，查询距离，单位为地理单位
         Geometry g = new Geometry();
         // 构建点地物，必设
         g.type = GeometryType.POINT;
