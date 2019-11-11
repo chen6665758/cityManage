@@ -133,8 +133,11 @@ public class EventReportTypeDialogFragment extends DialogFragment {
         if("3".equals(ertype))
         {
             initEvenData();
-        }else{
-            tempData();
+        }else if("0".equals(ertype) || "1".equals(ertype) || "2".equals(ertype)){
+            initEventType();
+        }else if("4".equals(ertype))
+        {
+            initNoteType();
         }
     }
 
@@ -176,6 +179,124 @@ public class EventReportTypeDialogFragment extends DialogFragment {
                                 }
                             }else{
                                 myUntils.showToast(getContext(),json.getString("message"));
+                            }
+
+
+                        }catch (Exception ex)
+                        {
+                            Log.e("EventReportDialog", "行数: 187  ex:" + ex.getMessage());
+                            myUntils.showToast(getContext(),"请检查网络是否正常链接！");
+                            return;
+                        }
+
+                    }
+
+                    @Override
+                    public void onError(Response<String> response) {
+                        super.onError(response);
+                        Log.e("EventReportDialog", "行数: 196  error:" + response.body());
+                    }
+                });
+    }
+
+    /**
+     * 加载事件类别
+     */
+    private void initEventType()
+    {
+
+        OkGo.<String>post(Constants.EVENTTYPE_URL)
+                .tag(this)//
+                .params("access_token", appToken)
+                .params("typeId",parentType)
+                .execute(new StringCallback() {
+                    @Override
+                    public void onSuccess(Response<String> response) {
+
+                        String data = response.body();//这个就是返回来的结果
+                        try {
+                            JSONObject json = new JSONObject(data);
+                            String resultCode = json.getString("code");
+
+                            if(resultCode.equals("2000"))
+                            {
+                                JSONArray childData = json.getJSONArray("data");
+                                if(childData.length() > 0)
+                                {
+                                    for(int i=0;i<childData.length();i++) {
+                                        JSONObject object = childData.getJSONObject(i);
+                                        EventTypeModel model = new EventTypeModel();
+                                        model.setEventTypeId(object.getString("eventTypeId"));
+                                        model.setEventTypeName(object.getString("eventTypeName"));
+                                        list_data.add(model);
+                                    }
+                                    eAdapter.notifyDataSetChanged();
+                                }else{
+                                    myUntils.showToast(getContext(),"对不起，没有可以选择的部门！");
+                                    dismiss();
+                                }
+                            }else{
+                                myUntils.showToast(getContext(),json.getString("message"));
+                                dismiss();
+                            }
+
+
+                        }catch (Exception ex)
+                        {
+                            Log.e("EventReportDialog", "行数: 187  ex:" + ex.getMessage());
+                            myUntils.showToast(getContext(),"请检查网络是否正常链接！");
+                            return;
+                        }
+
+                    }
+
+                    @Override
+                    public void onError(Response<String> response) {
+                        super.onError(response);
+                        Log.e("EventReportDialog", "行数: 196  error:" + response.body());
+                    }
+                });
+    }
+
+    /**
+     * 加载节点名称类
+     */
+    private void initNoteType()
+    {
+        OkGo.<String>post(Constants.EVENTNOTE_URL)
+                .tag(this)//
+                .params("access_token", appToken)
+                .params("typeId",parentType)
+                .execute(new StringCallback() {
+                    @Override
+                    public void onSuccess(Response<String> response) {
+
+                        String data = response.body();//这个就是返回来的结果
+                        try {
+                            JSONObject json = new JSONObject(data);
+                            Log.e("EventReportTypeDialogFragment.java(onSuccess)", "行数: 274  data:" + data);
+                            String resultCode = json.getString("code");
+
+                            if(resultCode.equals("2000"))
+                            {
+                                JSONArray childData = json.getJSONArray("data");
+                                if(childData.length() > 0)
+                                {
+                                    for(int i=0;i<childData.length();i++) {
+                                        JSONObject object = childData.getJSONObject(i);
+                                        EventTypeModel model = new EventTypeModel();
+                                        model.setEventTypeId(object.getString("id"));
+                                        model.setEventTypeName(object.getString("name"));
+                                        list_data.add(model);
+                                    }
+                                    eAdapter.notifyDataSetChanged();
+                                }else{
+                                    myUntils.showToast(getContext(),"对不起，没有可以选择的部门！");
+                                    dismiss();
+                                }
+                            }else{
+                                myUntils.showToast(getContext(),json.getString("message"));
+                                dismiss();
                             }
 
 
