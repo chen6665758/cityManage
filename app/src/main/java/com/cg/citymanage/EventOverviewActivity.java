@@ -3,6 +3,8 @@ package com.cg.citymanage;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
@@ -45,6 +47,8 @@ import java.util.Date;
 */
 public class EventOverviewActivity extends BaseActivity implements View.OnClickListener {
 
+    private String appToken;
+
     /**
      * 标题栏
      */
@@ -64,6 +68,11 @@ public class EventOverviewActivity extends BaseActivity implements View.OnClickL
     private TextView txt_endTime;
     private int timeType = 0;              //时间类别 0：开始时间 1：结束时间
 
+    private String typeId;            //事件类别id
+    private String typeBigId;         //事件大类id
+    private String typeSmallId;       //事件小类id
+    private String typeNodeId;        //节点id
+
     /**
      * 清空与查询按钮
      */
@@ -75,7 +84,7 @@ public class EventOverviewActivity extends BaseActivity implements View.OnClickL
         super.onCreate(savedInstanceState);
 
         mContext = this;
-
+        appToken = mSharedPreferences.getString("appToken","");
         initControls();
     }
 
@@ -163,51 +172,67 @@ public class EventOverviewActivity extends BaseActivity implements View.OnClickL
                 break;
             //选择事件分类
             case R.id.txt_typeName:
-                EventReportTypeDialogFragment tDialog = EventReportTypeDialogFragment.newInstance("0","","","");
+                EventReportTypeDialogFragment tDialog = EventReportTypeDialogFragment.newInstance("0","",appToken,"");
                 tDialog.show(getSupportFragmentManager(),"事件分类");
                 tDialog.setOnItemClickLitener(new EventReportTypeDialogFragment.OnItemClickLitener() {
                     @Override
                     public void OnItemClick(View view, String EventTypeId, String EventTypeName) {
-
+                        //Log.e("EventOverview", "行数: 174  EventTypeId:" + EventTypeId + " EventTypeName:" + EventTypeName);
+                        txt_typeName.setText(EventTypeName);
+                        typeId = EventTypeId;
                     }
                 });
                 break;
             //事件大类
             case R.id.txt_bigTypeName:
-                EventReportTypeDialogFragment bDialog = EventReportTypeDialogFragment.newInstance("1","","","");
-                bDialog.show(getSupportFragmentManager(),"事件大类");
-                bDialog.setOnItemClickLitener(new EventReportTypeDialogFragment.OnItemClickLitener() {
-                    @Override
-                    public void OnItemClick(View view, String EventTypeId, String EventTypeName) {
 
-                    }
-                });
+                if(TextUtils.isEmpty(typeId))
+                {
+                    myUntils.showToast(mContext,"请先选择事件分类！");
+                }else {
+                    EventReportTypeDialogFragment bDialog = EventReportTypeDialogFragment.newInstance("1", typeId, appToken, "");
+                    bDialog.show(getSupportFragmentManager(), "事件大类");
+                    bDialog.setOnItemClickLitener(new EventReportTypeDialogFragment.OnItemClickLitener() {
+                        @Override
+                        public void OnItemClick(View view, String EventTypeId, String EventTypeName) {
+                            txt_bigTypeName.setText(EventTypeName);
+                            typeBigId = EventTypeId;
+                        }
+                    });
+                }
                 break;
             //事件小类
             case R.id.txt_smallTypeName:
-                EventReportTypeDialogFragment sDialog = EventReportTypeDialogFragment.newInstance("2","","","");
-                sDialog.show(getSupportFragmentManager(),"事件小类");
-                sDialog.setOnItemClickLitener(new EventReportTypeDialogFragment.OnItemClickLitener() {
-                    @Override
-                    public void OnItemClick(View view, String EventTypeId, String EventTypeName) {
-
-                    }
-                });
+                if(TextUtils.isEmpty(typeBigId))
+                {
+                    myUntils.showToast(mContext,"请先选择事件大类！");
+                }else {
+                    EventReportTypeDialogFragment sDialog = EventReportTypeDialogFragment.newInstance("2", typeBigId, appToken, "");
+                    sDialog.show(getSupportFragmentManager(), "事件小类");
+                    sDialog.setOnItemClickLitener(new EventReportTypeDialogFragment.OnItemClickLitener() {
+                        @Override
+                        public void OnItemClick(View view, String EventTypeId, String EventTypeName) {
+                            txt_smallTypeName.setText(EventTypeName);
+                            typeSmallId = EventTypeId;
+                        }
+                    });
+                }
                 break;
             //节点名称
             case R.id.txt_nodeName:
-                EventReportTypeDialogFragment nDialog = EventReportTypeDialogFragment.newInstance("2","","","");
+                EventReportTypeDialogFragment nDialog = EventReportTypeDialogFragment.newInstance("4","",appToken,"");
                 nDialog.show(getSupportFragmentManager(),"节点名称");
                 nDialog.setOnItemClickLitener(new EventReportTypeDialogFragment.OnItemClickLitener() {
                     @Override
                     public void OnItemClick(View view, String EventTypeId, String EventTypeName) {
-
+                        txt_nodeName.setText(EventTypeName);
+                        typeNodeId = EventTypeId;
                     }
                 });
                 break;
             //所属网络
             case R.id.txt_gridValue:
-
+                Jump_intent(MapSelectActivity.class,bundle);
                 break;
             //开始时间
             case R.id.txt_startTime:
