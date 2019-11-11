@@ -234,7 +234,7 @@
             android:layout_weight="1"
             android:layout_height="40dp"
             android:background="@drawable/btnbgblue1"
-            android:text="上报事件"
+            android:text="查询"
             android:textColor="@color/white"
             android:layout_marginLeft="15dp"
             android:layout_marginRight="15dp"

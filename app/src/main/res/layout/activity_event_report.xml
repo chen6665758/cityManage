@@ -195,6 +195,7 @@
                         android:layout_marginRight="@dimen/ListItemMarginLeftRight"
                         android:layout_toRightOf="@+id/txt_address"
                         android:background="@null"
+                        android:textSize="14sp"
                         android:gravity="left|center_vertical" />
 
                 </RelativeLayout>
@@ -226,11 +227,11 @@
                         android:id="@+id/txt_titleValue"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-
                         android:layout_marginRight="@dimen/ListItemMarginLeftRight"
                         android:layout_toRightOf="@+id/txt_title"
                         android:background="@null"
-                        android:gravity="left|center_vertical" />
+                        android:gravity="left|center_vertical"
+                        android:textSize="14sp"/>
                 </RelativeLayout>
 
                 <View
@@ -259,8 +260,10 @@
                         android:layout_marginRight="@dimen/ListItemMarginLeftRight"
                         android:layout_toRightOf="@+id/txt_content"
                         android:background="@null"
-                        android:gravity="left|center_vertical"
-                        android:minLines="3" />
+                        android:layout_marginTop="8dp"
+                        android:gravity="left"
+                        android:minLines="3"
+                        android:textSize="14sp"/>
                 </RelativeLayout>
 
             </LinearLayout>
@@ -408,6 +411,7 @@
         android:background="@color/white">
 
         <Button
+            android:id="@+id/btn_reportSubmit"
             android:layout_width="match_parent"
             android:layout_height="40dp"
             android:background="@drawable/btnbgblue1"
