@@ -89,6 +89,7 @@ public class EventReportTypeDialogFragment extends DialogFragment {
         parentType = getArguments().getString("parentType");
         appToken = getArguments().getString("appToken");
         btnName = getArguments().getString("btnName");
+
     }
 
     @Nullable

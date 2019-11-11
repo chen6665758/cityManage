@@ -3,6 +3,7 @@ package com.cg.citymanage;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
@@ -10,8 +11,16 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.cg.citymanage.Adapters.EventOverviewListAdpater;
+import com.cg.citymanage.infos.Constants;
 import com.cg.citymanage.models.EventListModel;
+import com.cg.citymanage.untils.myUntils;
+import com.lzy.okgo.OkGo;
+import com.lzy.okgo.callback.StringCallback;
+import com.lzy.okgo.model.Response;
 import com.wuxiaolong.pullloadmorerecyclerview.PullLoadMoreRecyclerView;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -45,6 +54,13 @@ import java.util.List;
 */
 public class EventOverviewListActivity extends BaseActivity implements View.OnClickListener {
 
+    private String appToken;
+    private String eventTypeId = "";
+    private String gridId = "";
+    private String eventStatus = "";
+    private String baginDate = "";
+    private String endDate = "";
+
     /**
      * 标题栏
      */
@@ -70,7 +86,12 @@ public class EventOverviewListActivity extends BaseActivity implements View.OnCl
 
         mContext = this;
 
-        Log.e("EventOverviewList", "行数: 73  eventType:" + getIntent().getStringExtra("eventType"));
+        appToken = mSharedPreferences.getString("appToken","");
+        eventTypeId = getIntent().getStringExtra("eventTypeId");
+        gridId = getIntent().getStringExtra("gridId");
+        eventStatus = getIntent().getStringExtra("eventStatus");
+        baginDate = getIntent().getStringExtra("baginDate");
+        endDate = getIntent().getStringExtra("endDate");
 
         initControls();
     }
@@ -104,11 +125,14 @@ public class EventOverviewListActivity extends BaseActivity implements View.OnCl
                 //下拉刷新
                 pageNo = 1;
                 list_data.clear();
+                initData();
             }
 
             @Override
             public void onLoadMore() {
                 //上拉加载更多
+                pageNo++;
+                initData();
             }
         });
 
@@ -117,6 +141,7 @@ public class EventOverviewListActivity extends BaseActivity implements View.OnCl
             public void OnItemClick(View view, int positon) {
 
                 bundle.putString("eventId",list_data.get(positon).getEventId());
+                bundle.putString("title",list_data.get(positon).getEventName());
                 Jump_intent(EventOverviewDetailActivity.class,bundle);
             }
         });
@@ -124,7 +149,86 @@ public class EventOverviewListActivity extends BaseActivity implements View.OnCl
         //无数据时显示
         rela_NoData = (RelativeLayout)findViewById(R.id.rela_NoData);
 
-        tempData();
+        //tempData();
+        initData();
+    }
+
+    /**
+     * 初始化数据
+     */
+    private void initData()
+    {
+        progress_Dialog.show();
+        OkGo.<String>post(Constants.EVENTOVERVIEW_URL)
+                .tag(this)//
+                .params("access_token", appToken)
+                .params("eventTypeId",eventTypeId)
+                .params("gridId",gridId)
+                .params("eventStatus",eventStatus)
+                .params("baginDate",baginDate)
+                .params("endDate",endDate)
+                .params("page",String.valueOf(pageNo))
+                .params("pageSize",Constants.PAGESIZE)
+                .execute(new StringCallback() {
+                    @Override
+                    public void onSuccess(Response<String> response) {
+                        //注意这里已经是在主线程了
+                        progress_Dialog.dismiss();
+                        String data = response.body();
+                        try {
+                            JSONObject json = new JSONObject(data);
+                            String resultCode = json.getString("code");
+                            if(resultCode.equals("2000"))
+                            {
+                                JSONArray array = json.getJSONArray("data");
+                                if(array.length() > 0)
+                                {
+                                    for(int i = 0;i<array.length();i++) {
+                                        JSONObject child = array.getJSONObject(i);
+                                        EventListModel model = new EventListModel();
+                                        model.setEventId(child.getString("id"));
+                                        model.setEventName(child.getString("eventTitle"));
+                                        model.setEventTime(TextUtils.isEmpty(child.getString("createTime")) ? "" :
+                                                myUntils.StringPattern(child.getString("createTime"),"yyyy-MM-dd HH:mm:ss","yyyy-MM-dd"));
+                                        model.setEventInfo(child.getString("eventCode") + " " + child.getString("eventTypeName"));
+                                        model.setEventLink(child.getString("eventStatus"));
+                                        model.setIsImpatient("9");
+                                        list_data.add(model);
+                                    }
+                                    eAdapter.notifyDataSetChanged();
+
+                                }else{
+                                    myUntils.showToast(mContext,"没有新的事件了！");
+                                }
+
+                            }else{
+                                myUntils.showToast(mContext,json.getString("message"));
+                            }
+
+                            //根据数据数量，来判断是否给出无数据提示
+                            if(list_data.size() > 0)
+                            {
+                                rela_NoData.setVisibility(View.GONE);
+                            }else{
+                                rela_NoData.setVisibility(View.VISIBLE);
+                            }
+                        }catch (Exception ex)
+                        {
+                            Log.e("EventOverviewList", "行数: 212  ex:" + ex.getMessage());
+                            myUntils.showToast(mContext,"请检查网络是否正常链接！");
+                            return;
+                        }
+
+                        pmr_event.setPullLoadMoreCompleted();
+                    }
+
+                    @Override
+                    public void onError(Response<String> response) {
+                        super.onError(response);
+                        progress_Dialog.dismiss();
+                        Log.e("EventOverviewList", "行数: 224  error:" + response.body());
+                    }
+                });
     }
 
     @Override

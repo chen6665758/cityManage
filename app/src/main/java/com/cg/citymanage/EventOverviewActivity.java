@@ -256,8 +256,39 @@ public class EventOverviewActivity extends BaseActivity implements View.OnClickL
                 break;
             //查询跳转页面
             case R.id.btn_search:
-                bundle.putString("eventType","事件");
-                Jump_intent(EventOverviewListActivity.class,bundle);
+                String eventTypeId = "";
+                String gridId = txt_gridValue.getText().toString();
+                String eventStatus = "";
+                String baginDate = txt_startTime.getText().toString();
+                String endDate = txt_endTime.getText().toString();
+                if(!TextUtils.isEmpty(typeSmallId))
+                {
+                    eventTypeId = typeSmallId;
+                }else if(!TextUtils.isEmpty(typeBigId))
+                {
+                    eventTypeId = typeBigId;
+                }else if(!TextUtils.isEmpty(typeId))
+                {
+                    eventTypeId = typeId;
+                }
+
+                if(!TextUtils.isEmpty(typeNodeId))
+                {
+                    eventStatus = typeNodeId;
+                }
+
+                if(TextUtils.isEmpty(eventTypeId) && TextUtils.isEmpty(gridId) && TextUtils.isEmpty(eventStatus) &&
+                        TextUtils.isEmpty(baginDate) && TextUtils.isEmpty(endDate))
+                {
+                    myUntils.showToast(mContext,"最少要选择一个查询条件！");
+                }else {
+                    bundle.putString("eventTypeId", eventTypeId);
+                    bundle.putString("gridId", gridId);
+                    bundle.putString("eventStatus",eventStatus);
+                    bundle.putString("baginDate",baginDate);
+                    bundle.putString("endDate",endDate);
+                    Jump_intent(EventOverviewListActivity.class, bundle);
+                }
                 break;
         }
     }

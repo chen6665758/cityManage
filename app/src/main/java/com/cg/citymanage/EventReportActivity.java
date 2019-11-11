@@ -9,8 +9,10 @@ import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -18,8 +20,13 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.cg.citymanage.infos.Constants;
 import com.cg.citymanage.untils.myUntils;
+import com.lzy.okgo.OkGo;
+import com.lzy.okgo.callback.StringCallback;
+import com.lzy.okgo.model.Response;
 
+import org.json.JSONObject;
 import org.w3c.dom.Text;
 import org.yczbj.ycvideoplayerlib.constant.ConstantKeys;
 import org.yczbj.ycvideoplayerlib.controller.VideoPlayerController;
@@ -28,6 +35,7 @@ import org.yczbj.ycvideoplayerlib.player.VideoPlayer;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.List;
 
 import cn.bingoogolapple.photopicker.activity.BGAPhotoPickerActivity;
 import cn.bingoogolapple.photopicker.activity.BGAPhotoPickerPreviewActivity;
@@ -64,6 +72,8 @@ import static com.cg.citymanage.untils.CameraUntils.getImageAbsolutePath;
 */
 public class EventReportActivity extends BaseActivity implements View.OnClickListener,BGASortableNinePhotoLayout.Delegate {
 
+    private String appToken;
+
     /**
      * 标题栏
      */
@@ -79,11 +89,17 @@ public class EventReportActivity extends BaseActivity implements View.OnClickLis
     private TextView txt_siteValue;
     private int MAP_CODE = 105;
 
+    private String typeId;            //事件类别id
+    private String typeBigId;         //事件大类id
+    private String typeSmallId;       //事件小类id
+    private String typeNodeId;        //节点id
+
     /**
      * 添加图片
      */
     private LinearLayout linear_pic;
     private BGASortableNinePhotoLayout mPhotosSnpl;
+    private List<String> imgFile;             //图片地址
     private int RC_CHOOSE_PHOTO = 101;
     private int RC_PHOTO_PREVIEW = 102;
 
@@ -97,6 +113,7 @@ public class EventReportActivity extends BaseActivity implements View.OnClickLis
     private VideoPlayerController mController;
     private ImageView img_videoDel;
     private RelativeLayout rela_video;
+    private String vedioFile;                 //视频地址
 
     /**
      * 添加音频
@@ -110,17 +127,25 @@ public class EventReportActivity extends BaseActivity implements View.OnClickLis
     private AnimationDrawable animationDrawable;
     private MediaPlayer mediaPlayer;
     private ImageView img_voiceDel;
+    private String audioFile;                 //音频地址
+
+    /**
+     * 提交事件
+     */
+    private Button btn_reportSubmit;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         mContext = this;
-
+        appToken = mSharedPreferences.getString("appToken","");
         //权限的设置
         myUntils.JudgePermission(this,mContext,"您拒绝了相机功能，拍照等功能将无法使用！",Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA);
 
         initControls();
+
+        imgFile = new ArrayList<>();
     }
 
     @Override
@@ -222,6 +247,9 @@ public class EventReportActivity extends BaseActivity implements View.OnClickLis
         img_voiceDel = (ImageView)findViewById(R.id.img_voiceDel);
         img_voiceDel.setOnClickListener(this);
 
+        //事件提交
+        btn_reportSubmit = (Button)findViewById(R.id.btn_reportSubmit);
+        btn_reportSubmit.setOnClickListener(this);
     }
 
     @Override
@@ -239,36 +267,49 @@ public class EventReportActivity extends BaseActivity implements View.OnClickLis
                 break;
             //事件分类选择框
             case R.id.txt_typeName:
-                EventReportTypeDialogFragment tDialog = EventReportTypeDialogFragment.newInstance("0","","","");
+                EventReportTypeDialogFragment tDialog = EventReportTypeDialogFragment.newInstance("0","",appToken,"");
                 tDialog.show(getSupportFragmentManager(),"事件分类");
                 tDialog.setOnItemClickLitener(new EventReportTypeDialogFragment.OnItemClickLitener() {
                     @Override
                     public void OnItemClick(View view, String EventTypeId, String EventTypeName) {
-
+                        txt_typeName.setText(EventTypeName);
+                        typeId = EventTypeId;
                     }
                 });
                 break;
             //事件大类选择框
             case R.id.txt_bigTypeName:
-                EventReportTypeDialogFragment bDialog = EventReportTypeDialogFragment.newInstance("1","","","");
-                bDialog.show(getSupportFragmentManager(),"事件大类");
-                bDialog.setOnItemClickLitener(new EventReportTypeDialogFragment.OnItemClickLitener() {
-                    @Override
-                    public void OnItemClick(View view, String EventTypeId, String EventTypeName) {
-
-                    }
-                });
+                if(TextUtils.isEmpty(typeId))
+                {
+                    myUntils.showToast(mContext,"请先选择事件分类！");
+                }else {
+                    EventReportTypeDialogFragment bDialog = EventReportTypeDialogFragment.newInstance("1", typeId, appToken, "");
+                    bDialog.show(getSupportFragmentManager(), "事件大类");
+                    bDialog.setOnItemClickLitener(new EventReportTypeDialogFragment.OnItemClickLitener() {
+                        @Override
+                        public void OnItemClick(View view, String EventTypeId, String EventTypeName) {
+                            txt_bigTypeName.setText(EventTypeName);
+                            typeBigId = EventTypeId;
+                        }
+                    });
+                }
                 break;
             //事件小类选择框
             case R.id.txt_smallTypeName:
-                EventReportTypeDialogFragment sDialog = EventReportTypeDialogFragment.newInstance("2","","","");
-                sDialog.show(getSupportFragmentManager(),"事件小类");
-                sDialog.setOnItemClickLitener(new EventReportTypeDialogFragment.OnItemClickLitener() {
-                    @Override
-                    public void OnItemClick(View view, String EventTypeId, String EventTypeName) {
-
-                    }
-                });
+                if(TextUtils.isEmpty(typeBigId))
+                {
+                    myUntils.showToast(mContext,"请先选择事件大类！");
+                }else {
+                    EventReportTypeDialogFragment sDialog = EventReportTypeDialogFragment.newInstance("2", typeBigId, appToken, "");
+                    sDialog.show(getSupportFragmentManager(), "事件小类");
+                    sDialog.setOnItemClickLitener(new EventReportTypeDialogFragment.OnItemClickLitener() {
+                        @Override
+                        public void OnItemClick(View view, String EventTypeId, String EventTypeName) {
+                            txt_smallTypeName.setText(EventTypeName);
+                            typeSmallId = EventTypeId;
+                        }
+                    });
+                }
                 break;
             //点选择地图
             case R.id.txt_siteValue:
@@ -279,35 +320,43 @@ public class EventReportActivity extends BaseActivity implements View.OnClickLis
                 break;
             //图片添加
             case R.id.linear_pic:
-                if(myUntils.checkGalleryPermission(mContext,EventReportActivity.this,Manifest.permission.WRITE_EXTERNAL_STORAGE) &&
-                        myUntils.checkGalleryPermission(mContext,EventReportActivity.this,Manifest.permission.CAMERA) )
+                if(imgFile.size() > 2)
                 {
-                    if(mPhotosSnpl.getData().size() >= 3)
-                    {
-                        myUntils.showToast(mContext,"图片最多只能上传三张！");
-                        return;
-                    }else {
-                        choicePhotoWrapper();
+                    myUntils.showToast(mContext, "图片最多只能上传三张！");
+                }else {
+                    if (myUntils.checkGalleryPermission(mContext, EventReportActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE) &&
+                            myUntils.checkGalleryPermission(mContext, EventReportActivity.this, Manifest.permission.CAMERA)) {
+                        if (mPhotosSnpl.getData().size() >= 3) {
+                            myUntils.showToast(mContext, "图片最多只能上传三张！");
+                            return;
+                        } else {
+                            choicePhotoWrapper();
+                        }
+                    } else {
+                        //权限的设置
+                        myUntils.JudgePermission(this, mContext, "您拒绝了相机功能，拍照等功能将无法使用！", Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA);
                     }
-                }else{
-                    //权限的设置
-                    myUntils.JudgePermission(this,mContext,"您拒绝了相机功能，拍照等功能将无法使用！",Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA);
                 }
                 break;
             //视频添加
             case R.id.linear_video:
-                if(myUntils.checkGalleryPermission(mContext,EventReportActivity.this,Manifest.permission.WRITE_EXTERNAL_STORAGE) &&
-                        myUntils.checkGalleryPermission(mContext,EventReportActivity.this,Manifest.permission.CAMERA))
+                if(!TextUtils.isEmpty(vedioFile))
                 {
-                    Intent intent=new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
-                    intent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY,0);
-                    //好使
-                    intent.putExtra(MediaStore.EXTRA_SIZE_LIMIT,10485760L);
-                    intent.putExtra(MediaStore.EXTRA_DURATION_LIMIT,10);
-                    startActivityForResult(intent,VIDEO_CAPTURE);
-                }else{
-                    //权限的设置
-                    myUntils.JudgePermission(this,mContext,"您拒绝了相机功能，拍照等功能将无法使用！",Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA);
+                    myUntils.showToast(mContext, "视频只能上传一个！");
+
+                }else {
+                    if (myUntils.checkGalleryPermission(mContext, EventReportActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE) &&
+                            myUntils.checkGalleryPermission(mContext, EventReportActivity.this, Manifest.permission.CAMERA)) {
+                        Intent intent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
+                        intent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 0);
+                        //好使
+                        intent.putExtra(MediaStore.EXTRA_SIZE_LIMIT, 10485760L);
+                        intent.putExtra(MediaStore.EXTRA_DURATION_LIMIT, 10);
+                        startActivityForResult(intent, VIDEO_CAPTURE);
+                    } else {
+                        //权限的设置
+                        myUntils.JudgePermission(this, mContext, "您拒绝了相机功能，拍照等功能将无法使用！", Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA);
+                    }
                 }
                 break;
             //视频关闭按钮
@@ -319,14 +368,20 @@ public class EventReportActivity extends BaseActivity implements View.OnClickLis
                     public void OnItemClick(View view, int positon) {
                         videoPath = "";
                         rela_video.setVisibility(View.GONE);
+                        vedioFile = "";
                     }
                 });
                 break;
             //添加音频
             case R.id.linear_voice:
-                Intent intent = new Intent();
-                intent.setClass(EventReportActivity.this,SoundRecordingActivity.class);
-                startActivityForResult(intent,VOICE_CODE,bundle);
+                if(!TextUtils.isEmpty(audioFile))
+                {
+                    myUntils.showToast(mContext, "音频只能上传一个！");
+                }else {
+                    Intent intent = new Intent();
+                    intent.setClass(EventReportActivity.this, SoundRecordingActivity.class);
+                    startActivityForResult(intent, VOICE_CODE, bundle);
+                }
                 break;
             //播放音频
             case R.id.rela_voiceplay:
@@ -346,9 +401,20 @@ public class EventReportActivity extends BaseActivity implements View.OnClickLis
                     public void OnItemClick(View view, int positon) {
                         rela_voice.setVisibility(View.GONE);
                         voicePath = "";
+                        audioFile = "";
                     }
                 });
 
+                break;
+            //提交按钮
+            case R.id.btn_reportSubmit:
+                Log.e("EventReportActivity.java(onClick)", "行数: 411  typeId:" + typeId);
+                Log.e("EventReportActivity.java(onClick)", "行数: 412  typeBigId:" + typeBigId);
+                Log.e("EventReportActivity.java(onClick)", "行数: 413  typeSmallId:" + typeSmallId);
+                Log.e("EventReportActivity.java(onClick)", "行数: 414  typeNodeId:" + typeNodeId);
+                Log.e("EventReportActivity.java(onClick)", "行数: 415  imgFile:" + imgFile.toString());
+                Log.e("EventReportActivity.java(onClick)", "行数: 416  vedioFile:" + vedioFile);
+                Log.e("EventReportActivity.java(onClick)", "行数: 417  audioFile:" + audioFile);
                 break;
         }
     }
@@ -383,6 +449,7 @@ public class EventReportActivity extends BaseActivity implements View.OnClickLis
     @Override
     public void onClickDeleteNinePhotoItem(BGASortableNinePhotoLayout sortableNinePhotoLayout, View view, int position, String model, ArrayList<String> models) {
         mPhotosSnpl.removeItem(position);
+        imgFile.remove(position);
     }
 
     @Override
@@ -403,7 +470,11 @@ public class EventReportActivity extends BaseActivity implements View.OnClickLis
     }
 
 
-
+    /**
+     * 播放音频
+     * @param path               音频路径
+     * @throws Exception
+     */
     private void playVoice(String path) throws Exception {
         if ("".equals(path)) {
             Toast.makeText(mContext, "路径不能为空", Toast.LENGTH_LONG).show();
@@ -469,13 +540,78 @@ public class EventReportActivity extends BaseActivity implements View.OnClickLis
 
 
 
+    /**
+     * 上传文件
+     * @param file                         文件
+     * @param accessoryType                文件分类 1图片 2视频 3音频
+     */
+    private void upLoadFile(File file, final String accessoryType)
+    {
+        progress_Dialog.show();
+        OkGo.<String>post(Constants.FILEUPLOAD_URL)
+                .tag(this)//
+                .params("access_token", appToken)
+                .params("upLoadFile",file)
+                .params("accessoryType",accessoryType)
+                .execute(new StringCallback() {
+                    @Override
+                    public void onSuccess(Response<String> response) {
+                        progress_Dialog.dismiss();
+                        String data = response.body();//这个就是返回来的结果
+                        try {
+                            JSONObject json = new JSONObject(data);
+                            String resultCode = json.getString("code");
+
+
+                            if(resultCode.equals("2000"))
+                            {
+
+                                JSONObject object = json.getJSONObject("data");
+
+                                if("1".equals(accessoryType))
+                                {
+                                    imgFile.add(object.getString("eventAccessoryId"));
+
+                                }else if("2".equals(accessoryType))
+                                {
+                                    vedioFile = object.getString("eventAccessoryId");
+                                    video_player.setUp(object.getString("accessoryPath"),null);
+                                }else if("3".equals(accessoryType))
+                                {
+                                    audioFile = object.getString("eventAccessoryId");
+                                }
+                            }else{
+                                myUntils.showToast(mContext,json.getString("message"));
+                            }
+
+
+                        }catch (Exception ex)
+                        {
+                            Log.e("EventWaitSubmit", "行数: 617  ex:" + ex.getMessage());
+                            myUntils.showToast(mContext,"请检查网络是否正常链接！");
+                            return;
+                        }
+
+                    }
+
+                    @Override
+                    public void onError(Response<String> response) {
+                        super.onError(response);
+                        Log.e("EventWaitSubmit", "行数: 626  error:" + response.body());
+                    }
+                });
+    }
+
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK && requestCode == RC_CHOOSE_PHOTO) {
             mPhotosSnpl.addMoreData(BGAPhotoPickerActivity.getSelectedPhotos(data));
-
-            Log.e("EventReportActivity", "行数: 185  data:" + mPhotosSnpl.getData().toString());
+            for(int i=0;i<mPhotosSnpl.getData().size();i++) {
+                File file = new File(mPhotosSnpl.getData().get(i));
+                upLoadFile(file, "1");
+            }
 
         } else if (requestCode == RC_PHOTO_PREVIEW) {
             mPhotosSnpl.setData(BGAPhotoPickerPreviewActivity.getSelectedPhotos(data));
@@ -485,12 +621,16 @@ public class EventReportActivity extends BaseActivity implements View.OnClickLis
             String mVideoPath = getImageAbsolutePath(EventReportActivity.this,videoUri);
             videoPath = mVideoPath;
             rela_video.setVisibility(View.VISIBLE);
-            video_player.setUp(mVideoPath,null);
+            //video_player.setUp(mVideoPath,null);
+            File vfile = new File(mVideoPath);
+            upLoadFile(vfile,"2");
         } else if(resultCode==RESULT_OK && requestCode == VOICE_CODE)
         {
             voicePath = data.getStringExtra("sPath");
             if(!"".equals(voicePath))
             {
+                File afile = new File(voicePath);
+                upLoadFile(afile,"3");
                 rela_voice.setVisibility(View.VISIBLE);
 
             }else{
