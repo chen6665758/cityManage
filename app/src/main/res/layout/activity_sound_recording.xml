@@ -32,48 +32,61 @@
         android:layout_below="@+id/rela_voiceview"
         android:layout_marginTop="50dp">
 
-        <RelativeLayout
+        <LinearLayout
             android:id="@+id/rela_startvoice"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center">
-
-            <Button
-                android:id="@+id/btn_soundstart"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="开始录音" />
+            android:gravity="center"
+            android:orientation="vertical">
 
             <Chronometer
                 android:id="@+id/tv_play"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_toRightOf="@+id/btn_soundstart"
                 android:background="@null"
-                android:layout_centerVertical="true"
+                android:layout_centerInParent="true"
                 android:text="10'"
                 android:textColor="#000000"
                 android:textSize="12sp" />
-        </RelativeLayout>
 
 
-        <Button
-            android:id="@+id/btn_backSound"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/rela_startvoice"
-            android:text="提交返回数据" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:layout_below="@+id/tv_play">
+                <Button
+                    android:id="@+id/btn_soundstart"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/btnbgblue1"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:text="开始录音"
+                    android:textColor="@color/white"/>
+                <Button
+                    android:id="@+id/btn_backSound"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/rela_startvoice"
+                    android:background="@drawable/btnbgblue1"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:textColor="@color/white"
+                    android:visibility="gone"
+                    android:text="提交返回数据" />
+            </LinearLayout>
+
+
+        </LinearLayout>
+
+
+
 
     </RelativeLayout>
 
 
-
-
-    <Button
-        android:id="@+id/btn_playsound"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:text="播放录音" />
 
 </RelativeLayout>
