@@ -59,7 +59,6 @@ public class SoundRecordingActivity extends BaseActivity implements View.OnClick
     private TextView title_textview;
 
     private Button btn_soundstart;
-    private Button btn_playsound;
     private Button btn_backSound;
 
     private File mRecAudioFile; // 录制的音频文件
@@ -113,6 +112,7 @@ public class SoundRecordingActivity extends BaseActivity implements View.OnClick
                 if(playstatus == 0)
                 {
                     btn_soundstart.setText("停止录音");
+                    btn_backSound.setVisibility(View.GONE);
                     playstatus = 1;
                     //startSound();
                     if (mMediaRecorder == null) {
@@ -140,23 +140,13 @@ public class SoundRecordingActivity extends BaseActivity implements View.OnClick
                     animationDrawable.start();
                 }else{
                     btn_soundstart.setText("开始录音");
+                    btn_backSound.setVisibility(View.VISIBLE);
                     stopSound();
                 }
             }
         });
 
-        btn_playsound = (Button)findViewById(R.id.btn_playsound);
-        btn_playsound.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                try {
-                    play(mRecAudioPath.getAbsolutePath()+ File.separator + mRecAudioNmae);
-                } catch (Exception e) {
-                    Log.e("SoundRecordingActivity", "行数: 104  error:" + e.getMessage());
-                    e.printStackTrace();
-                }
-            }
-        });
+
 
         btn_backSound = (Button)findViewById(R.id.btn_backSound);
         btn_backSound.setOnClickListener(new View.OnClickListener() {
