@@ -52,6 +52,7 @@
                         android:layout_toRightOf="@+id/txt_type"
                         android:background="@null"
                         android:layout_marginTop="10dp"
+                        android:layout_marginLeft="10dp"
                         android:hint="请输入信息标题"
                         android:textSize="14sp"
                         android:gravity="left" />
@@ -111,6 +112,7 @@
                         android:layout_height="70dp"
                         android:layout_marginTop="8dp"
                         android:layout_marginRight="@dimen/ListItemMarginLeftRight"
+                        android:layout_marginLeft="10dp"
                         android:layout_toRightOf="@+id/txt_content"
                         android:background="@null"
                         android:gravity="left"
@@ -266,6 +268,7 @@
         android:background="@color/white">
 
         <Button
+            android:id="@+id/btn_addInfo"
             android:layout_width="match_parent"
             android:layout_height="40dp"
             android:background="@drawable/btnbgblue1"

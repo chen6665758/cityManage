@@ -32,7 +32,7 @@
                 android:id="@+id/txt_infoTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="什么是 Service"
+                android:text=""
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="20dp"
                 android:textSize="18sp"
@@ -45,7 +45,7 @@
                 android:layout_centerHorizontal="true"
                 android:layout_below="@+id/txt_infoTitle"
                 android:layout_marginTop="5dp"
-                android:text="2019-11-04 15:25:11"/>
+                android:text=""/>
             <TextView
                 android:id="@+id/txt_infoContent"
                 android:layout_width="match_parent"
@@ -54,11 +54,7 @@
                 android:layout_marginTop="10dp"
                 android:layout_marginLeft="20dp"
                 android:layout_marginRight="20dp"
-                android:text="最近微博上忽然流出三段李小璐和PGone的同框视频，看起来应该是在拍抖音。
-PGone很快回应称，“这可怕的圈子你们想象不到。为什么去年在抖音拍的视频没有任何外传的前提下会被放出来还没有logo？为什么我名字一直上不了热搜这次突然上了？这后面到底谁在操作？”最近微博上忽然流出三段李小璐和PGone的同框视频，看起来应该是在拍抖音。
-PGone很快回应称，“这可怕的圈子你们想象不到。为什么去年在抖音拍的视频没有任何外传的前提下会被放出来还没有logo？为什么我名字一直上不了热搜这次突然上了？这后面到底谁在操作？”最近微博上忽然流出三段李小璐和PGone的同框视频，看起来应该是在拍抖音。
-PGone很快回应称，“这可怕的圈子你们想象不到。为什么去年在抖音拍的视频没有任何外传的前提下会被放出来还没有logo？为什么我名字一直上不了热搜这次突然上了？这后面到底谁在操作？”最近微博上忽然流出三段李小璐和PGone的同框视频，看起来应该是在拍抖音。
-PGone很快回应称，“这可怕的圈子你们想象不到。为什么去年在抖音拍的视频没有任何外传的前提下会被放出来还没有logo？为什么我名字一直上不了热搜这次突然上了？这后面到底谁在操作？”"/>
+                android:text=""/>
 
             <TextView
                 android:id="@+id/txt_other"
