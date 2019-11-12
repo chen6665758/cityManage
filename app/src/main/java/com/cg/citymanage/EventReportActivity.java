@@ -424,12 +424,12 @@ public class EventReportActivity extends BaseActivity implements View.OnClickLis
                 break;
             //提交按钮
             case R.id.btn_reportSubmit:
-                Log.e("EventReportActivity.java(onClick)", "行数: 411  typeId:" + typeId);
-                Log.e("EventReportActivity.java(onClick)", "行数: 412  typeBigId:" + typeBigId);
-                Log.e("EventReportActivity.java(onClick)", "行数: 413  typeSmallId:" + typeSmallId);
-                Log.e("EventReportActivity.java(onClick)", "行数: 415  imgFile:" + imgFile.toString());
-                Log.e("EventReportActivity.java(onClick)", "行数: 416  vedioFile:" + vedioFile);
-                Log.e("EventReportActivity.java(onClick)", "行数: 417  audioFile:" + audioFile);
+//                Log.e("EventReportActivity.java(onClick)", "行数: 411  typeId:" + typeId);
+//                Log.e("EventReportActivity.java(onClick)", "行数: 412  typeBigId:" + typeBigId);
+//                Log.e("EventReportActivity.java(onClick)", "行数: 413  typeSmallId:" + typeSmallId);
+//                Log.e("EventReportActivity.java(onClick)", "行数: 415  imgFile:" + imgFile.toString());
+//                Log.e("EventReportActivity.java(onClick)", "行数: 416  vedioFile:" + vedioFile);
+//                Log.e("EventReportActivity.java(onClick)", "行数: 417  audioFile:" + audioFile);
 
                 if(TextUtils.isEmpty(typeSmallId))
                 {
@@ -728,7 +728,6 @@ public class EventReportActivity extends BaseActivity implements View.OnClickLis
                     public void onSuccess(Response<String> response) {
 
                         String data = response.body();//这个就是返回来的结果
-                        Log.e("EventReportActivity.java(onSuccess)", "行数: 729  data:" + data);
 
                         try {
                             JSONObject json = new JSONObject(data);

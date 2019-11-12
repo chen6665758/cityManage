@@ -3,9 +3,7 @@ package com.cg.citymanage;
 import android.content.Intent;
 import android.graphics.drawable.AnimationDrawable;
 import android.media.MediaPlayer;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
@@ -15,13 +13,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.cg.citymanage.infos.Constants;
-import com.cg.citymanage.untils.myUntils;
-import com.lzy.okgo.OkGo;
-import com.lzy.okgo.callback.StringCallback;
-import com.lzy.okgo.model.Response;
-
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.yczbj.ycvideoplayerlib.constant.ConstantKeys;
 import org.yczbj.ycvideoplayerlib.controller.VideoPlayerController;
@@ -57,13 +50,14 @@ import cn.bingoogolapple.photopicker.widget.BGASortableNinePhotoLayout;
 /*     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 /*               佛祖保佑         永无BUG
 
-* 功能：事件详情中显示图片，视频、音频的页面
+* 功能：信息显示附件消息
 * 作者：cg
-* 时间：2019/10/24 15:00
+* 时间：2019/11/12 10:08
 */
-public class EventPicViewActivity extends BaseActivity implements View.OnClickListener,BGASortableNinePhotoLayout.Delegate {
+public class InformationOtherActivity extends BaseActivity implements View.OnClickListener,BGASortableNinePhotoLayout.Delegate {
 
     private String appToken;
+    private String mData;
     private String ids;
     private int EnclosureNumber = 0;
     private String[] arrayIds;
@@ -108,15 +102,8 @@ public class EventPicViewActivity extends BaseActivity implements View.OnClickLi
 
         mContext = this;
         appToken = mSharedPreferences.getString("appToken","");
-        ids = getIntent().getStringExtra("ids");
-        if(ids.contains(","))
-        {
-            arrayIds = ids.split(",");
-            EnclosureNumber = arrayIds.length;
-        }else{
-            arrayIds = new String[]{"ids"};
-            EnclosureNumber = 1;
-        }
+        mData = getIntent().getStringExtra("otherInfo");
+
         initControls();
     }
 
@@ -156,7 +143,7 @@ public class EventPicViewActivity extends BaseActivity implements View.OnClickLi
 
     @Override
     public void setContentView() {
-        setContentView(R.layout.activity_event_pic_view);
+        setContentView(R.layout.activity_information_other);
     }
 
     /**
@@ -168,7 +155,7 @@ public class EventPicViewActivity extends BaseActivity implements View.OnClickLi
         title_left_btn = (ImageButton)findViewById(R.id.title_left_btn);
         title_left_btn.setOnClickListener(this);
         title_textview = (TextView) findViewById(R.id.title_textview);
-        title_textview.setText("事件显示");
+        title_textview.setText("附件显示");
 
         //图片
         linear_pic = (LinearLayout)findViewById(R.id.linear_pic);
@@ -189,6 +176,7 @@ public class EventPicViewActivity extends BaseActivity implements View.OnClickLi
         //video_player.setUp("/storage/emulated/0/DCIM/Camera/VID_20191023_103406.3gp",null);
         //创建视频控制器
         mController = new VideoPlayerController(this);
+        mController.setTitle("");
         //设置视频控制器
         video_player.setController(mController);
 
@@ -202,83 +190,51 @@ public class EventPicViewActivity extends BaseActivity implements View.OnClickLi
     }
 
     /**
-     * 加载网络数据
+     * 初始化数据
      */
     private void initData()
     {
-        for(int i=0;i<arrayIds.length;i++) {
-            OkGo.<String>post(Constants.EVENTDETAILENCLOSURE_URL)
-                    .tag(this)//
-                    .params("access_token", appToken)
-                    .params("eventAccessoryIds", arrayIds[i])
-                    .execute(new StringCallback() {
-                        @Override
-                        public void onSuccess(Response<String> response) {
-                             loadNumber++;
+        try {
+            JSONObject json = new JSONObject(mData);
+            JSONObject jData = json.getJSONObject("data");
+            JSONArray array = jData.getJSONArray("MessageAccessory");
+            for(int i=0;i<array.length();i++)
+            {
+                JSONObject object = array.getJSONObject(i);
+                if ("0".equals(object.getString("accessoryType"))) {
+                    isVisiblePic = true;
+                    snpl_moment_add_photos.addLastItem(object.getString("accessoryPath"));
+                } else if ("2".equals(object.getString("accessoryType"))) {
+                    isVisibleVideo = true;
+                    video_player.setUp(object.getString("accessoryPath"), null);
+                } else if ("1".equals(object.getString("accessoryType"))) {
+                    isVisibleVoice = true;
+                    //playVoice(object.getString("accessoryPath"));
+                    audioPath = object.getString("accessoryPath");
+                }
+            }
 
-                            String data = response.body();//这个就是返回来的结果
-                            try {
-                                JSONObject json = new JSONObject(data);
-                                String resultCode = json.getString("code");
+            if(!isVisiblePic)
+            {
+                linear_pic.setVisibility(View.GONE);
+                snpl_moment_add_photos.setVisibility(View.GONE);
+            }
 
-                                if (resultCode.equals("2000")) {
+            if(!isVisibleVideo)
+            {
+                linear_video.setVisibility(View.GONE);
+                video_player.setVisibility(View.GONE);
+            }
 
-                                    JSONArray child = json.getJSONArray("data");
-                                    if(child.length() > 0) {
+            if(!isVisibleVoice)
+            {
+                linear_voice.setVisibility(View.GONE);
+                rela_voiceplay.setVisibility(View.GONE);
+            }
 
-                                        JSONObject object = child.getJSONObject(0);
-
-                                        if ("1".equals(object.getString("accessoryType"))) {
-                                            isVisiblePic = true;
-                                            snpl_moment_add_photos.addLastItem(object.getString("accessoryPath"));
-                                        } else if ("2".equals(object.getString("accessoryType"))) {
-                                            isVisibleVideo = true;
-                                            video_player.setUp(object.getString("accessoryPath"), null);
-                                        } else if ("3".equals(object.getString("accessoryType"))) {
-                                            isVisibleVoice = true;
-                                            //playVoice(object.getString("accessoryPath"));
-                                            audioPath = object.getString("accessoryPath");
-                                        }
-                                    }
-                                } else {
-                                    myUntils.showToast(mContext, json.getString("message"));
-                                }
-
-                                if(loadNumber == EnclosureNumber)
-                                {
-                                    if(!isVisiblePic)
-                                    {
-                                        linear_pic.setVisibility(View.GONE);
-                                        snpl_moment_add_photos.setVisibility(View.GONE);
-                                    }
-
-                                    if(!isVisibleVideo)
-                                    {
-                                        linear_video.setVisibility(View.GONE);
-                                        video_player.setVisibility(View.GONE);
-                                    }
-
-                                    if(!isVisibleVoice)
-                                    {
-                                        linear_voice.setVisibility(View.GONE);
-                                        rela_voiceplay.setVisibility(View.GONE);
-                                    }
-                                }
-
-                            } catch (Exception ex) {
-                                Log.e("EventPartakeDetail", "行数: 248  ex:" + ex.getMessage());
-                                myUntils.showToast(mContext, "请检查网络是否正常链接！");
-                                return;
-                            }
-
-                        }
-
-                        @Override
-                        public void onError(Response<String> response) {
-                            super.onError(response);
-                            Log.e("EventPartakeDetail", "行数: 259  error:" + response.body());
-                        }
-                    });
+        } catch (Exception e) {
+            Log.e("InformationOther", "行数: 234  error:" + e.getMessage());
+            e.printStackTrace();
         }
     }
 
@@ -295,7 +251,6 @@ public class EventPicViewActivity extends BaseActivity implements View.OnClickLi
             case R.id.title_left_btn:
                 finish();
                 break;
-
             //音频播放
             case R.id.rela_voiceplay:
                 try {
@@ -334,67 +289,64 @@ public class EventPicViewActivity extends BaseActivity implements View.OnClickLi
 
     }
 
-
+    /**
+     * 播放音频
+     * @param path                网络路径
+     * @throws Exception
+     */
     private void playVoice(String path) throws Exception {
         if ("".equals(path)) {
             Toast.makeText(mContext, "路径不能为空", Toast.LENGTH_LONG).show();
             return;
         }
-        File file = new File(path);
-        if (file.exists()) {
 
 
-            animationDrawable = (AnimationDrawable) img_play.getBackground();
-            animationDrawable.stop();
-            animationDrawable.start();
+        animationDrawable = (AnimationDrawable) img_play.getBackground();
+        animationDrawable.stop();
+        animationDrawable.start();
 
-            mediaPlayer = new MediaPlayer();
-            mediaPlayer.setDataSource(path);
-            // mediaPlayer.prepare(); // c/c++ 播放器引擎的初始化
-            // 同步方法
-            // 采用异步的方式
-            mediaPlayer.prepareAsync();
-            // 为播放器注册
-            mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+        mediaPlayer = new MediaPlayer();
+        mediaPlayer.setDataSource(path);
+        // mediaPlayer.prepare(); // c/c++ 播放器引擎的初始化
+        // 同步方法
+        // 采用异步的方式
+        mediaPlayer.prepareAsync();
+        // 为播放器注册
+        mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
 
-                public void onPrepared(MediaPlayer mp) {
-                    // TODO Auto-generated method stub
-                    mp.start();
+            public void onPrepared(MediaPlayer mp) {
+                // TODO Auto-generated method stub
+                mp.start();
 
-                }
-            });
+            }
+        });
 
-            // 注册播放完毕后的监听事件
-            mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+        // 注册播放完毕后的监听事件
+        mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
 
-                public void onCompletion(MediaPlayer mp) {
-                    if(mp!=null) {
-                        if(mp.isPlaying())
-                            mp.stop();
-                        mp.reset();
-                        mp.release();
-                        mp=null;
+            public void onCompletion(MediaPlayer mp) {
+                if (mp != null) {
+                    if (mp.isPlaying())
+                        mp.stop();
+                    mp.reset();
+                    mp.release();
+                    mp = null;
 
-                        if(animationDrawable!=null)
-                        {
-                            animationDrawable.stop();
-                        }
+                    if (animationDrawable != null) {
+                        animationDrawable.stop();
                     }
-
                 }
-            });
-            mediaPlayer.setOnErrorListener(new MediaPlayer.OnErrorListener() {
-                @Override
-                public boolean onError(MediaPlayer mediaPlayer, int i, int i1) {
-                    mediaPlayer.reset();
-                    return false;
-                }
-            });
 
-        } else {
-            Toast.makeText(mContext, "文件不存在", Toast.LENGTH_LONG).show();
-            return;
-        }
+            }
+        });
+        mediaPlayer.setOnErrorListener(new MediaPlayer.OnErrorListener() {
+            @Override
+            public boolean onError(MediaPlayer mediaPlayer, int i, int i1) {
+                mediaPlayer.reset();
+                return false;
+            }
+        });
+
 
     }
 }

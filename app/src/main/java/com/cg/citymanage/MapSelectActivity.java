@@ -254,7 +254,7 @@ public class MapSelectActivity extends BaseActivity implements View.OnClickListe
         p.spatialQueryMode = SpatialQueryMode.INTERSECT;// 必设，空间查询模式，默认相交
         // 构建查询几何对象
         Geometry g = new Geometry();
-        g.type = GeometryType.POINT;
+        g.type = GeometryType.REGION;
         g.points = new com.supermap.services.components.commontypes.Point2D[] { new com.supermap.services.components.commontypes.Point2D(longTouchGeoPoint.x,longTouchGeoPoint.y) };
         g.parts = new int[] { 1 };
         p.geometry = g;

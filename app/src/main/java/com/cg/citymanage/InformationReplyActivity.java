@@ -9,8 +9,10 @@ import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -19,8 +21,14 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.cg.citymanage.infos.Constants;
+import com.cg.citymanage.untils.LiveDataBus;
 import com.cg.citymanage.untils.myUntils;
+import com.lzy.okgo.OkGo;
+import com.lzy.okgo.callback.StringCallback;
+import com.lzy.okgo.model.Response;
 
+import org.json.JSONObject;
 import org.yczbj.ycvideoplayerlib.constant.ConstantKeys;
 import org.yczbj.ycvideoplayerlib.controller.VideoPlayerController;
 import org.yczbj.ycvideoplayerlib.manager.VideoPlayerManager;
@@ -28,6 +36,7 @@ import org.yczbj.ycvideoplayerlib.player.VideoPlayer;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.List;
 
 import cn.bingoogolapple.photopicker.activity.BGAPhotoPickerActivity;
 import cn.bingoogolapple.photopicker.activity.BGAPhotoPickerPreviewActivity;
@@ -64,6 +73,14 @@ import static com.cg.citymanage.untils.CameraUntils.getImageAbsolutePath;
 */
 public class InformationReplyActivity extends BaseActivity implements View.OnClickListener,BGASortableNinePhotoLayout.Delegate {
 
+    private String appToken;
+    private String status;          //状态 0：添加 1：回复
+    private String empId;           //接收人id
+    private String empName;         //接收人姓名
+    private String messageTitle;    //信息标题
+    private String messageContent;  //信息描述
+
+
     /**
      * 标题栏
      */
@@ -82,6 +99,7 @@ public class InformationReplyActivity extends BaseActivity implements View.OnCli
      */
     private LinearLayout linear_pic;
     private BGASortableNinePhotoLayout mPhotosSnpl;
+    private List<String> imgFile;             //图片地址
     private int RC_CHOOSE_PHOTO = 101;
     private int RC_PHOTO_PREVIEW = 102;
 
@@ -95,6 +113,7 @@ public class InformationReplyActivity extends BaseActivity implements View.OnCli
     private VideoPlayerController mController;
     private ImageView img_videoDel;
     private RelativeLayout rela_video;
+    private String vedioFile;                 //视频地址
 
     /**
      * 添加音频
@@ -108,16 +127,31 @@ public class InformationReplyActivity extends BaseActivity implements View.OnCli
     private AnimationDrawable animationDrawable;
     private MediaPlayer mediaPlayer;
     private ImageView img_voiceDel;
+    private String audioFile;                 //音频地址
+
+    /**
+     * 添加或是回复
+     */
+    private Button btn_addInfo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         mContext = this;
+        appToken = mSharedPreferences.getString("appToken","");
         //权限的设置
         myUntils.JudgePermission(this,mContext,"您拒绝了相机功能，拍照等功能将无法使用！",Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA);
+        status = getIntent().getStringExtra("status");
+        if("1".equals(status))
+        {
+            empId = getIntent().getStringExtra("empId");
+            empName = getIntent().getStringExtra("empName");
+        }
 
         initControls();
+
+        imgFile = new ArrayList<>();
     }
 
     @Override
@@ -176,7 +210,12 @@ public class InformationReplyActivity extends BaseActivity implements View.OnCli
         //信息填写
         txt_infoTitle = (EditText) findViewById(R.id.txt_infoTitle);
         txt_receiverName = (TextView)findViewById(R.id.txt_receiverName);
-        txt_receiverName.setOnClickListener(this);
+        if("1".equals(status))
+        {
+            txt_receiverName.setText(empName);
+        }else {
+            txt_receiverName.setOnClickListener(this);
+        }
         txt_infoContent = (EditText)findViewById(R.id.txt_infoContent);
 
         //添加图片
@@ -195,7 +234,7 @@ public class InformationReplyActivity extends BaseActivity implements View.OnCli
         video_player.setPlayerType(ConstantKeys.IjkPlayerType.TYPE_IJK);
         video_player.continueFromLastPosition(false);
         video_player.setBackgroundColor("#000000");
-        video_player.setUp("/storage/emulated/0/DCIM/Camera/VID_20191023_103406.3gp",null);
+        //video_player.setUp("/storage/emulated/0/DCIM/Camera/VID_20191023_103406.3gp",null);
         //创建视频控制器
         mController = new VideoPlayerController(this);
         //设置视频控制器
@@ -214,6 +253,16 @@ public class InformationReplyActivity extends BaseActivity implements View.OnCli
         img_play = (ImageView)findViewById(R.id.img_play);
         img_voiceDel = (ImageView)findViewById(R.id.img_voiceDel);
         img_voiceDel.setOnClickListener(this);
+
+        //添加与回复
+        btn_addInfo = (Button)findViewById(R.id.btn_addInfo);
+        if("0".equals(status))
+        {
+            btn_addInfo.setText("添加");
+        }else{
+            btn_addInfo.setText("回复");
+        }
+        btn_addInfo.setOnClickListener(this);
     }
 
     @Override
@@ -230,23 +279,34 @@ public class InformationReplyActivity extends BaseActivity implements View.OnCli
                 break;
             //选择接收人
             case R.id.txt_receiverName:
-
+                EventReportTypeDialogFragment eDialog = EventReportTypeDialogFragment.newInstance("3","0",appToken,"属实提案");
+                eDialog.show(getSupportFragmentManager(),"信息接收人");
+                eDialog.setOnItemClickLitener(new EventReportTypeDialogFragment.OnItemClickLitener() {
+                    @Override
+                    public void OnItemClick(View view, String EventTypeId, String EventTypeName) {
+                        txt_receiverName.setText(EventTypeName);
+                        empId = EventTypeId;
+                    }
+                });
                 break;
             //图片添加
             case R.id.linear_pic:
-                if(myUntils.checkGalleryPermission(mContext,InformationReplyActivity.this,Manifest.permission.WRITE_EXTERNAL_STORAGE) &&
-                        myUntils.checkGalleryPermission(mContext,InformationReplyActivity.this,Manifest.permission.CAMERA) )
+                if(imgFile.size() > 2)
                 {
-                    if(mPhotosSnpl.getData().size() >= 3)
-                    {
-                        myUntils.showToast(mContext,"图片最多只能上传三张！");
-                        return;
-                    }else {
-                        choicePhotoWrapper();
+                    myUntils.showToast(mContext, "图片最多只能上传三张！");
+                }else {
+                    if (myUntils.checkGalleryPermission(mContext, InformationReplyActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE) &&
+                            myUntils.checkGalleryPermission(mContext, InformationReplyActivity.this, Manifest.permission.CAMERA)) {
+                        if (mPhotosSnpl.getData().size() >= 3) {
+                            myUntils.showToast(mContext, "图片最多只能上传三张！");
+                            return;
+                        } else {
+                            choicePhotoWrapper();
+                        }
+                    } else {
+                        //权限的设置
+                        myUntils.JudgePermission(this, mContext, "您拒绝了相机功能，拍照等功能将无法使用！", Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA);
                     }
-                }else{
-                    //权限的设置
-                    myUntils.JudgePermission(this,mContext,"您拒绝了相机功能，拍照等功能将无法使用！",Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA);
                 }
                 break;
             //视频添加
@@ -274,6 +334,7 @@ public class InformationReplyActivity extends BaseActivity implements View.OnCli
                     public void OnItemClick(View view, int positon) {
                         videoPath = "";
                         rela_video.setVisibility(View.GONE);
+                        vedioFile = "";
                     }
                 });
                 break;
@@ -301,9 +362,40 @@ public class InformationReplyActivity extends BaseActivity implements View.OnCli
                     public void OnItemClick(View view, int positon) {
                         rela_voice.setVisibility(View.GONE);
                         voicePath = "";
+                        audioFile = "";
                     }
                 });
 
+                break;
+            //添加或回复
+            case R.id.btn_addInfo:
+                String messageTitle = txt_infoTitle.getText().toString();
+                if(TextUtils.isEmpty(messageTitle))
+                {
+                    myUntils.showToast(mContext,"对不起，消息标题不能为空！");
+                    return;
+                }
+                if(TextUtils.isEmpty(empId))
+                {
+                    myUntils.showToast(mContext,"对不起，请选择发送人！");
+                    return;
+                }
+                String messageContent = txt_infoContent.getText().toString();
+                if(TextUtils.isEmpty(messageContent))
+                {
+                    myUntils.showToast(mContext,"对不起，消息内容不能为空！");
+                    return;
+                }
+                String imgFiles = "";
+                if(imgFile.size() > 0) {
+                    for (int i = 0; i < imgFile.size(); i++) {
+                        imgFiles += imgFile.get(i) + ",";
+                    }
+                    imgFiles = imgFiles.substring(0,imgFiles.length()-1);
+
+                }
+
+                reportSubmit(messageTitle,messageContent,imgFiles);
                 break;
         }
     }
@@ -338,6 +430,7 @@ public class InformationReplyActivity extends BaseActivity implements View.OnCli
     @Override
     public void onClickDeleteNinePhotoItem(BGASortableNinePhotoLayout sortableNinePhotoLayout, View view, int position, String model, ArrayList<String> models) {
         mPhotosSnpl.removeItem(position);
+        imgFile.remove(position);
     }
 
     @Override
@@ -429,8 +522,10 @@ public class InformationReplyActivity extends BaseActivity implements View.OnCli
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK && requestCode == RC_CHOOSE_PHOTO) {
             mPhotosSnpl.addMoreData(BGAPhotoPickerActivity.getSelectedPhotos(data));
-
-            Log.e("EventReportActivity", "行数: 185  data:" + mPhotosSnpl.getData().toString());
+            for(int i=0;i<mPhotosSnpl.getData().size();i++) {
+                File file = new File(mPhotosSnpl.getData().get(i));
+                upLoadFile(file, "1");
+            }
 
         } else if (requestCode == RC_PHOTO_PREVIEW) {
             mPhotosSnpl.setData(BGAPhotoPickerPreviewActivity.getSelectedPhotos(data));
@@ -440,12 +535,16 @@ public class InformationReplyActivity extends BaseActivity implements View.OnCli
             String mVideoPath = getImageAbsolutePath(InformationReplyActivity.this,videoUri);
             videoPath = mVideoPath;
             rela_video.setVisibility(View.VISIBLE);
-            video_player.setUp(mVideoPath,null);
+            //video_player.setUp(mVideoPath,null);
+            File vfile = new File(mVideoPath);
+            upLoadFile(vfile,"2");
         } else if(resultCode==RESULT_OK && requestCode == VOICE_CODE)
         {
             voicePath = data.getStringExtra("sPath");
             if(!"".equals(voicePath))
             {
+                File afile = new File(voicePath);
+                upLoadFile(afile,"3");
                 rela_voice.setVisibility(View.VISIBLE);
 
             }else{
@@ -454,5 +553,132 @@ public class InformationReplyActivity extends BaseActivity implements View.OnCli
             }
             Log.e("EventReportActivity", "行数: 332  voicePath:" + voicePath);
         }
+    }
+
+
+    /**
+     * 上传文件
+     * @param file                         文件
+     * @param accessoryType                文件分类 1图片 2视频 3音频
+     */
+    private void upLoadFile(File file, final String accessoryType)
+    {
+        progress_Dialog.show();
+        OkGo.<String>post(Constants.INFORMATIONUPLOAD_URL)
+                .tag(this)//
+                .params("access_token", appToken)
+                .params("upLoadFile",file)
+                .params("accessoryType",accessoryType)
+                .execute(new StringCallback() {
+                    @Override
+                    public void onSuccess(Response<String> response) {
+                        progress_Dialog.dismiss();
+                        String data = response.body();//这个就是返回来的结果
+                        try {
+                            JSONObject json = new JSONObject(data);
+                            String resultCode = json.getString("code");
+                            Log.e("InformationReplyActivity.java(onSuccess)", "行数: 580  data:" + data);
+
+                            if(resultCode.equals("2000"))
+                            {
+
+                                JSONObject object = json.getJSONObject("data");
+
+                                if("1".equals(accessoryType))
+                                {
+                                    imgFile.add(object.getString("fileName"));
+
+                                }else if("2".equals(accessoryType))
+                                {
+                                    vedioFile = object.getString("fileName");
+                                    video_player.setUp(object.getString("showUrl") + object.getString("fileName"),null);
+                                }else if("3".equals(accessoryType))
+                                {
+                                    audioFile = object.getString("fileName");
+                                }
+                            }else{
+                                myUntils.showToast(mContext,json.getString("message"));
+                            }
+
+
+                        }catch (Exception ex)
+                        {
+                            Log.e("EventWaitSubmit", "行数: 617  ex:" + ex.getMessage());
+                            myUntils.showToast(mContext,"请检查网络是否正常链接！");
+                            return;
+                        }
+
+                    }
+
+                    @Override
+                    public void onError(Response<String> response) {
+                        super.onError(response);
+                        Log.e("EventWaitSubmit", "行数: 626  error:" + response.body());
+                    }
+                });
+    }
+
+
+    /**
+     * 提交数据
+     * @param messageTitle                标题
+     * @param messageContent              内容
+     * @param imgFils                     图片
+     */
+    private void reportSubmit(String messageTitle,String messageContent,String imgFils)
+    {
+
+        Log.e("InformationReplyActivity.java(reportSubmit)", "行数: 631  empId：" + empId);
+        Log.e("InformationReplyActivity.java(reportSubmit)", "行数: 632  messageTitle：" + messageTitle);
+        Log.e("InformationReplyActivity.java(reportSubmit)", "行数: 633  messageContent：" + messageContent);
+        Log.e("InformationReplyActivity.java(reportSubmit)", "行数: 634  imgFils：" + imgFils);
+        Log.e("InformationReplyActivity.java(reportSubmit)", "行数: 635  vedioFile：" + vedioFile);
+        Log.e("InformationReplyActivity.java(reportSubmit)", "行数: 636  audioFile:" + audioFile);
+
+        OkGo.<String>post(Constants.INFORMATIONADD_URL)
+                .tag(this)//
+                .params("access_token", appToken)
+                .params("empId",empId)
+                .params("messageTitle",messageTitle)
+                .params("messageContent",messageContent)
+                .params("ImgFile",imgFils)
+                .params("videoFile",vedioFile)
+                .params("audioFile",audioFile)
+                .execute(new StringCallback() {
+                    @Override
+                    public void onSuccess(Response<String> response) {
+
+                        String data = response.body();//这个就是返回来的结果
+
+                        try {
+                            JSONObject json = new JSONObject(data);
+                            String resultCode = json.getString("code");
+
+                            if(resultCode.equals("2000"))
+                            {
+                                myUntils.showToast(mContext,"事件上传处理成功！");
+                                LiveDataBus.get().with("Information").setValue(true);
+                                Jump_intent(EventWaitActivity.class,bundle);
+                                finish();
+                            }else{
+                                myUntils.showToast(mContext,json.getString("message"));
+                            }
+
+
+                        }catch (Exception ex)
+                        {
+                            Log.e("EventWaitSubmit", "行数: 671  ex:" + ex.getMessage());
+                            myUntils.showToast(mContext,"请检查网络是否正常链接！");
+                            return;
+                        }
+
+                    }
+
+                    @Override
+                    public void onError(Response<String> response) {
+                        super.onError(response);
+                        Log.e("EventWaitSubmit", "行数: 681  error:" + response.body());
+                    }
+                });
     }
 }

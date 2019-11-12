@@ -159,7 +159,6 @@ public class EventReportTypeDialogFragment extends DialogFragment {
                         try {
                             JSONObject json = new JSONObject(data);
                             String resultCode = json.getString("code");
-
                             if(resultCode.equals("2000"))
                             {
                                 JSONObject childData = json.getJSONObject("data");
