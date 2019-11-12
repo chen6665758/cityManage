@@ -577,7 +577,6 @@ public class InformationReplyActivity extends BaseActivity implements View.OnCli
                         try {
                             JSONObject json = new JSONObject(data);
                             String resultCode = json.getString("code");
-                            Log.e("InformationReplyActivity.java(onSuccess)", "行数: 580  data:" + data);
 
                             if(resultCode.equals("2000"))
                             {
@@ -627,14 +626,6 @@ public class InformationReplyActivity extends BaseActivity implements View.OnCli
      */
     private void reportSubmit(String messageTitle,String messageContent,String imgFils)
     {
-
-        Log.e("InformationReplyActivity.java(reportSubmit)", "行数: 631  empId：" + empId);
-        Log.e("InformationReplyActivity.java(reportSubmit)", "行数: 632  messageTitle：" + messageTitle);
-        Log.e("InformationReplyActivity.java(reportSubmit)", "行数: 633  messageContent：" + messageContent);
-        Log.e("InformationReplyActivity.java(reportSubmit)", "行数: 634  imgFils：" + imgFils);
-        Log.e("InformationReplyActivity.java(reportSubmit)", "行数: 635  vedioFile：" + vedioFile);
-        Log.e("InformationReplyActivity.java(reportSubmit)", "行数: 636  audioFile:" + audioFile);
-
         OkGo.<String>post(Constants.INFORMATIONADD_URL)
                 .tag(this)//
                 .params("access_token", appToken)
