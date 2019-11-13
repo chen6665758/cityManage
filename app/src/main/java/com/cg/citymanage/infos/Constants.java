@@ -52,6 +52,10 @@ public class Constants {
     public static String EVENTPARTAKELIST_URL = MAIN_URL + "api/query_event";
     //事件传阅列表接口
     public static String EVENTTRANSMIT_URL = MAIN_URL + "api/toViewEventList";
+    //事件传阅详情页，传阅人列表
+    public static String EVENTRANSMITER_URL = MAIN_URL + "api/circulateEmpList";
+    //事件传阅提交接口
+    public static String EVENTRANSMITSUBMIT_URL = MAIN_URL + "api/insertViewEvent";
     //被传阅事件列表
     public static String EVENTCIRCULATED_URL = MAIN_URL + "api/showViewEvent";
     //待办事件列表
@@ -64,23 +68,44 @@ public class Constants {
     public static String EVENTWAITSUBMIT_URL = MAIN_URL + "api/completeTask";
     //催办事件
     public static String EVENTIMPATIENT_URL = MAIN_URL + "api/timeManage";
+    //催办事件详情页面催办事件提交
+    public static String EVENTIMPATIENTSUMIT_URL = MAIN_URL + "api/editStatus";
     //事件详情页事件流程列表接口
     public static String EVENTDETAIL_URL = MAIN_URL + "api/eventPartakeInfo";
     //事件中催办事件详情列表接口
     public static String EVENTIMPATIENTDETAIL_URL = MAIN_URL + "api/eventHasten";
     //事件中详情页事件流程列表中附件接口
     public static String EVENTDETAILENCLOSURE_URL = MAIN_URL + "api/getEventAccessory";
+    //事件总览查询列表
+    public static String EVENTOVERVIEW_URL = MAIN_URL + "api/eventQuery";
+    //事件上报接口
+    public static String EVENTREPORTADD_URL = MAIN_URL + "api/insertToEvent";
 
+    //事件类别选择接口
+    public static String EVENTTYPE_URL = MAIN_URL + "api/getEventTypeByTypeId";
+    //事件节点名称选择接口
+    public static String EVENTNOTE_URL = MAIN_URL + "api/getOutcomeList";
+
+    //信息列表接口
+    public static String INFORMATIONLIST_URL = MAIN_URL + "api/toReceiveMessageList";
+    //信息详情接口
+    public static String INFORMATIONDETAIL_URL = MAIN_URL + "api/MessageFindOne";
+    //信息添加与回复接口
+    public static String INFORMATIONADD_URL = MAIN_URL + "api/saveMessage";
 
 
     //文件上传接口
     public static String FILEUPLOAD_URL = MAIN_URL + "api/upLoad/upLoadFile";
+    //消息上传接口
+    public static String INFORMATIONUPLOAD_URL = MAIN_URL + "api/upLoad/getFileName";
 
 
     //升级下载的文件名
     public static String DownLoadFileName = "citymanage.apk";
+    public static String DownLoadFilePath = "http://10.64.43.106:9999/citymanage.apk";
     //取得版本号信息，用于判断系统是否需求升级
-    public static String DOWNLOADFILE_URL = MAIN_URL + "/version/0";
+    public static String DOWNLOADFILE_URL = MAIN_URL + "api/findAppVersion";
+
 
 
     //*********************************地图地址***************************************
