@@ -270,7 +270,15 @@ public class EventReportActivity extends BaseActivity implements View.OnClickLis
 
     @Override
     public void Jump_intent(Class<?> cla, Bundle bundle) {
-
+        if(mContext !=null)
+        {
+            Intent intent = new Intent(mContext, cla);
+            if (bundle != null) {
+                intent.putExtras(bundle);
+            }
+            startActivity(intent);
+            //overridePendingTransition(0, 0);
+        }
     }
 
     @Override

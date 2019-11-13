@@ -8,6 +8,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.AlertDialog;
@@ -140,6 +141,13 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         //权限的设置
         myUntils.JudgePermission(this,mContext,"您拒绝了读取文件的功能，会造成软件无法更新下载,并且会影响到维修与巡更功能！",Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE);
 
+        //有权限时候 我要上传我的方法
+        dirName = Environment.getExternalStorageDirectory().getPath() + "/sdcard/download/";
+        File file = new File(dirName);
+        if (!file.exists()) {
+            file.mkdirs();
+        }
+
         initControls();
 
     }
@@ -225,7 +233,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         //升级
         alertDia = new AlertDialog.Builder(mContext).create();
 
-        //GetVersion();
+        GetVersion();
 
         initUserInfo();
 
@@ -330,7 +338,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                     public void onSuccess(Response<String> response) {
                         //注意这里已经是在主线程了
                         String data = response.body();//这个就是返回来的结果
-                        //Log.e("MainActivity.java(onSuccess)", "行数: 330  data:" + data);
                         try {
                             JSONObject json = new JSONObject(data);
                             String resultCode = json.getString("code");
@@ -381,13 +388,13 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     private void GetVersion()
     {
         OkGo.<String>post(DOWNLOADFILE_URL)
+                .params("access_token",appToken)
                 .tag(this)//
                 .execute(new StringCallback() {
                     @Override
                     public void onSuccess(Response<String> response) {
                         //注意这里已经是在主线程了
                         String data = response.body();//这个就是返回来的结果
-                        Log.e("MainActivity", "行数: 135  data:" + data);
                         try {
                             try {
 
@@ -395,23 +402,23 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                                 String resultCode = json.getString("code");
                                 if("2000".equals(resultCode))
                                 {
-                                    if(!"[]".equals(json.getString("data"))) {
 
-//                                        VersionModel model = gson.fromJson(json.getString("data"),verType);
+                                    JSONObject mData = json.getJSONObject("data");
+                                    VerUpdate(Integer.parseInt(mData.getString("versionId")),mData.getString("version"));
+//                                    if(!"[]".equals(json.getString("data"))) {
 //
-//                                        DownUrl = model.getDownLoadUrl();
-                                        //VerUpdate(model.getVersionNum(),model.getVersion());
-                                    }else{
+////                                        VersionModel model = gson.fromJson(json.getString("data"),verType);
+////
+////                                        DownUrl = model.getDownLoadUrl();
+//                                        VerUpdate(model.getVersionNum(),model.getVersion());
+//                                    }else{
+//
+//                                        //VerUpdate(1,"1.0.0");
+//
+//                                    }
 
-                                        //VerUpdate(1,"1.0.0");
-
-                                    }
-
-                                }else if("500".equals(resultCode))
-                                {
-                                    myUntils.showToast(mContext,json.getString("msg"));
                                 }else{
-                                    myUntils.showToast(mContext,json.getString("msg"));
+                                    myUntils.showToast(mContext,json.getString("message"));
                                 }
 
 
@@ -440,6 +447,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
      * 升级
      */
     public void VerUpdate(final int appVersionId, final String version) {
+
+
         new Handler().postDelayed(new Runnable() {
             public void run() {
                 if (appVersionId > myUntils.getLocalVersion(getApplicationContext())) {
@@ -496,7 +505,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
      */
     private void GoDown() {
 
-        OkGo.<File>get("")
+        OkGo.<File>get(Constants.DownLoadFilePath)
                 .execute(new FileCallback(dirName, Constants.DownLoadFileName) {   //指定下载的路径  下载文件名
                     @Override
                     public void onSuccess(Response<File> response) {
@@ -506,6 +515,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                     @Override
                     public void onError(Response<File> response) {
                         super.onError(response);
+                        Log.e("MainActivity", "行数: 520  error:" + response.message());
 
                     }
 
