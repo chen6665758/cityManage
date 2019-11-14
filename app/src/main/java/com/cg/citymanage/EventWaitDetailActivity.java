@@ -60,6 +60,8 @@ import java.util.List;
 */
 public class EventWaitDetailActivity extends BaseActivity implements View.OnClickListener {
 
+    public static EventWaitDetailActivity mEventWaitDetailActivity;
+
     private String appToken;
     private String eventId;
     private String title;
@@ -123,6 +125,7 @@ public class EventWaitDetailActivity extends BaseActivity implements View.OnClic
         super.onCreate(savedInstanceState);
 
         mContext = this;
+        mEventWaitDetailActivity = this;
         appToken = mSharedPreferences.getString("appToken","");
         eventId = getIntent().getStringExtra("eventId");
         title = getIntent().getStringExtra("title");

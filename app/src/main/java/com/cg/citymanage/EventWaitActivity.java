@@ -1,6 +1,8 @@
 package com.cg.citymanage;
 
+import android.arch.lifecycle.Observer;
 import android.content.Intent;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -13,6 +15,7 @@ import android.widget.TextView;
 import com.cg.citymanage.Adapters.EventOverviewListAdpater;
 import com.cg.citymanage.infos.Constants;
 import com.cg.citymanage.models.EventListModel;
+import com.cg.citymanage.untils.LiveDataBus;
 import com.cg.citymanage.untils.myUntils;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.callback.StringCallback;
@@ -82,6 +85,21 @@ public class EventWaitActivity extends BaseActivity implements View.OnClickListe
         mContext = this;
         appToken = mSharedPreferences.getString("appToken","");
         initControls();
+
+        LiveDataBus.get().with("EventWait", Boolean.class)
+                .observe(this, new Observer<Boolean>() {
+                    @Override
+                    public void onChanged(@Nullable Boolean aBoolean) {
+
+                        if(aBoolean != null) {
+                            if (aBoolean) {
+                                pageNo = 1;
+                                list_data.clear();
+                                initData();
+                            }
+                        }
+                    }
+                });
     }
 
     @Override

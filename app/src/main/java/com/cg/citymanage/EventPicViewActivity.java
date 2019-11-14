@@ -109,6 +109,7 @@ public class EventPicViewActivity extends BaseActivity implements View.OnClickLi
         mContext = this;
         appToken = mSharedPreferences.getString("appToken","");
         ids = getIntent().getStringExtra("ids");
+        Log.e("EventPicView", "行数: 112  ids:" + ids);
         if(ids.contains(","))
         {
             arrayIds = ids.split(",");
@@ -189,6 +190,7 @@ public class EventPicViewActivity extends BaseActivity implements View.OnClickLi
         //video_player.setUp("/storage/emulated/0/DCIM/Camera/VID_20191023_103406.3gp",null);
         //创建视频控制器
         mController = new VideoPlayerController(this);
+        mController.setTitle("");
         //设置视频控制器
         video_player.setController(mController);
 
@@ -340,61 +342,55 @@ public class EventPicViewActivity extends BaseActivity implements View.OnClickLi
             Toast.makeText(mContext, "路径不能为空", Toast.LENGTH_LONG).show();
             return;
         }
-        File file = new File(path);
-        if (file.exists()) {
 
 
-            animationDrawable = (AnimationDrawable) img_play.getBackground();
-            animationDrawable.stop();
-            animationDrawable.start();
+        animationDrawable = (AnimationDrawable) img_play.getBackground();
+        animationDrawable.stop();
+        animationDrawable.start();
 
-            mediaPlayer = new MediaPlayer();
-            mediaPlayer.setDataSource(path);
-            // mediaPlayer.prepare(); // c/c++ 播放器引擎的初始化
-            // 同步方法
-            // 采用异步的方式
-            mediaPlayer.prepareAsync();
-            // 为播放器注册
-            mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+        mediaPlayer = new MediaPlayer();
+        mediaPlayer.setDataSource(path);
+        // mediaPlayer.prepare(); // c/c++ 播放器引擎的初始化
+        // 同步方法
+        // 采用异步的方式
+        mediaPlayer.prepareAsync();
+        // 为播放器注册
+        mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
 
-                public void onPrepared(MediaPlayer mp) {
-                    // TODO Auto-generated method stub
-                    mp.start();
+            public void onPrepared(MediaPlayer mp) {
+                // TODO Auto-generated method stub
+                mp.start();
 
-                }
-            });
+            }
+        });
 
-            // 注册播放完毕后的监听事件
-            mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+        // 注册播放完毕后的监听事件
+        mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
 
-                public void onCompletion(MediaPlayer mp) {
-                    if(mp!=null) {
-                        if(mp.isPlaying())
-                            mp.stop();
-                        mp.reset();
-                        mp.release();
-                        mp=null;
+            public void onCompletion(MediaPlayer mp) {
+                if (mp != null) {
+                    if (mp.isPlaying())
+                        mp.stop();
+                    mp.reset();
+                    mp.release();
+                    mp = null;
 
-                        if(animationDrawable!=null)
-                        {
-                            animationDrawable.stop();
-                        }
+                    if (animationDrawable != null) {
+                        animationDrawable.stop();
                     }
-
                 }
-            });
-            mediaPlayer.setOnErrorListener(new MediaPlayer.OnErrorListener() {
-                @Override
-                public boolean onError(MediaPlayer mediaPlayer, int i, int i1) {
-                    mediaPlayer.reset();
-                    return false;
-                }
-            });
 
-        } else {
-            Toast.makeText(mContext, "文件不存在", Toast.LENGTH_LONG).show();
-            return;
-        }
+            }
+        });
+        mediaPlayer.setOnErrorListener(new MediaPlayer.OnErrorListener() {
+            @Override
+            public boolean onError(MediaPlayer mediaPlayer, int i, int i1) {
+                mediaPlayer.reset();
+                return false;
+            }
+        });
+
+
 
     }
 }

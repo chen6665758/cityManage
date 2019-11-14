@@ -21,6 +21,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.cg.citymanage.infos.Constants;
+import com.cg.citymanage.untils.LiveDataBus;
 import com.cg.citymanage.untils.myUntils;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.callback.StringCallback;
@@ -384,6 +385,12 @@ public class EventWaitSubmitActivity extends BaseActivity implements View.OnClic
             //事件处理提交
             case R.id.btn_eventWaitProcess:
 
+                if("立案".equals(eventWaitStatus) || "属实提案".equals(eventWaitStatus) || "申请结案".equals(eventWaitStatus)) {
+                    if (TextUtils.isEmpty(assignee)) {
+                        myUntils.showToast(mContext,"对不起，请选择处理部门");
+                        return;
+                    }
+                }
 
                 String comment = edit_processDescribe.getText().toString();
                 String imgFiles = "";
@@ -633,6 +640,7 @@ public class EventWaitSubmitActivity extends BaseActivity implements View.OnClic
      */
     private void SumitData(String comment,String imgFiles)
     {
+
         OkGo.<String>post(Constants.EVENTWAITSUBMIT_URL)
                 .tag(this)//
                 .params("access_token", appToken)
@@ -655,6 +663,11 @@ public class EventWaitSubmitActivity extends BaseActivity implements View.OnClic
 
                             if(resultCode.equals("2000"))
                             {
+                                LiveDataBus.get().with("EventWait").setValue(true);
+                                if(EventWaitDetailActivity.mEventWaitDetailActivity != null)
+                                {
+                                    EventWaitDetailActivity.mEventWaitDetailActivity.finish();
+                                }
                                 myUntils.showToast(mContext,eventWaitStatus + "处理成功！");
                                 finish();
                             }else{
