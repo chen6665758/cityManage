@@ -340,7 +340,8 @@ public class EventReportActivity extends BaseActivity implements View.OnClickLis
                 Intent mapIntent = new Intent();
                 mapIntent.setClass(EventReportActivity.this,MapSelectActivity.class);
                 //startActivityForResult(mapIntent,MAP_CODE);
-                startActivity(mapIntent);
+                mapIntent.putExtra("mapclass","report");
+                startActivityForResult(mapIntent,MAP_CODE);
                 break;
             //图片添加
             case R.id.linear_pic:
@@ -711,7 +712,7 @@ public class EventReportActivity extends BaseActivity implements View.OnClickLis
             Log.e("EventReportActivity", "行数: 332  voicePath:" + voicePath);
         }else if(resultCode==RESULT_OK && requestCode == MAP_CODE)
         {
-
+            Log.e("EventReportActivity.java(onActivityResult)", "行数: 715  lng:");
         }
     }
 

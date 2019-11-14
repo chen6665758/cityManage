@@ -3,6 +3,7 @@ package com.cg.citymanage;
 import android.graphics.drawable.Drawable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.RelativeLayout;
@@ -81,7 +82,13 @@ public class MapViewActivity extends BaseActivity implements View.OnClickListene
         }
 
         centerPoint2D = new Point2D(lng, lat);
-        initControls();
+
+        if(!isInternetPresent) {
+            myUntils.showToast(mContext,"对不起，网络连接失败，请检查网络是否通畅！");
+            finish();
+        }else {
+            initControls();
+        }
     }
 
     @Override
@@ -109,37 +116,43 @@ public class MapViewActivity extends BaseActivity implements View.OnClickListene
         title_textview = (TextView) findViewById(R.id.title_textview);
         title_textview.setText("发生位置");
 
-        //地图
-        mapview = (MapView)findViewById(R.id.mapview);
-        //创建地图图层，并指向iServer提供的地图服务
-        layerView1 = new LayerView(this);
-        layerView1.setURL(BaseMap_URL);
-        layerView2 = new LayerView(this);
-        layerView2.setURL(DataMap_URl);
+        try {
+            //地图
+            mapview = (MapView) findViewById(R.id.mapview);
+            //创建地图图层，并指向iServer提供的地图服务
+            layerView1 = new LayerView(this);
+            layerView1.setURL(BaseMap_URL);
+            layerView2 = new LayerView(this);
+            layerView2.setURL(DataMap_URl);
 
-        LayerView[] layerViews=new LayerView[2];
-        layerViews[0] = layerView1;
-        layerViews[1] = layerView2;
+            LayerView[] layerViews = new LayerView[2];
+            layerViews[0] = layerView1;
+            layerViews[1] = layerView2;
 
-        mapview.addLayers(layerViews);
-        //设置地图缩放
-        mapview.setBuiltInZoomControls(true);
-        //设置地图中心点
-        //mapview.getController().setCenter(centerPoint2D);
-        mapview.getController().setCenter(centerPoint2D);
-        //设置地图的显示比例，数值越大显示的越细
-        mapview.getController().setZoom(3);
+            mapview.addLayers(layerViews);
+            //设置地图缩放
+            mapview.setBuiltInZoomControls(true);
+            //设置地图中心点
+            //mapview.getController().setCenter(centerPoint2D);
+            mapview.getController().setCenter(centerPoint2D);
+            //设置地图的显示比例，数值越大显示的越细
+            mapview.getController().setZoom(3);
 
 
-        //地图点击时，标的点的图标
-        Drawable drawableBlue = getResources().getDrawable(R.mipmap.icon_overlay_nearby_center);
-        overlay = new DefaultItemizedOverlay(drawableBlue);
+            //地图点击时，标的点的图标
+            Drawable drawableBlue = getResources().getDrawable(R.mipmap.icon_overlay_nearby_center);
+            overlay = new DefaultItemizedOverlay(drawableBlue);
 
-        overlay.clear();
-        OverlayItem overlayItem1 = new OverlayItem(centerPoint2D, "绥化", "绥化");
-        overlay.addItem(overlayItem1);
-        mapview.getOverlays().add(overlay);
-        mapview.invalidate();
+            overlay.clear();
+            OverlayItem overlayItem1 = new OverlayItem(centerPoint2D, "绥化", "绥化");
+            overlay.addItem(overlayItem1);
+            mapview.getOverlays().add(overlay);
+            mapview.invalidate();
+        }catch (Exception ex)
+        {
+            myUntils.showToast(mContext,"对不起，地图坐标不正确，无法正常显示！");
+            Log.e("MapViewActivity", "行数: 152  error:" + ex.getMessage());
+        }
     }
 
     @Override

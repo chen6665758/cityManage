@@ -27,6 +27,7 @@ import com.supermap.imobilelite.maps.query.QueryByGeometryService;
 import com.supermap.imobilelite.maps.query.QueryEventListener;
 import com.supermap.imobilelite.maps.query.QueryResult;
 import com.supermap.imobilelite.maps.query.SpatialQueryMode;
+import com.supermap.services.components.commontypes.Feature;
 import com.supermap.services.components.commontypes.Geometry;
 import com.supermap.services.components.commontypes.GeometryType;
 
@@ -61,6 +62,11 @@ import static com.cg.citymanage.infos.Constants.DataMap_URl;
 * 时间：2019/10/30 13:31
 */
 public class MapSelectActivity extends BaseActivity implements View.OnClickListener {
+
+    private String mapclass;
+    private String siteValue;
+    private String lng;
+    private String lat;
 
     /**
      * 标题栏
@@ -100,7 +106,7 @@ public class MapSelectActivity extends BaseActivity implements View.OnClickListe
         super.onCreate(savedInstanceState);
 
         mContext = this;
-
+        mapclass = getIntent().getStringExtra("mapclass");
         centerPoint2D = new Point2D(575215.42774951, 5167223.4071475);
         initControls();
     }
@@ -198,6 +204,8 @@ public class MapSelectActivity extends BaseActivity implements View.OnClickListe
                     if(isSelectPoint) {
 
                         longTouchGeoPoint = mapView.getProjection().fromPixels(touchX, touchY);
+                        lng = String.valueOf(longTouchGeoPoint.x);
+                        lat = String.valueOf(longTouchGeoPoint.y);
                         overlay.clear();
                         OverlayItem overlayItem1 = new OverlayItem(longTouchGeoPoint, "绥化", "绥化");
                         overlay.addItem(overlayItem1);
@@ -251,18 +259,15 @@ public class MapSelectActivity extends BaseActivity implements View.OnClickListe
     private void geometryQuery()
     {
         QueryByGeometryParameters p = new QueryByGeometryParameters();
-        p.spatialQueryMode = SpatialQueryMode.INTERSECT;// 必设，空间查询模式，默认相交
+        p.spatialQueryMode = SpatialQueryMode.WITHIN;// 必设，空间查询模式，默认相交
         // 构建查询几何对象
         Geometry g = new Geometry();
         g.type = GeometryType.REGION;
         g.points = new com.supermap.services.components.commontypes.Point2D[] { new com.supermap.services.components.commontypes.Point2D(longTouchGeoPoint.x,longTouchGeoPoint.y) };
         g.parts = new int[] { 1 };
         p.geometry = g;
-        // p.expectCount = 3;
         FilterParameter fp = new FilterParameter();
-        // fp.attributeFilter = "SMID > 0";
-        //fp.name = "Capitals@World.1";// 必设参数，图层名称格式：数据集名称@数据源别名
-        fp.name = "BuildRegion_habin@china";
+        fp.name = "BuildRegion_habin@china";// 必设参数，图层名称格式：数据集名称@数据源别名
         p.filterParameters = new FilterParameter[] { fp };
         QueryByGeometryService qs = new QueryByGeometryService(DataMap_URl);
         qs.process(p, new MyQueryEventListener());
@@ -280,14 +285,32 @@ public class MapSelectActivity extends BaseActivity implements View.OnClickListe
         @Override
         public void onQueryStatusChanged(Object sourceObject, EventStatus status) {
             Message msg = new Message();
-            Log.e("QueryDemo", "行数: 101  onQueryStatusChanged:" + status.toString());
             if (sourceObject instanceof QueryResult && status.equals(EventStatus.PROCESS_COMPLETE)) {
                 QueryResult qr = (QueryResult) sourceObject;
-
-                System.out.println("QueryResult totalCount:" + qr.quertyResultInfo.totalCount + ",currentCount:" + qr.quertyResultInfo.currentCount);
-//                msg.obj = qr;
-//                msg.what = QUERY_SUCCESS;
-                Log.e("ThreeActivity", "行数: 218  取到值了:" + qr.quertyResultInfo.totalCount + ",currentCount:" + qr.quertyResultInfo.currentCount);
+                if(qr != null && qr.quertyResultInfo != null && qr.quertyResultInfo.recordsets != null)
+                {
+                    for(int i=0; i<qr.quertyResultInfo.recordsets.length;i++)
+                    {
+                        Feature[] features = qr.quertyResultInfo.recordsets[i].features;
+                        if(features != null)
+                        {
+                            for(int j=0;j<features.length;j++)
+                            {
+                                Feature feature= features[j];
+                                Log.e("OneActivity", "行数: 208  网格：" );
+                                for(int k=0;k<feature.fieldNames.length;k++)
+                                {
+                                    Log.e("OneActivity", "行数: 211  网格数据：" + feature.fieldNames[k] + "  value:" + feature.fieldValues[k]);
+                                    if("".equals(feature.fieldNames[k]))
+                                    {
+                                        title_right_btn.setVisibility(View.VISIBLE);
+                                        break;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
             } else {
 //                msg.what = QUERY_FAILED;
                 Log.e("ThreeActivity", "行数: 220  geometryQuery错误");
@@ -337,7 +360,15 @@ public class MapSelectActivity extends BaseActivity implements View.OnClickListe
                 break;
             //取得点选的网格
             case R.id.title_right_btn:
-
+                Intent intent = new Intent();
+                if("report".equals(mapclass)) {
+                    intent.setClass(mContext, EventReportActivity.class);
+                }
+                intent.putExtra("lng",lng);
+                intent.putExtra("lat",lat);
+                intent.putExtra("siteValue", siteValue);
+                setResult(RESULT_OK, intent);
+                finish();
                 break;
         }
     }
