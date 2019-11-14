@@ -58,7 +58,7 @@
                         android:layout_marginRight="@dimen/ListItemMarginLeftRight"
                         android:layout_toRightOf="@+id/txt_eventcode"
                         android:gravity="left|center_vertical"
-                        android:text="aaaaaaaaaa"
+                        android:text=""
                         android:textSize="15sp"
                         android:textColor="#211e1e"/>
 
@@ -94,7 +94,7 @@
                         android:layout_marginRight="@dimen/ListItemMarginLeftRight"
                         android:layout_toRightOf="@+id/txt_eventtype"
                         android:gravity="left|center_vertical"
-                        android:text="aaaaaaaaaa"
+                        android:text=""
                         android:textSize="15sp"
                         android:textColor="#211e1e"/>
 
@@ -130,7 +130,7 @@
                         android:layout_marginRight="@dimen/ListItemMarginLeftRight"
                         android:layout_toRightOf="@+id/txt_report"
                         android:gravity="left|center_vertical"
-                        android:text="aaaaaaaaaa"
+                        android:text=""
                         android:textSize="15sp"
                         android:textColor="#211e1e"/>
 
@@ -166,7 +166,7 @@
                         android:layout_toRightOf="@+id/txt_site"
                         android:gravity="left|center_vertical"
                         android:drawableRight="@mipmap/ico_mapposion"
-                        android:text="aaaaaaaaaa"
+                        android:text=""
                         android:textSize="15sp"
                         android:textColor="#211e1e"/>
 
@@ -201,7 +201,7 @@
                         android:layout_marginRight="@dimen/ListItemMarginLeftRight"
                         android:layout_toRightOf="@+id/txt_time"
                         android:gravity="left|center_vertical"
-                        android:text="aaaaaaaaaa"
+                        android:text=""
                         android:textSize="15sp"
                         android:textColor="#211e1e"/>
 
@@ -238,7 +238,7 @@
                         android:layout_marginRight="@dimen/ListItemMarginLeftRight"
                         android:layout_toRightOf="@+id/txt_info"
                         android:gravity="left|center_vertical"
-                        android:text="aaaaaaaaaa"
+                        android:text=""
                         android:textSize="15sp"
                         android:textColor="#211e1e"/>
 
@@ -254,7 +254,8 @@
                 android:layout_marginTop="10dp"
                 android:paddingBottom="10dp"
                 android:background="@color/white"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:visibility="gone">
 
                 <RelativeLayout
                     android:id="@+id/rela_detail"
@@ -313,7 +314,8 @@
                 android:layout_marginTop="10dp"
                 android:paddingBottom="10dp"
                 android:background="@color/white"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:visibility="gone">
 
                 <RelativeLayout
                     android:id="@+id/rela_Impatientdetail"
