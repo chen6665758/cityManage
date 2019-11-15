@@ -57,11 +57,17 @@ public class PartStatisticsActivity extends BaseActivity implements View.OnClick
 
     private String appToken;
 
+    private String gridId = "";
+    private String deptMainId = "";
+    private String deptOwnerId = "";
+    private String deptKeepId = "";
+
     /**
      * 标题栏
      */
     private ImageButton title_left_btn;
     private TextView title_textview;
+    private RelativeLayout rl_2;
     private TextView title_right_btn;
     private int SEARCH_CODE = 101;
 
@@ -101,9 +107,13 @@ public class PartStatisticsActivity extends BaseActivity implements View.OnClick
         title_left_btn.setOnClickListener(this);
         title_textview = (TextView) findViewById(R.id.title_textview);
         title_textview.setText("部件统计");
+        rl_2 = (RelativeLayout)findViewById(R.id.rl_2);
+        rl_2.setVisibility(View.VISIBLE);
+        rl_2.setOnClickListener(this);
         title_right_btn = (TextView)findViewById(R.id.title_right_btn);
-        title_right_btn.setBackgroundResource(R.mipmap.ico_mainevent);
-        title_right_btn.setText("");
+        title_right_btn.setVisibility(View.VISIBLE);
+        //title_right_btn.setBackgroundResource(R.mipmap.ico_mainevent);
+        title_right_btn.setText("查询");
         title_right_btn.setOnClickListener(this);
 
         //信息列表
@@ -127,10 +137,10 @@ public class PartStatisticsActivity extends BaseActivity implements View.OnClick
         OkGo.<String>post(Constants.PARTSTATISTICS_URL)
                 .tag(this)//
                 .params("access_token", appToken)
-                .params("gridId","")
-                .params("deptMainId","")
-                .params("deptOwnerId","")
-                .params("deptKeepId","")
+                .params("gridId",gridId)
+                .params("deptMainId",deptMainId)
+                .params("deptOwnerId",deptOwnerId)
+                .params("deptKeepId",deptKeepId)
                 .execute(new StringCallback() {
                     @Override
                     public void onSuccess(Response<String> response) {
@@ -229,8 +239,14 @@ public class PartStatisticsActivity extends BaseActivity implements View.OnClick
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK && requestCode == SEARCH_CODE) {
+            gridId = data.getStringExtra("gridId");
+            deptKeepId = data.getStringExtra("deptKeepId");
+            deptMainId = data.getStringExtra("deptMainId");
+            deptOwnerId = data.getStringExtra("deptOwnerId");
 
-
+            Log.e("PartStatistics", "行数: 247  gridId:" + gridId + " deptKeepId:" + deptKeepId + " deptMainId:" + deptMainId + " deptOwnerId:" + deptOwnerId);
+            list_data.clear();
+            initData();
         }
     }
 
@@ -242,9 +258,15 @@ public class PartStatisticsActivity extends BaseActivity implements View.OnClick
             case R.id.title_left_btn:
                 finish();
                 break;
+            //  跳转到查询页面
+            case R.id.rl_2:
+                Intent intent = new Intent(mContext,PartStatisticsSearchActivity.class);
+                startActivityForResult(intent,SEARCH_CODE);
+                break;
             //跳转到查询页面
             case R.id.title_right_btn:
-
+                Intent intent2 = new Intent(mContext,PartStatisticsSearchActivity.class);
+                startActivityForResult(intent2,SEARCH_CODE);
                 break;
         }
     }
