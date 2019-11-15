@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/bg"
+    tools:context=".PartStatisticsSearchActivity"
+    android:orientation="vertical">
+
+    <include
+        android:id="@+id/title_layout_1"
+        layout="@layout/title_layout_1" />
+
+    <!--位置选择-->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/title_layout_1"
+        android:layout_marginTop="10dp"
+        android:background="@color/white"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="40dp">
+
+            <TextView
+                android:id="@+id/txt_site"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="@dimen/ListItemMarginLeftRight"
+                android:text="选择网格：" />
+
+            <TextView
+                android:id="@+id/txt_siteValue"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginRight="@dimen/ListItemMarginLeftRight"
+                android:layout_toRightOf="@+id/txt_site"
+                android:drawableRight="@mipmap/ico_mapposion"
+                android:gravity="center" />
+
+        </RelativeLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:background="@color/lineColor" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="40dp">
+
+            <TextView
+                android:id="@+id/txt_deptMain"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="@dimen/ListItemMarginLeftRight"
+                android:text="主管部门：" />
+
+            <EditText
+                android:id="@+id/edit_deptMain"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginRight="@dimen/ListItemMarginLeftRight"
+                android:layout_toRightOf="@+id/txt_deptMain"
+                android:gravity="center_vertical"
+                android:background="@null"/>
+
+        </RelativeLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:background="@color/lineColor" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:focusable="true"
+            android:focusableInTouchMode="true">
+
+            <TextView
+                android:id="@+id/txt_deptOwner"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="@dimen/ListItemMarginLeftRight"
+                android:text="权属部门：" />
+
+            <EditText
+                android:id="@+id/edit_deptOwner"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginRight="@dimen/ListItemMarginLeftRight"
+                android:layout_toRightOf="@+id/txt_deptOwner"
+                android:background="@null"
+                android:textSize="14sp"
+                android:gravity="left|center_vertical" />
+
+        </RelativeLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:background="@color/lineColor" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:focusable="true"
+            android:focusableInTouchMode="true">
+
+            <TextView
+                android:id="@+id/txt_deptKeep"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="@dimen/ListItemMarginLeftRight"
+                android:text="养护部门：" />
+
+            <EditText
+                android:id="@+id/edit_deptKeep"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginRight="@dimen/ListItemMarginLeftRight"
+                android:layout_toRightOf="@+id/txt_deptKeep"
+                android:background="@null"
+                android:textSize="14sp"
+                android:gravity="left|center_vertical" />
+
+        </RelativeLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/linear_add"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_marginTop="10dp"
+        android:layout_alignParentBottom="true"
+        android:background="@color/white">
+
+        <Button
+            android:id="@+id/btn_partSearch"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:background="@drawable/btnbgblue1"
+            android:text="查询"
+            android:textColor="@color/white"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:textSize="16sp"
+            android:layout_gravity="center"
+            />
+
+    </LinearLayout>
+
+</LinearLayout>
