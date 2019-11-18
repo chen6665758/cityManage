@@ -139,6 +139,9 @@ public class EventReportTypeDialogFragment extends DialogFragment {
         }else if("4".equals(ertype))
         {
             initNoteType();
+        }else if("5".equals(ertype))
+        {
+            initMail();
         }
     }
 
@@ -274,7 +277,6 @@ public class EventReportTypeDialogFragment extends DialogFragment {
                         String data = response.body();//这个就是返回来的结果
                         try {
                             JSONObject json = new JSONObject(data);
-                            Log.e("EventReportTypeDialogFragment.java(onSuccess)", "行数: 274  data:" + data);
                             String resultCode = json.getString("code");
 
                             if(resultCode.equals("2000"))
@@ -315,6 +317,24 @@ public class EventReportTypeDialogFragment extends DialogFragment {
                         Log.e("EventReportDialog", "行数: 196  error:" + response.body());
                     }
                 });
+    }
+
+    /**
+     * 通讯录选择
+     */
+    private void initMail()
+    {
+        EventTypeModel model1 = new EventTypeModel();
+        model1.setEventTypeId("1");
+        model1.setEventTypeName("发信息");
+        list_data.add(model1);
+
+        EventTypeModel model2 = new EventTypeModel();
+        model2.setEventTypeId("2");
+        model2.setEventTypeName("打电话");
+        list_data.add(model2);
+
+        eAdapter.notifyDataSetChanged();
     }
 
     /**
