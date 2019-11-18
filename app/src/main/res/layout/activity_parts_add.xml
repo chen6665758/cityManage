@@ -1,0 +1,491 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/bg"
+    tools:context=".PartsAddActivity">
+
+    <include
+        android:id="@+id/title_layout_1"
+        layout="@layout/title_layout_1" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/title_layout_1"
+        android:layout_above="@+id/linear_add">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:focusable="true"
+            android:focusableInTouchMode="true">
+
+            <!--事件选择-->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
+                android:orientation="vertical">
+
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp">
+
+                    <TextView
+                        android:id="@+id/txt_bigType"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="@dimen/ListItemMarginLeftRight"
+                        android:text="部件大类：" />
+
+                    <TextView
+                        android:id="@+id/txt_bigTypeName"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginRight="@dimen/ListItemMarginLeftRight"
+                        android:layout_toRightOf="@+id/txt_bigType"
+                        android:drawableRight="@mipmap/ico_eventjt"
+                        android:gravity="center"
+                        android:textSize="14sp"
+                        android:text="请选择(必填)"/>
+
+                </RelativeLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="0.5dp"
+                    android:background="@color/lineColor" />
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp">
+
+                    <TextView
+                        android:id="@+id/txt_smallType"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="@dimen/ListItemMarginLeftRight"
+                        android:text="部件小类：" />
+
+                    <TextView
+                        android:id="@+id/txt_smallTypeName"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginRight="@dimen/ListItemMarginLeftRight"
+                        android:layout_toRightOf="@+id/txt_smallType"
+                        android:drawableRight="@mipmap/ico_eventjt"
+                        android:textSize="14sp"
+                        android:gravity="center" />
+
+                </RelativeLayout>
+
+            </LinearLayout>
+
+            <!--部件信息-->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:background="@color/white"
+                android:orientation="vertical">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp">
+
+                    <TextView
+                        android:id="@+id/txt_objId"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="@dimen/ListItemMarginLeftRight"
+                        android:text="部件编码：" />
+
+                    <EditText
+                        android:id="@+id/edit_objId"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginRight="10dp"
+                        android:layout_toRightOf="@+id/txt_objId"
+                        android:layout_toLeftOf="@+id/btn_objId"
+                        android:background="@null"
+                        android:textSize="14sp"
+                        android:gravity="left|center_vertical" />
+
+                    <Button
+                        android:id="@+id/btn_objId"
+                        android:layout_width="wrap_content"
+                        android:layout_height="30dp"
+                        android:background="@drawable/btnbgblue1"
+                        android:layout_centerVertical="true"
+                        android:text="验证"
+                        android:textColor="@color/white"
+                        android:layout_marginRight="@dimen/ListItemMarginLeftRight"
+                        android:layout_alignParentRight="true"/>
+
+                </RelativeLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="0.5dp"
+                    android:background="@color/lineColor" />
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp">
+
+                    <TextView
+                        android:id="@+id/txt_objState"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="@dimen/ListItemMarginLeftRight"
+                        android:text="部件状态：" />
+
+                    <EditText
+                        android:id="@+id/edit_objState"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginRight="@dimen/ListItemMarginLeftRight"
+                        android:layout_toRightOf="@+id/txt_objState"
+                        android:gravity="left|center_vertical"
+                        android:textSize="14sp"
+                        android:background="@null"/>
+
+                </RelativeLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="0.5dp"
+                    android:background="@color/lineColor" />
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:focusable="true"
+                    android:focusableInTouchMode="true">
+
+                    <TextView
+                        android:id="@+id/txt_deptName1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="@dimen/ListItemMarginLeftRight"
+                        android:text="主管单位：" />
+
+                    <EditText
+                        android:id="@+id/edit_deptName1"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginRight="@dimen/ListItemMarginLeftRight"
+                        android:layout_toRightOf="@+id/txt_deptName1"
+                        android:background="@null"
+                        android:textSize="14sp"
+                        android:gravity="left|center_vertical" />
+
+                </RelativeLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="0.5dp"
+                    android:background="@color/lineColor" />
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:focusable="true"
+                    android:focusableInTouchMode="true">
+
+                    <TextView
+                        android:id="@+id/txt_deptName2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="@dimen/ListItemMarginLeftRight"
+                        android:text="权属单位：" />
+
+                    <EditText
+                        android:id="@+id/edit_deptName2"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginRight="@dimen/ListItemMarginLeftRight"
+                        android:layout_toRightOf="@+id/txt_deptName2"
+                        android:background="@null"
+                        android:textSize="14sp"
+                        android:gravity="left|center_vertical"
+                        />
+
+                </RelativeLayout>
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="0.5dp"
+                    android:background="@color/lineColor" />
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:focusable="true"
+                    android:focusableInTouchMode="true">
+
+                    <TextView
+                        android:id="@+id/txt_deptName3"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="@dimen/ListItemMarginLeftRight"
+                        android:text="养护单位：" />
+
+                    <EditText
+                        android:id="@+id/edit_deptName3"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginRight="@dimen/ListItemMarginLeftRight"
+                        android:layout_toRightOf="@+id/txt_deptName3"
+                        android:background="@null"
+                        android:textSize="14sp"
+                        android:gravity="left|center_vertical" />
+
+                </RelativeLayout>
+            </LinearLayout>
+
+            <!--位置选择-->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:background="@color/white"
+                android:orientation="vertical">
+
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp">
+
+                    <TextView
+                        android:id="@+id/txt_grid"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="@dimen/ListItemMarginLeftRight"
+                        android:text="所属网格：" />
+
+                    <TextView
+                        android:id="@+id/txt_gridValue"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginRight="@dimen/ListItemMarginLeftRight"
+                        android:layout_toRightOf="@+id/txt_grid"
+                        android:drawableRight="@mipmap/ico_mapposion"
+                        android:gravity="center"
+                        android:textSize="14sp"/>
+
+                </RelativeLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="0.5dp"
+                    android:background="@color/lineColor" />
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:focusable="true"
+                    android:focusableInTouchMode="true">
+
+                    <TextView
+                        android:id="@+id/txt_address"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="@dimen/ListItemMarginLeftRight"
+                        android:text="详细地址："
+                        />
+
+                    <EditText
+                        android:id="@+id/edit_address"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginRight="@dimen/ListItemMarginLeftRight"
+                        android:layout_toRightOf="@+id/txt_address"
+                        android:background="@null"
+                        android:textSize="14sp"
+                        android:gravity="left|center_vertical" />
+
+                </RelativeLayout>
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="0.5dp"
+                    android:background="@color/lineColor" />
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp">
+
+                    <TextView
+                        android:id="@+id/txt_areas"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="@dimen/ListItemMarginLeftRight"
+                        android:text="所属社区：" />
+
+                    <EditText
+                        android:id="@+id/edit_areas"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginRight="@dimen/ListItemMarginLeftRight"
+                        android:layout_toRightOf="@+id/txt_areas"
+                        android:background="@null"
+                        android:textSize="14sp"
+                        android:gravity="left|center_vertical" />
+
+                </RelativeLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="0.5dp"
+                    android:background="@color/lineColor" />
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp">
+
+                    <TextView
+                        android:id="@+id/txt_dataSource"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="@dimen/ListItemMarginLeftRight"
+                        android:text="数据来源：" />
+
+                    <EditText
+                        android:id="@+id/edit_dataSource"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginRight="@dimen/ListItemMarginLeftRight"
+                        android:layout_toRightOf="@+id/txt_dataSource"
+                        android:gravity="left|center_vertical"
+                        android:textSize="14sp"
+                        android:background="@null"/>
+
+                </RelativeLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="0.5dp"
+                    android:background="@color/lineColor" />
+            </LinearLayout>
+
+            <!--照片与备注-->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:background="@color/white"
+                android:orientation="vertical">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp">
+
+                    <TextView
+                        android:id="@+id/txt_photoAddr"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="@dimen/ListItemMarginLeftRight"
+                        android:text="图片地址：" />
+
+                    <EditText
+                        android:id="@+id/edit_photoAddr"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginRight="@dimen/ListItemMarginLeftRight"
+                        android:layout_toRightOf="@+id/txt_photoAddr"
+                        android:gravity="left|center_vertical"
+                        android:textSize="14sp"
+                        android:background="@null"/>
+
+                </RelativeLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="0.5dp"
+                    android:background="@color/lineColor" />
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="100dp">
+
+                    <TextView
+                        android:id="@+id/txt_note"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginLeft="@dimen/ListItemMarginLeftRight"
+                        android:text="备注信息："
+                        android:layout_alignParentTop="true"/>
+
+                    <EditText
+                        android:id="@+id/edit_note"
+                        android:layout_width="match_parent"
+                        android:layout_height="100dp"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginRight="@dimen/ListItemMarginLeftRight"
+                        android:layout_toRightOf="@+id/txt_note"
+                        android:background="@null"
+                        android:textSize="14sp"
+                        android:gravity="left|top" />
+
+                </RelativeLayout>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </ScrollView>
+
+    <LinearLayout
+        android:id="@+id/linear_add"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_alignParentBottom="true"
+        android:background="@color/white">
+
+        <Button
+            android:id="@+id/btn_partSubmit"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="40dp"
+            android:background="@drawable/btnbgblue1"
+            android:text="采集"
+            android:textColor="@color/white"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:textSize="16sp"
+            android:layout_gravity="center"
+            />
+
+        <Button
+            android:id="@+id/btn_partCancel"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="40dp"
+            android:background="@drawable/btnbgblue1"
+            android:text="取消"
+            android:textColor="@color/white"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:textSize="16sp"
+            android:layout_gravity="center"
+            />
+
+    </LinearLayout>
+
+</RelativeLayout>
