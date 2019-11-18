@@ -229,6 +229,9 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                     case "18":
                         Jump_intent(PartStatisticsActivity.class,bundle);
                         break;
+                    case "8":
+                        Jump_intent(PartsAddActivity.class,bundle);
+                        break;
                 }
             }
         });
@@ -355,7 +358,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                                     MainMenuModel model = new MainMenuModel();
                                     if("1".equals(child.getString("id")) || "13".equals(child.getString("id")) || "14".equals(child.getString("id"))
                                             || "19".equals(child.getString("id")) || "2".equals(child.getString("id")) || "3".equals(child.getString("id"))
-                                            || "9".equals(child.getString("id")) || "18".equals(child.getString("id")))
+                                            || "9".equals(child.getString("id")) || "18".equals(child.getString("id")) || "8".equals(child.getString("id")))
                                     {
                                         model.setMenuId(child.getString("id"));
                                         model.setMenuName(child.getString("name"));
