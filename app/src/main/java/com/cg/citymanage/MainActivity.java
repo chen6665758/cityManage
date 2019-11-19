@@ -232,6 +232,12 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                     case "8":
                         Jump_intent(PartsAddActivity.class,bundle);
                         break;
+                    case "10":
+                        Jump_intent(MailListActivity.class,bundle);
+                        break;
+                    case "12":
+                        Jump_intent(ClockInActivity.class,bundle);
+                        break;
                 }
             }
         });
@@ -356,9 +362,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                                     JSONObject child = array.getJSONObject(i);
 
                                     MainMenuModel model = new MainMenuModel();
-                                    if("1".equals(child.getString("id")) || "13".equals(child.getString("id")) || "14".equals(child.getString("id"))
-                                            || "19".equals(child.getString("id")) || "2".equals(child.getString("id")) || "3".equals(child.getString("id"))
-                                            || "9".equals(child.getString("id")) || "18".equals(child.getString("id")) || "8".equals(child.getString("id")))
+                                    if(!"6".equals(child.getString("id")))
                                     {
                                         model.setMenuId(child.getString("id"));
                                         model.setMenuName(child.getString("name"));
