@@ -1,5 +1,6 @@
 package com.cg.citymanage;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -90,6 +91,7 @@ public class PartsAddActivity extends BaseActivity implements View.OnClickListen
     private EditText edit_deptName3;
 
     private TextView txt_gridValue;
+    private int MAP_CODE = 101;
     private EditText edit_address;
     private EditText edit_areas;
     private EditText edit_dataSource;
@@ -216,7 +218,11 @@ public class PartsAddActivity extends BaseActivity implements View.OnClickListen
                 break;
             //取网格数据
             case R.id.txt_gridValue:
-
+                Intent mapIntent = new Intent();
+                mapIntent.setClass(PartsAddActivity.this,MapSelectActivity.class);
+                //startActivityForResult(mapIntent,MAP_CODE);
+                mapIntent.putExtra("mapclass","partadd");
+                startActivityForResult(mapIntent,MAP_CODE);
                 break;
             //采集部件
             case R.id.btn_partSubmit:
@@ -416,5 +422,15 @@ public class PartsAddActivity extends BaseActivity implements View.OnClickListen
 
         edit_photoAddr.setText("");
         edit_note.setText("");
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == RESULT_OK && requestCode == MAP_CODE) {
+
+            txt_gridValue.setText(data.getStringExtra("siteValue"));
+            bgId = data.getStringExtra("gridId");
+        }
     }
 }

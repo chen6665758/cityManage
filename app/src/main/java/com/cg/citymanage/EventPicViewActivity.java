@@ -219,6 +219,7 @@ public class EventPicViewActivity extends BaseActivity implements View.OnClickLi
                              loadNumber++;
 
                             String data = response.body();//这个就是返回来的结果
+                            Log.e("EventPicViewActivity.java(onSuccess)", "行数: 222  data:" + data);
                             try {
                                 JSONObject json = new JSONObject(data);
                                 String resultCode = json.getString("code");

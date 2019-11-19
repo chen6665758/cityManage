@@ -2,9 +2,11 @@ package com.cg.citymanage;
 
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
+import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
@@ -12,6 +14,7 @@ import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.cg.citymanage.untils.myUntils;
 import com.supermap.imobilelite.commons.EventStatus;
 import com.supermap.imobilelite.maps.DefaultItemizedOverlay;
 import com.supermap.imobilelite.maps.LayerView;
@@ -65,6 +68,7 @@ public class MapSelectActivity extends BaseActivity implements View.OnClickListe
 
     private String mapclass;
     private String siteValue;
+    private String gridId;
     private String lng;
     private String lat;
 
@@ -107,7 +111,8 @@ public class MapSelectActivity extends BaseActivity implements View.OnClickListe
 
         mContext = this;
         mapclass = getIntent().getStringExtra("mapclass");
-        centerPoint2D = new Point2D(575215.42774951, 5167223.4071475);
+        //centerPoint2D = new Point2D(575215.42774951, 5167223.4071475);
+        centerPoint2D = new Point2D(536982.8194663200, 5345986.7709373999);
         initControls();
     }
 
@@ -139,8 +144,10 @@ public class MapSelectActivity extends BaseActivity implements View.OnClickListe
         title_textview = (TextView) findViewById(R.id.title_textview);
         title_textview.setText("选择网格");
         rl_2 = (RelativeLayout)findViewById(R.id.rl_2);
+        //rl_2.setVisibility(View.VISIBLE);
         title_right_btn = (TextView)findViewById(R.id.title_right_btn);
         title_right_btn.setText("提交数据");
+        title_right_btn.setVisibility(View.VISIBLE);
         title_right_btn.setOnClickListener(this);
 
 
@@ -262,12 +269,13 @@ public class MapSelectActivity extends BaseActivity implements View.OnClickListe
         p.spatialQueryMode = SpatialQueryMode.WITHIN;// 必设，空间查询模式，默认相交
         // 构建查询几何对象
         Geometry g = new Geometry();
-        g.type = GeometryType.REGION;
+        g.type = GeometryType.POINT;
         g.points = new com.supermap.services.components.commontypes.Point2D[] { new com.supermap.services.components.commontypes.Point2D(longTouchGeoPoint.x,longTouchGeoPoint.y) };
         g.parts = new int[] { 1 };
         p.geometry = g;
         FilterParameter fp = new FilterParameter();
         fp.name = "BuildRegion_habin@china";// 必设参数，图层名称格式：数据集名称@数据源别名
+
         p.filterParameters = new FilterParameter[] { fp };
         QueryByGeometryService qs = new QueryByGeometryService(DataMap_URl);
         qs.process(p, new MyQueryEventListener());
@@ -297,28 +305,59 @@ public class MapSelectActivity extends BaseActivity implements View.OnClickListe
                             for(int j=0;j<features.length;j++)
                             {
                                 Feature feature= features[j];
-                                Log.e("OneActivity", "行数: 208  网格：" );
+                                //Log.e("OneActivity", "行数: 208  网格：" );
                                 for(int k=0;k<feature.fieldNames.length;k++)
                                 {
-                                    Log.e("OneActivity", "行数: 211  网格数据：" + feature.fieldNames[k] + "  value:" + feature.fieldValues[k]);
-                                    if("".equals(feature.fieldNames[k]))
+                                    //Log.e("OneActivity", "行数: 211  网格数据：" + feature.fieldNames[k] + "  value:" + feature.fieldValues[k]);
+                                    if("GridName".equals(feature.fieldNames[k]))
                                     {
-                                        title_right_btn.setVisibility(View.VISIBLE);
-                                        break;
+                                        //Log.e("MapSelectActivity.java(onQueryStatusChanged)", "行数: 309  没走吗");
+                                        siteValue = feature.fieldValues[k];
+
+                                    }
+                                    if("GridCode".equals(feature.fieldNames[k]))
+                                    {
+                                        gridId = feature.fieldValues[k];
                                     }
                                 }
                             }
                         }
                     }
+
+                    if(TextUtils.isEmpty(siteValue) || TextUtils.isEmpty(gridId))
+                    {
+                        msg.what = 1;
+                    }else{
+                        msg.what = 0;
+                    }
+
+                }else{
+                    myUntils.showToast(mContext,"点击不在范围内，请确认！");
+                    msg.what = 1;
                 }
             } else {
-//                msg.what = QUERY_FAILED;
-                Log.e("ThreeActivity", "行数: 220  geometryQuery错误");
+                msg.what = 1;
+                Log.e("MapSelect", "行数: 338  geometryQuery错误");
+                myUntils.showToast(mContext,"点击不在范围内，请确认！");
             }
             // 子线程不能直接调用UI相关控件，所以只能通过把结果以消息的方式告知UI主线程展示结果
-//            handler.sendMessage(msg);
+            handler.sendMessage(msg);
         }
     }
+
+
+    Handler handler = new Handler(){
+
+        public void handleMessage(Message msg) {
+
+            if(msg.what == 0)
+            {
+                rl_2.setVisibility(View.VISIBLE);
+            }else{
+                myUntils.showToast(mContext,"点击不在范围内，请确认！");
+            }
+        }
+    };
 
 
     class DistanceQueryEventListener extends QueryEventListener
@@ -363,10 +402,20 @@ public class MapSelectActivity extends BaseActivity implements View.OnClickListe
                 Intent intent = new Intent();
                 if("report".equals(mapclass)) {
                     intent.setClass(mContext, EventReportActivity.class);
+                }else if("over".equals(mapclass))
+                {
+                    intent.setClass(mContext,EventOverviewActivity.class);
+                }else if("partsearch".equals(mapclass))
+                {
+                    intent.setClass(mContext,PartStatisticsSearchActivity.class);
+                }else if("partadd".equals(mapclass))
+                {
+                    intent.setClass(mContext,PartsAddActivity.class);
                 }
                 intent.putExtra("lng",lng);
                 intent.putExtra("lat",lat);
                 intent.putExtra("siteValue", siteValue);
+                intent.putExtra("gridId",gridId);
                 setResult(RESULT_OK, intent);
                 finish();
                 break;

@@ -51,6 +51,8 @@ public class PartStatisticsSearchActivity extends BaseActivity implements View.O
      * 查询条件
      */
     private TextView txt_siteValue;
+    private int MAP_CODE = 101;
+    private String gridId = "";
     private EditText edit_deptMain;
     private EditText edit_deptOwner;
     private EditText edit_deptKeep;
@@ -111,13 +113,17 @@ public class PartStatisticsSearchActivity extends BaseActivity implements View.O
                 break;
             //选择网格
             case R.id.txt_siteValue:
-
+                Intent mapIntent = new Intent();
+                mapIntent.setClass(PartStatisticsSearchActivity.this,MapSelectActivity.class);
+                //startActivityForResult(mapIntent,MAP_CODE);
+                mapIntent.putExtra("mapclass","partsearch");
+                startActivityForResult(mapIntent,MAP_CODE);
                 break;
             /**
              * 查询
               */
             case R.id.btn_partSearch:
-                if(TextUtils.isEmpty(txt_siteValue.getText().toString()) && TextUtils.isEmpty(edit_deptKeep.getText().toString()) &&
+                if(TextUtils.isEmpty(gridId) && TextUtils.isEmpty(edit_deptKeep.getText().toString()) &&
                         TextUtils.isEmpty(edit_deptMain.getText().toString()) && TextUtils.isEmpty(edit_deptOwner.getText().toString()))
                 {
                     myUntils.showToast(mContext,"对不起，查询条件不能全为空");
@@ -125,13 +131,23 @@ public class PartStatisticsSearchActivity extends BaseActivity implements View.O
                 }
                 Intent intent = new Intent();
                 intent.setClass(mContext, PartStatisticsActivity.class);
-                intent.putExtra("gridId",txt_siteValue.getText().toString());
+                intent.putExtra("gridId",gridId);
                 intent.putExtra("deptMainId",edit_deptMain.getText().toString());
                 intent.putExtra("deptOwnerId", edit_deptOwner.getText().toString());
                 intent.putExtra("deptKeepId", edit_deptKeep.getText().toString());
                 setResult(RESULT_OK, intent);
                 finish();
                 break;
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == RESULT_OK && requestCode == MAP_CODE) {
+
+            txt_siteValue.setText(data.getStringExtra("siteValue"));
+            gridId = data.getStringExtra("gridId");
         }
     }
 }

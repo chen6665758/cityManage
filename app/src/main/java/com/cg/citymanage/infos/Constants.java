@@ -65,7 +65,7 @@ public class Constants {
     //待办事件详情回复值中，处理部分部门接口
     public static String EVENTWAITDEP_URL = MAIN_URL + "api/toEmpTree6";
     //待办事件详情中，处理内容回复的接口
-    public static String EVENTWAITSUBMIT_URL = MAIN_URL + "api/completeTask";
+    public static String EVENTWAITSUBMIT_URL = MAIN_URL + "api/completeTask"; //"http://10.64.3.114:8000/api/completeTask";//
     //催办事件
     public static String EVENTIMPATIENT_URL = MAIN_URL + "api/timeManage";
     //催办事件详情页面催办事件提交
@@ -94,6 +94,28 @@ public class Constants {
     public static String INFORMATIONADD_URL = MAIN_URL + "api/saveMessage";
 
 
+    //部件统计接口
+    public static String PARTSTATISTICS_URL = MAIN_URL + "api/unit/statistics/tree";
+    //部件编码验证接口
+    public static String PARTSVAROBJID_URL = MAIN_URL + "api/validatorCityUnit";
+    //部件采集接口
+    public static String PARTSUBMITADD_URL = MAIN_URL + "api/insertCityUnit";
+
+    //通讯录列表接口
+    public static String MAILLIST_URL = MAIN_URL + "api/addressBook/list";
+
+    //考勤当天数据接口
+    public static String CLOCKTODAY_URL = MAIN_URL + "api/checkin/today";
+    //考勤周统计接口
+    public static String CLOCKINFOWEEK_URL = MAIN_URL + "api/checkin/statistics/week";
+    //考勤月统计接口
+    public static String CLOCKINFOMONTH_URL = MAIN_URL + "api/checkin/statistics/month";
+    //考勤保存接口
+    public static String CLOCKINSAVE_URL = MAIN_URL + "api/checkin/save";
+    //考勤历史记录接口
+    public static String CLOCKHISTORYLIST_URL = MAIN_URL + "api/checkin/me/query";
+
+
     //文件上传接口
     public static String FILEUPLOAD_URL = MAIN_URL + "api/upLoad/upLoadFile";
     //消息上传接口
@@ -110,7 +132,9 @@ public class Constants {
 
     //*********************************地图地址***************************************
     //底图
-    public static String BaseMap_URL = "http://60.15.198.193:5128/iserver/services/map-ugcv5-suihua/rest/maps/suihua";
+    //public static String BaseMap_URL = "http://60.15.198.193:5128/iserver/services/map-ugcv5-suihua/rest/maps/suihua";
+    public static String BaseMap_URL = "http://221.211.181.10:9013/iserver/services/map-DiTu/rest/maps/北安底图";
     //数据层图
-    public static String DataMap_URl = "http://60.15.198.193:5128/iserver/services/map-suihuaGrid/rest/maps/habGrid";
+    //public static String DataMap_URl = "http://60.15.198.193:5128/iserver/services/map-suihuaGrid/rest/maps/habGrid";
+    public static String DataMap_URl = "http://221.211.181.10:9013/iserver/services/map-wangge0827/rest/maps/habGrid";
 }

@@ -1,6 +1,7 @@
 package com.cg.citymanage;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -63,6 +64,8 @@ public class EventOverviewActivity extends BaseActivity implements View.OnClickL
     private TextView txt_smallTypeName;
     private TextView txt_nodeName;
     private TextView txt_gridValue;
+    private int MAP_CODE = 101;
+    private String gridId = "";
     private TextView txt_startTime;
     private TimePickerView pvTime;
     private TextView txt_endTime;
@@ -232,7 +235,11 @@ public class EventOverviewActivity extends BaseActivity implements View.OnClickL
                 break;
             //所属网络
             case R.id.txt_gridValue:
-                Jump_intent(MapSelectActivity.class,bundle);
+                Intent mapIntent = new Intent();
+                mapIntent.setClass(EventOverviewActivity.this,MapSelectActivity.class);
+                //startActivityForResult(mapIntent,MAP_CODE);
+                mapIntent.putExtra("mapclass","over");
+                startActivityForResult(mapIntent,MAP_CODE);
                 break;
             //开始时间
             case R.id.txt_startTime:
@@ -257,7 +264,7 @@ public class EventOverviewActivity extends BaseActivity implements View.OnClickL
             //查询跳转页面
             case R.id.btn_search:
                 String eventTypeId = "";
-                String gridId = txt_gridValue.getText().toString();
+
                 String eventStatus = "";
                 String baginDate = txt_startTime.getText().toString();
                 String endDate = txt_endTime.getText().toString();
@@ -290,6 +297,17 @@ public class EventOverviewActivity extends BaseActivity implements View.OnClickL
                     Jump_intent(EventOverviewListActivity.class, bundle);
                 }
                 break;
+        }
+    }
+
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == RESULT_OK && requestCode == MAP_CODE) {
+
+            txt_gridValue.setText(data.getStringExtra("siteValue"));
+            gridId = data.getStringExtra("gridId");
         }
     }
 }

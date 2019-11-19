@@ -446,10 +446,10 @@ public class EventReportActivity extends BaseActivity implements View.OnClickLis
                     return;
                 }
 
-                gridId = txt_gridValue.getText().toString();
-                gridId = "第二网络";
-                lng = "575215.42774951";
-                lat = "5167223.4071475";
+//                gridId = txt_gridValue.getText().toString();
+//                gridId = "第二网络";
+//                lng = "575215.42774951";
+//                lat = "5167223.4071475";
                 if(TextUtils.isEmpty(gridId) || TextUtils.isEmpty(lng) || TextUtils.isEmpty(lat))
                 {
                     myUntils.showToast(mContext,"所属网格不能为空！");
@@ -709,10 +709,15 @@ public class EventReportActivity extends BaseActivity implements View.OnClickLis
                 myUntils.showToast(mContext,"没有采集到音频文件，请重新采集！");
                 return;
             }
-            Log.e("EventReportActivity", "行数: 332  voicePath:" + voicePath);
         }else if(resultCode==RESULT_OK && requestCode == MAP_CODE)
         {
-            Log.e("EventReportActivity.java(onActivityResult)", "行数: 715  lng:");
+
+            lng = data.getStringExtra("lng");
+            lat = data.getStringExtra("lat");
+            txt_siteValue.setText("黑龙江省绥化市");
+            txt_gridValue.setText(data.getStringExtra("siteValue"));
+            gridId = data.getStringExtra("gridId");
+
         }
     }
 
