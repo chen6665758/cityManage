@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/bg"
+    tools:context=".ClockInActivity">
+
+    <include
+        android:id="@+id/title_layout_1"
+        layout="@layout/title_layout_1" />
+
+    <!--用户信息-->
+    <RelativeLayout
+        android:id="@+id/rela_userinfo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/title_layout_1"
+        android:background="#3a98f1">
+        <RelativeLayout
+            android:id="@+id/rela_user"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="20dp"
+            android:layout_marginLeft="15dp">
+            <ImageView
+                android:id="@+id/img_user"
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                android:src="@mipmap/ico_loginusertype"/>
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@+id/img_user"
+                android:layout_marginLeft="16dp"
+                android:layout_centerVertical="true"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/txt_username"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="超级管理员"
+                    android:textSize="16sp"
+                    android:textColor="@color/white"/>
+                <TextView
+                    android:id="@+id/txt_userinfo"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="14dp"
+                    android:text="中国联通，市容一大队"
+                    android:textColor="#b0c9fa"
+                    android:textSize="13sp"
+                    />
+
+            </LinearLayout>
+
+        </RelativeLayout>
+
+
+    </RelativeLayout>
+
+    <LinearLayout
+        android:id="@+id/linear_clockNumber"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/rela_userinfo"
+        android:background="#3a98f1"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
+        android:layout_marginTop="5dp"
+        android:orientation="vertical">
+        <!--周统计-->
+        <LinearLayout
+            android:id="@+id/linear_week"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/rela_user"
+            android:layout_marginLeft="15dp"
+            android:gravity="center_horizontal"
+            android:orientation="horizontal">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="本周统计"
+                android:textColor="@color/white"/>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    >
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="迟到次数："
+                        android:layout_marginLeft="20dp"
+                        android:textColor="@color/white"/>
+                    <TextView
+                        android:id="@+id/txt_weekComeLateCount"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="0"
+                        android:textColor="@color/white"/>
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    >
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="出勤组次数："
+                        android:textColor="@color/white"/>
+                    <TextView
+                        android:id="@+id/txt_weekGroupCount"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="0"
+                        android:textColor="@color/white"/>
+                </LinearLayout>
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <!--月统计-->
+        <LinearLayout
+            android:id="@+id/linear_month"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:layout_below="@+id/linear_week"
+            android:layout_marginLeft="15dp"
+
+            android:orientation="horizontal"
+            android:layout_marginTop="10dp">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="本月统计"
+                android:textColor="@color/white"/>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="迟到次数："
+                        android:layout_marginLeft="20dp"
+                        android:textColor="@color/white"/>
+                    <TextView
+                        android:id="@+id/txt_monthComeLateCount"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="0"
+                        android:textColor="@color/white"/>
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="出勤组次数："
+                        android:textColor="@color/white"/>
+                    <TextView
+                        android:id="@+id/txt_monthGroupCount"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="30"
+                        android:textColor="@color/white"/>
+                </LinearLayout>
+            </LinearLayout>
+
+        </LinearLayout>
+    </LinearLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/linear_clockNumber"
+        android:background="@color/white"
+        android:layout_marginTop="2dp"
+        android:visibility="visible">
+
+
+
+        <Button
+            android:id="@+id/btn_clockIn"
+            android:layout_width="200dp"
+            android:layout_height="200dp"
+            android:layout_centerInParent="true"
+            android:background="@drawable/btnbgblue1"
+            android:text="上午打卡"
+            android:textColor="@color/white"
+            android:textSize="20sp"
+            android:gravity="center"/>
+
+    </RelativeLayout>
+
+</RelativeLayout>
