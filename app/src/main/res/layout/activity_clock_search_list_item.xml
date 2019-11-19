@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="0.5dp"
+        android:background="@color/white"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/txt_clockTime"
+            android:layout_width="wrap_content"
+            android:layout_height="30dp"
+            android:layout_marginLeft="15dp"
+            android:gravity="center_vertical"
+            android:text="2019-11-19"
+            android:textColor="#000000"
+            android:textSize="16sp" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginRight="15dp">
+
+            <TextView
+                android:id="@+id/txt_in"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="上班打卡：" />
+
+            <TextView
+                android:id="@+id/txt_chockIn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@+id/txt_in"
+                android:text="2019-11-18 15:11:33" />
+
+            <TextView
+                android:id="@+id/txt_instatus"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:text="正常" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginRight="15dp">
+
+            <TextView
+                android:id="@+id/txt_out"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="下班打卡：" />
+
+            <TextView
+                android:id="@+id/txt_chockOut"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@+id/txt_out"
+                android:text="2019-11-18 15:11:33" />
+
+            <TextView
+                android:id="@+id/txt_outstatus"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:text="正常" />
+        </RelativeLayout>
+    </LinearLayout>
+
+</LinearLayout>
