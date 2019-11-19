@@ -58,6 +58,17 @@
             android:name="com.tianditu.apikey"
             android:value="035972404fa9af81e3d3494f1dd712a3" />
 
+        <!-- 自动更新 权限 -->
+        <provider
+            android:name="android.support.v4.content.FileProvider"
+            android:authorities="${applicationId}.provider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/provider_paths" />
+        </provider>
+
         <activity android:name=".SoundRecordingActivity" />
         <activity
             android:name=".LoginActivity"
@@ -65,6 +76,7 @@
             android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".EventReportActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
             android:screenOrientation="portrait" />
         <activity
             android:name=".EventOverviewActivity"
@@ -125,7 +137,24 @@
             android:name=".EventWaitSubmitActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:screenOrientation="portrait" />
-        <activity android:name=".MapViewActivity"
+        <activity
+            android:name=".MapViewActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".InformationOtherActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:screenOrientation="portrait" />
+        <activity android:name=".PartStatisticsActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".PartStatisticsSearchActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".PartsAddActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".MailListActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".ClockInActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".ClockInSearchActivity"
             android:screenOrientation="portrait"></activity>
     </application>
 
