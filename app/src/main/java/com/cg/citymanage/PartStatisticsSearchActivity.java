@@ -146,7 +146,7 @@ public class PartStatisticsSearchActivity extends BaseActivity implements View.O
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK && requestCode == MAP_CODE) {
 
-            txt_siteValue.setText(data.getStringExtra("siteValue"));
+            txt_siteValue.setText(data.getStringExtra("gridName"));
             gridId = data.getStringExtra("gridId");
         }
     }

@@ -429,7 +429,8 @@ public class PartsAddActivity extends BaseActivity implements View.OnClickListen
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK && requestCode == MAP_CODE) {
 
-            txt_gridValue.setText(data.getStringExtra("siteValue"));
+            txt_gridValue.setText(data.getStringExtra("gridName"));
+            edit_address.setText(data.getStringExtra("address"));
             bgId = data.getStringExtra("gridId");
         }
     }

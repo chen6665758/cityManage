@@ -1,5 +1,6 @@
 package com.cg.citymanage;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Handler;
@@ -10,10 +11,22 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.webkit.JavascriptInterface;
+import android.webkit.WebChromeClient;
+import android.webkit.WebView;
 import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.baidu.mapapi.model.LatLng;
+import com.baidu.mapapi.search.core.SearchResult;
+import com.baidu.mapapi.search.geocode.GeoCodeResult;
+import com.baidu.mapapi.search.geocode.GeoCoder;
+import com.baidu.mapapi.search.geocode.OnGetGeoCoderResultListener;
+import com.baidu.mapapi.search.geocode.ReverseGeoCodeOption;
+import com.baidu.mapapi.search.geocode.ReverseGeoCodeResult;
+import com.baidu.mapapi.utils.CoordinateConverter;
+import com.cg.citymanage.untils.CoordinateConversion;
 import com.cg.citymanage.untils.myUntils;
 import com.supermap.imobilelite.commons.EventStatus;
 import com.supermap.imobilelite.maps.DefaultItemizedOverlay;
@@ -34,6 +47,7 @@ import com.supermap.services.components.commontypes.Feature;
 import com.supermap.services.components.commontypes.Geometry;
 import com.supermap.services.components.commontypes.GeometryType;
 
+import static com.baidu.mapapi.utils.CoordinateConverter.CoordType.COMMON;
 import static com.cg.citymanage.infos.Constants.BaseMap_URL;
 import static com.cg.citymanage.infos.Constants.DataMap_URl;
 
@@ -69,6 +83,8 @@ public class MapSelectActivity extends BaseActivity implements View.OnClickListe
     private String mapclass;
     private String siteValue;
     private String gridId;
+    private String gridName;
+    private String address;
     private String lng;
     private String lat;
 
@@ -105,6 +121,12 @@ public class MapSelectActivity extends BaseActivity implements View.OnClickListe
     private Point2D longTouchGeoPoint = null;
     private boolean isSelectPoint; //是否点击点
 
+    /**
+     * 地图坐标转化
+     */
+    private WebView locationWebview;
+    private GeoCoder geoCoder;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -113,6 +135,7 @@ public class MapSelectActivity extends BaseActivity implements View.OnClickListe
         mapclass = getIntent().getStringExtra("mapclass");
         //centerPoint2D = new Point2D(575215.42774951, 5167223.4071475);
         centerPoint2D = new Point2D(536982.8194663200, 5345986.7709373999);
+
         initControls();
     }
 
@@ -181,6 +204,7 @@ public class MapSelectActivity extends BaseActivity implements View.OnClickListe
         TouchOverlay touchOverlay = new TouchOverlay();
         mapview.getOverlays().add(touchOverlay);
 
+        initGeoCoder();
     }
 
     /**
@@ -308,11 +332,11 @@ public class MapSelectActivity extends BaseActivity implements View.OnClickListe
                                 //Log.e("OneActivity", "行数: 208  网格：" );
                                 for(int k=0;k<feature.fieldNames.length;k++)
                                 {
-                                    //Log.e("OneActivity", "行数: 211  网格数据：" + feature.fieldNames[k] + "  value:" + feature.fieldValues[k]);
+                                    Log.e("OneActivity", "行数: 211  网格数据：" + feature.fieldNames[k] + "  value:" + feature.fieldValues[k]);
                                     if("GridName".equals(feature.fieldNames[k]))
                                     {
                                         //Log.e("MapSelectActivity.java(onQueryStatusChanged)", "行数: 309  没走吗");
-                                        siteValue = feature.fieldValues[k];
+                                        gridName = feature.fieldValues[k];
 
                                     }
                                     if("GridCode".equals(feature.fieldNames[k]))
@@ -324,7 +348,7 @@ public class MapSelectActivity extends BaseActivity implements View.OnClickListe
                         }
                     }
 
-                    if(TextUtils.isEmpty(siteValue) || TextUtils.isEmpty(gridId))
+                    if(TextUtils.isEmpty(gridName) || TextUtils.isEmpty(gridId))
                     {
                         msg.what = 1;
                     }else{
@@ -352,6 +376,8 @@ public class MapSelectActivity extends BaseActivity implements View.OnClickListe
 
             if(msg.what == 0)
             {
+                progress_Dialog.show();
+                initWebView();
                 rl_2.setVisibility(View.VISIBLE);
             }else{
                 myUntils.showToast(mContext,"点击不在范围内，请确认！");
@@ -375,6 +401,71 @@ public class MapSelectActivity extends BaseActivity implements View.OnClickListe
         }
     }
 
+
+
+    @SuppressLint("SetJavaScriptEnabled")
+    private void initWebView()
+    {
+        final double[] location = new double[]{Double.valueOf(lng), Double.valueOf(lat)};   //575215.42774951, 5167223.4071475   //
+        locationWebview = new WebView(this);
+        locationWebview.getSettings().setJavaScriptEnabled(true);
+
+        locationWebview.loadUrl("file:///android_asset/gauss-kruger.html");
+        locationWebview.addJavascriptInterface(this,"androidTransform");
+
+        locationWebview.setWebChromeClient(new WebChromeClient() {
+            public void onProgressChanged(WebView view, int progress) {
+                if (progress == 100) {
+                    //progress到一百后就是加载完成，在里边写你要调用的方法就行了
+                    locationWebview.loadUrl("javascript:MercatorToLonLat('" + "EPSG:4326" + "'," + location[0] + "," + location[1] + ")");
+                }
+            }
+        });
+    }
+
+    @JavascriptInterface
+    public void LonLatToMercatorCallback(double lon,double lat)
+    {
+        double[] lnglat = CoordinateConversion.wgs84tobd09(lon,lat);
+        LatLng latLng = new LatLng(lnglat[1],lnglat[0] - 3);
+        geoCoder.reverseGeoCode(new ReverseGeoCodeOption().location(latLng).pageNum(0).pageSize(100));
+    }
+
+    private void initGeoCoder() {
+        geoCoder = GeoCoder.newInstance();
+        geoCoder.setOnGetGeoCodeResultListener(new OnGetGeoCoderResultListener() {
+            @Override
+            public void onGetGeoCodeResult(GeoCodeResult geoCodeResult) {
+
+            }
+
+            @Override
+            public void onGetReverseGeoCodeResult(ReverseGeoCodeResult reverseGeoCodeResult) {
+
+                progress_Dialog.dismiss();
+
+                if (reverseGeoCodeResult == null
+                        || reverseGeoCodeResult.error != SearchResult.ERRORNO.NO_ERROR) {
+                    // 没有检测到结果
+                    Log.e("TrackRecordActivity.java(onGetReverseGeoCodeResult)", "行数: 108  没有取到值");
+                    return;
+                }
+
+
+
+                String myAddress = reverseGeoCodeResult.getAddress();
+                String BusinessCircle = reverseGeoCodeResult.getBusinessCircle();
+
+                ReverseGeoCodeResult.AddressComponent addressDetail = reverseGeoCodeResult.getAddressDetail();
+
+                address = myAddress;
+                siteValue = addressDetail.province + addressDetail.city;
+
+                Log.e("MapSelectActivity.java(onGetReverseGeoCodeResult)", "行数: 474  address:" + address);
+
+            }
+        });
+    }
 
     @Override
     public void Jump_intent(Class<?> cla, Bundle bundle) {
@@ -416,6 +507,8 @@ public class MapSelectActivity extends BaseActivity implements View.OnClickListe
                 intent.putExtra("lat",lat);
                 intent.putExtra("siteValue", siteValue);
                 intent.putExtra("gridId",gridId);
+                intent.putExtra("gridName", gridName);
+                intent.putExtra("address",address);
                 setResult(RESULT_OK, intent);
                 finish();
                 break;
