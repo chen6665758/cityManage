@@ -219,3 +219,8 @@
 -keep class com.supermap.**{*;}
 -keep class com.supermap.imobilelite.**{*;}
 -keep class com.supermap.services.**{*;}
+
+#百度地衅
+-keep class com.baidu.** {*;}
+-keep class mapsdkvi.com.** {*;}
+-dontwarn com.baidu.**

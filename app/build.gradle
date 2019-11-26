@@ -56,7 +56,9 @@ dependencies {
     //上拉加载，下拉刷新
     compile 'com.wuxiaolong.pullloadmorerecyclerview:library:1.1.2'
     //超图使用
-
     //通讯录
     compile 'com.github.nanchen2251:WaveSideBar:1.0.6'
+
+    //百度地图
+    implementation files('libs/BaiduLBS_Android.jar')
 }

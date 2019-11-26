@@ -57,6 +57,10 @@
         <meta-data
             android:name="com.tianditu.apikey"
             android:value="035972404fa9af81e3d3494f1dd712a3" />
+        <!-- 百度地图 -->
+        <meta-data
+            android:name="com.baidu.lbsapi.API_KEY"
+            android:value="gPQwoaWS22rnPBIZf3zopGP9hMoNAdwB" />
 
         <!-- 自动更新 权限 -->
         <provider
@@ -144,17 +148,40 @@
             android:name=".InformationOtherActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:screenOrientation="portrait" />
-        <activity android:name=".PartStatisticsActivity"
+        <activity
+            android:name=".PartStatisticsActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".PartStatisticsSearchActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".PartsAddActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".MailListActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ClockInActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ClockInSearchActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".TrackRecordActivity"
+            android:screenOrientation="portrait" />
+
+        <service android:name=".services.TrackService" />
+        <service
+            android:name=".services.tempService"
+            android:process=":remote" />
+
+        <activity android:name=".tempMapActivity"
             android:screenOrientation="portrait"/>
-        <activity android:name=".PartStatisticsSearchActivity"
+        <activity android:name=".TrackSearchActivity"
             android:screenOrientation="portrait"/>
-        <activity android:name=".PartsAddActivity"
+        <activity android:name=".PersonalSettingsActivity"
             android:screenOrientation="portrait"/>
-        <activity android:name=".MailListActivity"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".ClockInActivity"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".ClockInSearchActivity"
+        <activity android:name=".UpdatePwdActivity"
             android:screenOrientation="portrait"></activity>
     </application>
 
