@@ -100,6 +100,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     private ImageView img_user;
     private TextView txt_username;
     private TextView txt_userinfo;
+    private String userPic;
 
     /**
      * 事件数据
@@ -180,12 +181,9 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         rela_userInfo = (RelativeLayout)findViewById(R.id.rela_userInfo);
         rela_userInfo.setOnClickListener(this);
         img_user = (ImageView)findViewById(R.id.img_user);
+        img_user.setOnClickListener(this);
         txt_username = (TextView)findViewById(R.id.txt_username);
         txt_userinfo = (TextView)findViewById(R.id.txt_userinfo);
-        Glide.with(this)
-                .load("https://c-ssl.duitang.com/uploads/item/201811/07/20181107170428_sltox.thumb.700_0.jpeg")
-                .apply(RequestOptions.bitmapTransform(new CircleCrop()).placeholder(R.mipmap.ico_loginusertype))
-                .into(img_user);
 
         //事件数据
         txt_willwork = (TextView)findViewById(R.id.txt_willwork);
@@ -238,6 +236,10 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                     case "12":
                         Jump_intent(ClockInActivity.class,bundle);
                         break;
+                    case "6":
+                        Jump_intent(TrackRecordActivity.class,bundle);
+                        //Jump_intent(tempMapActivity.class,bundle);
+                        break;
                 }
             }
         });
@@ -275,6 +277,14 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                                 JSONObject childjson = new JSONObject(json.getString("data"));
                                 txt_username.setText(childjson.getString("name"));
                                 txt_userinfo.setText(childjson.getString("orgName"));
+                                userPic = childjson.getString("empHeadportrait");
+                                userPic = userPic.substring(userPic.indexOf(",") + 1,userPic.length());
+
+                                //Log.e("MainActivity.java(onSuccess)", "行数: 281  userPic:" + userPic);
+                                Glide.with(mContext)
+                                        .load(myUntils.base64ToBitmap(userPic))
+                                        .apply(RequestOptions.bitmapTransform(new CircleCrop()).placeholder(R.mipmap.ico_loginusertype))
+                                        .into(img_user);
                             }else{
                                 myUntils.showToast(mContext,json.getString("message"));
                             }
@@ -352,7 +362,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                         String data = response.body();//这个就是返回来的结果
                         try {
                             JSONObject json = new JSONObject(data);
-                            Log.e("MainActivity.java(onSuccess)", "行数: 343  data:" + data);
                             String resultCode = json.getString("code");
                             if(resultCode.equals("2000"))
                             {
@@ -362,12 +371,12 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                                     JSONObject child = array.getJSONObject(i);
 
                                     MainMenuModel model = new MainMenuModel();
-                                    if(!"6".equals(child.getString("id")))
-                                    {
+//                                    if(!"6".equals(child.getString("id")))
+//                                    {
                                         model.setMenuId(child.getString("id"));
                                         model.setMenuName(child.getString("name"));
                                         list_data.add(model);
-                                    }
+//                                    }
                                 }
 
                                 if(list_data.size() > 0)
@@ -612,6 +621,10 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
             //被传阅事件
             case R.id.title_right_btn:
                 Jump_intent(EventCirculatedActivity.class,bundle);
+                break;
+
+            case R.id.img_user:
+                Jump_intent(PersonalSettingsActivity.class,bundle);
                 break;
         }
     }

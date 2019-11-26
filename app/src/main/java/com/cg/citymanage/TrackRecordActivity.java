@@ -164,7 +164,7 @@ public class TrackRecordActivity extends BaseActivity implements View.OnClickLis
         rl_2.setVisibility(View.VISIBLE);
         title_right_btn = (TextView)findViewById(R.id.title_right_btn);
         title_right_btn.setOnClickListener(this);
-        title_right_btn.setBackgroundResource(R.mipmap.icon_search);
+        title_right_btn.setBackgroundResource(R.mipmap.ico_details_search_pre);
 
         initMap();
 
