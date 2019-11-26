@@ -11,13 +11,21 @@
         android:id="@+id/title_layout_1"
         layout="@layout/title_layout_1" />
 
+
+    <com.baidu.mapapi.map.MapView
+        android:id="@+id/mapView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/title_layout_1"
+        android:clickable="true"/>
+
     <TextView
         android:id="@+id/txt_mapsearch"
         android:layout_width="match_parent"
         android:layout_height="40dp"
-        android:layout_marginTop="5dp"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
+        android:layout_marginTop="5dp"
         android:layout_below="@id/title_layout_1"
         android:background="@drawable/search_edit_bg"
         android:drawableLeft="@mipmap/icon_search"
@@ -25,12 +33,5 @@
         android:gravity="center_vertical"
         android:paddingLeft="5dp"
         android:hint="请选择查询日期"/>
-    <com.baidu.mapapi.map.MapView
-        android:id="@+id/mapView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginTop="2dp"
-        android:layout_below="@+id/txt_mapsearch"
-        android:clickable="true"/>
 
 </RelativeLayout>
