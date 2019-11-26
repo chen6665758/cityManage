@@ -121,6 +121,15 @@ public class Constants {
     //消息上传接口
     public static String INFORMATIONUPLOAD_URL = MAIN_URL + "api/upLoad/getFileName";
 
+    //轨迹记录上传接口
+    public static String TRACKRECORDADD_URL = MAIN_URL + "api/personnelTrajectory/save";
+    //轨迹查询接口
+    public static String TRACKSEARCH_URL = MAIN_URL + "api/personnelTrajectory/findSearchForOne";
+
+
+    //个人设置修改密码
+    public static String PERSONALUPDATEPWD_URL = MAIN_URL + "api/password/update";
+
 
     //升级下载的文件名
     public static String DownLoadFileName = "citymanage.apk";

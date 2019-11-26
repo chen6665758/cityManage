@@ -9,6 +9,7 @@ import android.support.v7.app.AppCompatActivity;
 import com.cg.citymanage.customs.MyLoading;
 import com.cg.citymanage.untils.ConnectionDetector;
 import com.cg.citymanage.untils.StatusBarUtils;
+import com.cg.citymanage.untils.myApplication;
 import com.google.gson.Gson;
 
 /**
@@ -68,8 +69,15 @@ public abstract class BaseActivity extends AppCompatActivity {
         mSharedPreferences = getSharedPreferences("data", 0);// 获取SharedPreferences对象
         shared_editor = getSharedPreferences("data", 0).edit();// 获取Editor对象。
         gson = new Gson();
+
+        myApplication.getInstance().addActivity(this);
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        myApplication.getInstance().removeActivity(this);
+    }
 
     //加载布局
     public abstract void setContentView();
