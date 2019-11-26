@@ -714,8 +714,9 @@ public class EventReportActivity extends BaseActivity implements View.OnClickLis
 
             lng = data.getStringExtra("lng");
             lat = data.getStringExtra("lat");
-            txt_siteValue.setText("黑龙江省绥化市");
-            txt_gridValue.setText(data.getStringExtra("siteValue"));
+            txt_siteValue.setText(data.getStringExtra("siteValue"));
+            txt_gridValue.setText(data.getStringExtra("gridName"));
+            txt_addressValue.setText(data.getStringExtra("address"));
             gridId = data.getStringExtra("gridId");
 
         }

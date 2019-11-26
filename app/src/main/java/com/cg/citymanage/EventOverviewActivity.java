@@ -306,7 +306,7 @@ public class EventOverviewActivity extends BaseActivity implements View.OnClickL
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK && requestCode == MAP_CODE) {
 
-            txt_gridValue.setText(data.getStringExtra("siteValue"));
+            txt_gridValue.setText(data.getStringExtra("gridName"));
             gridId = data.getStringExtra("gridId");
         }
     }

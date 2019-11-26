@@ -185,6 +185,7 @@ public class ClockInSearchActivity extends BaseActivity implements View.OnClickL
                         //注意这里已经是在主线程了
                         progress_Dialog.dismiss();
                         String data = response.body();//这个就是返回来的结果
+                        Log.e("ClockInSearchActivity.java(onSuccess)", "行数: 188  data:" + data);
                         try {
                             JSONObject json = new JSONObject(data);
                             String resultCode = json.getString("code");
