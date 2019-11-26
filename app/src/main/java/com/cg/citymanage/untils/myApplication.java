@@ -1,7 +1,10 @@
 package com.cg.citymanage.untils;
 
+import android.app.Activity;
 import android.app.Application;
 
+import com.baidu.mapapi.CoordType;
+import com.baidu.mapapi.SDKInitializer;
 import com.cg.citymanage.services.InitIntentService;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.cache.CacheEntity;
@@ -12,6 +15,8 @@ import com.lzy.okgo.https.HttpsUtils;
 import com.lzy.okgo.model.HttpHeaders;
 import com.lzy.okgo.model.HttpParams;
 
+import java.util.LinkedList;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import me.jessyan.autosize.AutoSizeConfig;
@@ -46,10 +51,13 @@ import okhttp3.OkHttpClient;
 */
 public class myApplication extends Application {
 
+    private static myApplication mInstance;
+    private static List<Activity> activityList = new LinkedList<Activity>();
+
     @Override
     public void onCreate() {
         super.onCreate();
-
+        mInstance = this;
         /**
          * 设置今日头条的一些设置
          */
@@ -57,9 +65,27 @@ public class myApplication extends Application {
 
         //OKGO网络加载框架初始化
         //initOKGO();
+        initBaiDu();
 
         InitIntentService.start(this);
     }
+
+    public static myApplication getInstance() {
+        return mInstance;
+    }
+
+    public void addActivity(Activity activity)  {
+        activityList.add(activity);
+    }
+    public void removeActivity(Activity activity){
+        activityList.remove(activity);
+    }
+    public void exitAllActivity(){
+        for(Activity activity:activityList) {
+            activity.finish();
+        }
+    }
+
 
     /**
      * 今日头条适配框架的一些设置
@@ -164,5 +190,17 @@ public class myApplication extends Application {
                 .setRetryCount(3)                               //全局统一超时重连次数，默认为三次，那么最差的情况会请求4次(一次原始请求，三次重连请求)，不需要可以设置为0
                 .addCommonHeaders(headers);                      //全局公共头
                 //.addCommonParams(params);                       //全局公共参数
+    }
+
+    /**
+     * 百度地图初始化
+     */
+    private void initBaiDu()
+    {
+        //在使用SDK各组件之前初始化context信息，传入ApplicationContext
+        SDKInitializer.initialize(this);
+        //自4.3.0起，百度地图SDK所有接口均支持百度坐标和国测局坐标，用此方法设置您使用的坐标类型.
+        //包括BD09LL和GCJ02两种坐标，默认是BD09LL坐标。
+        SDKInitializer.setCoordType(CoordType.BD09LL);
     }
 }
