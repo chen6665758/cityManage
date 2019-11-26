@@ -200,7 +200,7 @@
             android:layout_width="200dp"
             android:layout_height="200dp"
             android:layout_centerInParent="true"
-            android:background="@drawable/btnbgblue1"
+            android:background="@mipmap/btnclockin"
             android:text="上午打卡"
             android:textColor="@color/white"
             android:textSize="20sp"

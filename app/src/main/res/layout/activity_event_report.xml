@@ -196,7 +196,7 @@
                         android:layout_toRightOf="@+id/txt_address"
                         android:background="@null"
                         android:textSize="14sp"
-                        android:gravity="left|center_vertical" />
+                        android:gravity="center" />
 
                 </RelativeLayout>
             </LinearLayout>
@@ -230,7 +230,7 @@
                         android:layout_marginRight="@dimen/ListItemMarginLeftRight"
                         android:layout_toRightOf="@+id/txt_title"
                         android:background="@null"
-                        android:gravity="left|center_vertical"
+                        android:gravity="center"
                         android:textSize="14sp"/>
                 </RelativeLayout>
 
