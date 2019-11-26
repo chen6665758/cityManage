@@ -156,6 +156,9 @@ public class MainMenuAdapter extends RecyclerView.Adapter<MainMenuAdapter.myView
             case "12":
                 picId = R.mipmap.ico_mainclockin;
                 break;
+            case "6":
+                picId = R.mipmap.ico_maintrackrecord;
+                break;
         }
 
         return picId;
