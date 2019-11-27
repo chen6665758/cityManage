@@ -1,64 +1,34 @@
 package com.cg.citymanage;
 
 import android.Manifest;
-import android.annotation.SuppressLint;
-import android.arch.lifecycle.Observer;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.pm.PackageManager;
-import android.location.Location;
-import android.location.LocationListener;
-import android.location.LocationManager;
-import android.support.annotation.Nullable;
-import android.support.v4.app.ActivityCompat;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
-import android.webkit.JavascriptInterface;
-import android.webkit.WebChromeClient;
-import android.webkit.WebView;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.baidu.mapapi.map.BaiduMap;
-import com.baidu.mapapi.map.BitmapDescriptor;
-import com.baidu.mapapi.map.BitmapDescriptorFactory;
 import com.baidu.mapapi.map.MapStatus;
 import com.baidu.mapapi.map.MapStatusUpdateFactory;
 import com.baidu.mapapi.map.MapView;
-import com.baidu.mapapi.map.Marker;
-import com.baidu.mapapi.map.MarkerOptions;
 import com.baidu.mapapi.map.Overlay;
 import com.baidu.mapapi.map.OverlayOptions;
 import com.baidu.mapapi.map.Polyline;
 import com.baidu.mapapi.map.PolylineOptions;
 import com.baidu.mapapi.model.LatLng;
-import com.baidu.mapapi.search.core.PoiInfo;
-import com.baidu.mapapi.search.core.SearchResult;
-import com.baidu.mapapi.search.geocode.GeoCodeResult;
-import com.baidu.mapapi.search.geocode.GeoCoder;
-import com.baidu.mapapi.search.geocode.OnGetGeoCoderResultListener;
-import com.baidu.mapapi.search.geocode.ReverseGeoCodeOption;
-import com.baidu.mapapi.search.geocode.ReverseGeoCodeResult;
 import com.baidu.mapapi.utils.CoordinateConverter;
 import com.cg.citymanage.services.TrackService;
-import com.cg.citymanage.services.tempService;
-import com.cg.citymanage.untils.CoordinateConversion;
-import com.cg.citymanage.untils.LiveDataBus;
 import com.cg.citymanage.untils.myUntils;
-import com.supermap.services.util.CoordinateConversionTool;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.baidu.mapapi.utils.CoordinateConverter.CoordType.COMMON;
 
 /**
  /*                       _oo0oo_
@@ -112,7 +82,7 @@ public class TrackRecordActivity extends BaseActivity implements View.OnClickLis
     private TextView txt_gps;
     private Button btn_search;
 
-    private boolean isStart;
+    private boolean isStart;      //判断service是否运行
     private  BC bc=new BC();
 
 
@@ -122,7 +92,9 @@ public class TrackRecordActivity extends BaseActivity implements View.OnClickLis
 
         mContext = this;
         appToken = mSharedPreferences.getString("appToken", "");
-        isStart = true;
+        //isStart = true;
+        isStart = myUntils.isServiceRunning(mContext,"com.cg.citymanage.services.TrackService");
+
 
         //权限的设置
         myUntils.JudgePermission(this, mContext, "您拒绝了读取当前定位，轨迹记录将无法使用！", Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION);
@@ -172,7 +144,12 @@ public class TrackRecordActivity extends BaseActivity implements View.OnClickLis
         txt_gps = (TextView) findViewById(R.id.txt_gps);
         btn_search = (Button) findViewById(R.id.btn_search);
         btn_search.setOnClickListener(this);
-
+        if(isStart)
+        {
+            btn_search.setText("停止记录");
+        }else{
+            btn_search.setText("点击开始\n记录");
+        }
 
     }
 
@@ -188,7 +165,6 @@ public class TrackRecordActivity extends BaseActivity implements View.OnClickLis
         mBaiduMap.setMyLocationEnabled(true);
 
         //获取运动后的定位点
-        //coordinateConvert();
         latLngs = new ArrayList<>();
 
         //设置中心点
@@ -200,37 +176,7 @@ public class TrackRecordActivity extends BaseActivity implements View.OnClickLis
 
         //地图设置缩放状态
         mBaiduMap.animateMapStatus(MapStatusUpdateFactory.newMapStatus(builder.build()));
-        /**
-         * 配置线段图层参数类： PolylineOptions
-         * ooPolyline.width(13)：线宽
-         * ooPolyline.color(0xAAFF0000)：线条颜色红色
-         * ooPolyline.points(latLngs)：List<LatLng> latLngs位置点，将相邻点与点连成线就成了轨迹了
-         */
-//        OverlayOptions ooPolyline = new PolylineOptions().width(8).color(0xAAFF0000).points(latLngs);
-//
-//        //在地图上画出线条图层，mPolyline：线条图层
-//        mPolyline = (Polyline) mBaiduMap.addOverlay(ooPolyline);
-//        mPolyline.setZIndex(3);
 
-        //始点图层图标
-        BitmapDescriptor startBD= BitmapDescriptorFactory
-                .fromResource(R.mipmap.loginuser);
-//        //终点图层图标
-//        BitmapDescriptor finishBD= BitmapDescriptorFactory
-//                .fromResource(R.mipmap.loginpassword);
-//
-        MarkerOptions oStart = new MarkerOptions();//地图标记类型的图层参数配置类
-        oStart.position(latLngs.get(0));//图层位置点，第一个点为起点
-        oStart.icon(startBD);//设置图层图片
-        oStart.zIndex(1);//设置图层Index
-
-        //添加起点图层
-        Marker mMarkerA = (Marker) (mBaiduMap.addOverlay(oStart));
-//
-//        //添加终点图层
-//        MarkerOptions oFinish = new MarkerOptions().position(latLngs.get(latLngs.size()-1))
-//                .icon(finishBD).zIndex(2);
-//        Marker mMarkerB = (Marker) (mBaiduMap.addOverlay(oFinish));
     }
 
     @Override
@@ -254,19 +200,20 @@ public class TrackRecordActivity extends BaseActivity implements View.OnClickLis
                 break;
 
             case R.id.btn_search:
-                if(isStart) {
-                    TrackService.startServer(mContext,appToken);
-                    btn_search.setText("停止记录");
-//                    Intent start= new Intent(mContext,tempService.class);
-//                    startService(start);
+                if(!myUntils.checkGalleryPermission(mContext,this,Manifest.permission.ACCESS_COARSE_LOCATION) ||
+                        !myUntils.checkGalleryPermission(mContext,this, Manifest.permission.ACCESS_FINE_LOCATION))
+                {
+                    myUntils.showToast(mContext,"您没有打开基站和GPS访问权限，无法进行轨迹记录，请打开相关权限");
+                }else {
+                    if (isStart) {
+                        TrackService.startServer(mContext, appToken);
+                        btn_search.setText("停止记录");
+                    } else {
+                        TrackService.stopServer(mContext);
+                        btn_search.setText("点击开始\n记录");
+                    }
+                    isStart = !isStart;
                 }
-                else{
-                    TrackService.stopServer(mContext);
-                    btn_search.setText("点击开始\n记录");
-//                    Intent stop= new Intent(mContext,tempService.class);
-//                    stopService(stop);
-                }
-                isStart = !isStart;
                 break;
             //跳转到查询页面
             case R.id.title_right_btn:
@@ -279,8 +226,6 @@ public class TrackRecordActivity extends BaseActivity implements View.OnClickLis
 
     //自定义 BroadcastReceiver
     public class BC extends BroadcastReceiver {
-        public static final String TAG="BC";
-
         @Override
         public void onReceive(Context context, Intent intent) {
             String lnglat=intent.getStringExtra("DATA");
@@ -296,10 +241,12 @@ public class TrackRecordActivity extends BaseActivity implements View.OnClickLis
         }
     }
 
-
+    /**
+     * 根据得到的经纬度，在百度地图上画出线路
+     * @param latLng              百度经纬度
+     */
     private void drawLine(LatLng latLng)
     {
-        Log.e("TrackRecordActivity.java(drawLine)", "行数: 290  latLng:" + latLng);
         latLngs.add(latLng);
         OverlayOptions ooPolyline = new PolylineOptions().width(8).color(0xAAFF0000).points(latLngs);
 
@@ -310,15 +257,13 @@ public class TrackRecordActivity extends BaseActivity implements View.OnClickLis
 
     //初始化坐标转换工具类，指定源坐标类型和坐标数据
     // sourceLatLng待转换坐标
-
     private LatLng getBaidu(LatLng sourceLatLng) {
         CoordinateConverter converter = new CoordinateConverter()
                 .from(CoordinateConverter.CoordType.GPS)
                 .coord(sourceLatLng);
 
         //desLatLng 转换后的坐标
-        LatLng desLatLng = converter.convert();
-        return desLatLng;
+        return converter.convert();
     }
 
 }
