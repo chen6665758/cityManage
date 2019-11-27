@@ -1,12 +1,14 @@
 package com.cg.citymanage;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.cg.citymanage.untils.StatusBarUtils;
 import com.cg.citymanage.untils.myUntils;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.callback.StringCallback;
@@ -53,7 +55,8 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mContext = this;
-
+        //沉浸式状态栏与状态栏文字颜色
+        StatusBarUtils.setStatusBarColor(this, Color.parseColor("#67ACF5"));
         initControls();
     }
 
