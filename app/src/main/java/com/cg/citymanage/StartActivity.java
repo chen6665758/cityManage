@@ -97,7 +97,11 @@ public class StartActivity extends AppCompatActivity implements View.OnClickList
     private void initControls()
     {
         linear_start = (LinearLayout)findViewById(R.id.linear_start);
-        linear_start.setOnClickListener(this);
+
+        if(!isInternetPresent) {
+            linear_start.setOnClickListener(this);
+        }
+
     }
 
 
@@ -191,6 +195,7 @@ public class StartActivity extends AppCompatActivity implements View.OnClickList
         switch (v.getId())
         {
             case R.id.linear_start:
+                isInternetPresent = cd.isConnectingToInternet();
                 initNet();
                 break;
         }
