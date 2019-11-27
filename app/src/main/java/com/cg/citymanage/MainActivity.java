@@ -47,7 +47,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.cg.citymanage.infos.Constants.DOWNLOADFILE_URL;
-import static com.cg.citymanage.infos.Constants.LOGIN_URL;
 import static com.cg.citymanage.infos.Constants.MAINUSEREVENTNUMBER_URL;
 import static com.cg.citymanage.infos.Constants.MAINUSERINFO_URL;
 import static com.cg.citymanage.infos.Constants.MAINUSERMENU_URL;
@@ -204,41 +203,65 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                 switch (list_data.get(positon).getMenuId())
                 {
                     case "1":
-                        Jump_intent(EventReportActivity.class,bundle);
+                        if (myUntils.isNotFastClick()) {
+                            Jump_intent(EventReportActivity.class, bundle);
+                        }
                         break;
                     case "13":
-                        Jump_intent(EventOverviewActivity.class,bundle);
+                        if (myUntils.isNotFastClick()) {
+                            Jump_intent(EventOverviewActivity.class, bundle);
+                        }
                         break;
                     case "14":
-                        Jump_intent(EventTransmitActivity.class,bundle);
+                        if (myUntils.isNotFastClick()) {
+                            Jump_intent(EventTransmitActivity.class, bundle);
+                        }
                         break;
                     case "19":
-                        Jump_intent(EventImpatientActivity.class,bundle);
+                        if (myUntils.isNotFastClick()) {
+                            Jump_intent(EventImpatientActivity.class, bundle);
+                        }
                         break;
                     case "2":
-                        Jump_intent(EventWaitActivity.class,bundle);
+                        if (myUntils.isNotFastClick()) {
+                            Jump_intent(EventWaitActivity.class, bundle);
+                        }
                         break;
                     case "3":
-                        Jump_intent(EventPartakeActivity.class,bundle);
+                        if (myUntils.isNotFastClick()) {
+                            Jump_intent(EventPartakeActivity.class, bundle);
+                        }
                         break;
                     case "9":
-                        Jump_intent(InformationActivity.class,bundle);
+                        if (myUntils.isNotFastClick()) {
+                            Jump_intent(InformationActivity.class, bundle);
+                        }
                         break;
                     case "18":
-                        Jump_intent(PartStatisticsActivity.class,bundle);
+                        if (myUntils.isNotFastClick()) {
+                            Jump_intent(PartStatisticsActivity.class, bundle);
+                        }
                         break;
                     case "8":
-                        Jump_intent(PartsAddActivity.class,bundle);
+                        if (myUntils.isNotFastClick()) {
+                            Jump_intent(PartsAddActivity.class, bundle);
+                        }
                         break;
                     case "10":
-                        Jump_intent(MailListActivity.class,bundle);
+                        if (myUntils.isNotFastClick()) {
+                            Jump_intent(MailListActivity.class, bundle);
+                        }
                         break;
                     case "12":
-                        Jump_intent(ClockInActivity.class,bundle);
+                        if (myUntils.isNotFastClick()) {
+                            Jump_intent(ClockInActivity.class, bundle);
+                        }
                         break;
                     case "6":
-                        Jump_intent(TrackRecordActivity.class,bundle);
-                        //Jump_intent(tempMapActivity.class,bundle);
+                        if (myUntils.isNotFastClick()) {
+                            Jump_intent(TrackRecordActivity.class, bundle);
+                            //Jump_intent(tempMapActivity.class,bundle);
+                        }
                         break;
                 }
             }
@@ -292,7 +315,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                         {
                             Log.e("MainActivity", "行数: 259  ex:" + ex.getMessage());
                             myUntils.showToast(mContext,"请检查网络是否正常链接！");
-                            return;
+
                         }
                     }
 
@@ -334,7 +357,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                         {
                             Log.e("MainActivity", "行数: 135  ex:" + ex.getMessage());
                             myUntils.showToast(mContext,"请检查网络是否正常链接！");
-                            return;
+
                         }
                     }
 
@@ -390,7 +413,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                         {
                             Log.e("MainActivity", "行数: 336  ex:" + ex.getMessage());
                             myUntils.showToast(mContext,"请检查网络是否正常链接！");
-                            return;
+
                         }
                     }
 
@@ -451,7 +474,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                         {
                             Log.e("LoginActivity", "行数: 135  ex:" + ex.getMessage());
                             myUntils.showToast(mContext,"请检查网络是否正常链接！");
-                            return;
+
                         }
                     }
 
@@ -535,7 +558,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                     @Override
                     public void onError(Response<File> response) {
                         super.onError(response);
-                        Log.e("MainActivity", "行数: 520  error:" + response.message());
+                        Log.e("MainActivity", "行数: 562  error:" + response.message());
 
                     }
 
@@ -573,8 +596,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 
     /**
      * 安装apk,第二步
-     * @param var0
-     * @param var1
+     * @param var0                  文件
+     * @param var1                  上下文
      */
     public void openFile(File var0, Context var1) {
         Intent var2 = new Intent();
