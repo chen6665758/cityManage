@@ -3,11 +3,12 @@ package com.cg.citymanage;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Color;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.LinearLayout;
 
 import com.cg.citymanage.untils.ConnectionDetector;
 import com.cg.citymanage.untils.StatusBarUtils;
@@ -47,7 +48,7 @@ import static com.cg.citymanage.infos.Constants.VALIDTOKEN_URL;
 * 作者：cg
 * 时间：2019/10/16 8:47
 */
-public class StartActivity extends AppCompatActivity {
+public class StartActivity extends AppCompatActivity implements View.OnClickListener {
 
     private final int times = 3000;       //页面停留时长
     public ConnectionDetector cd;
@@ -57,6 +58,8 @@ public class StartActivity extends AppCompatActivity {
     private Context mContext;
 
     private String appToken;
+
+    private LinearLayout linear_start;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,12 +74,30 @@ public class StartActivity extends AppCompatActivity {
         isInternetPresent = cd.isConnectingToInternet();// 判断网络
         mSharedPreferences = getSharedPreferences("data", 0);// 获取SharedPreferences对象
 
+        initNet();
+        initControls();
+    }
+
+    /**
+     * 判断网络是否通畅
+     */
+    private void initNet()
+    {
         if(isInternetPresent) {
             appToken = mSharedPreferences.getString("appToken", "");
             ValidToken(appToken);
         }else{
-            myUntils.showToast(mContext,"请链接网络，重新登录！");
+            myUntils.showToast(mContext,"请链接网络，保持网络连接，点击屏幕重新加载！");
         }
+    }
+
+    /**
+     * 初始化控件
+     */
+    private void initControls()
+    {
+        linear_start = (LinearLayout)findViewById(R.id.linear_start);
+        linear_start.setOnClickListener(this);
     }
 
 
@@ -135,18 +156,18 @@ public class StartActivity extends AppCompatActivity {
                             finish();
                         }catch (Exception ex)
                         {
-                            Log.e("StartActivity", "行数: 130  ex:" + ex.getMessage());
-                            myUntils.showToast(mContext,"请检查网络是否正常链接！");
-                            return;
+                            Log.e("StartActivity", "行数: 160  ex:" + ex.getMessage());
+                            myUntils.showToast(mContext,"请检查网络是否正常链接！点击屏幕重新加载！");
+
                         }
                     }
 
                     @Override
                     public void onError(Response<String> response) {
                         super.onError(response);
-                        Log.e("MainActivity", "行数: 141  error:" + response.body());
-                        myUntils.showToast(mContext,"请检查网络是否正常链接！");
-                        return;
+                        Log.e("StartActivity", "行数: 171  error:" + response.body());
+                        myUntils.showToast(mContext,"请检查网络是否正常链接！点击屏幕重新加载！");
+
                     }
                 });
     }
@@ -165,4 +186,13 @@ public class StartActivity extends AppCompatActivity {
     }
 
 
+    @Override
+    public void onClick(View v) {
+        switch (v.getId())
+        {
+            case R.id.linear_start:
+                initNet();
+                break;
+        }
+    }
 }
