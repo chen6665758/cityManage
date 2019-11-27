@@ -1,7 +1,6 @@
 package com.cg.citymanage;
 
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -16,7 +15,6 @@ import com.lzy.okgo.model.Response;
 import org.json.JSONObject;
 
 import static com.cg.citymanage.infos.Constants.LOGIN_URL;
-import static com.cg.citymanage.infos.Constants.VALIDTOKEN_URL;
 
 /**
 /*                       _oo0oo_
@@ -133,7 +131,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                                     {
                                         Log.e("LoginActivity", "行数: 135  ex:" + ex.getMessage());
                                         myUntils.showToast(mContext,"请检查网络是否正常链接！");
-                                        return;
+
                                     }
                                 }
 
