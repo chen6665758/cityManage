@@ -1,6 +1,7 @@
 package com.cg.citymanage.services;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.IntentService;
 import android.app.PendingIntent;
 import android.content.Context;
@@ -12,18 +13,17 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.support.v4.app.ActivityCompat;
-import android.text.TextUtils;
 import android.util.Log;
-import android.view.View;
+import android.webkit.JavascriptInterface;
+import android.webkit.WebChromeClient;
+import android.webkit.WebView;
 
 import com.cg.citymanage.infos.Constants;
-import com.cg.citymanage.untils.LiveDataBus;
 import com.cg.citymanage.untils.myUntils;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.callback.StringCallback;
 import com.lzy.okgo.model.Response;
 
-import org.json.JSONArray;
 import org.json.JSONObject;
 
 /**
@@ -56,7 +56,6 @@ import org.json.JSONObject;
 public class TrackService extends IntentService implements LocationListener {
 
     private LocationManager locationManager;
-    private int count=0;
     private String locationStatus;        //0是GPS  1是NET
 
     private double oldlat = 0;
@@ -95,7 +94,6 @@ public class TrackService extends IntentService implements LocationListener {
             location = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
         }
 
-        Log.e("TrackService.java(onHandleIntent)", "行数: 83  locationStatus:" + locationStatus);
 
         if(location != null)
         {
@@ -113,11 +111,11 @@ public class TrackService extends IntentService implements LocationListener {
         Log.e("TrackService", "纬度 =" + latitude);
         double longitude = location.getLongitude();
 
-        Log.e("TrackService.java(onLocationChanged)", "行数: 107  appToken:" + appToken);
         //将location作为参数传递给广播
         //当经纬度坐标不一样时，才传数据
         if(oldlat!=latitude && longitude!=oldlng) {
-            uploadData(String.valueOf(longitude),String.valueOf(latitude));
+            //uploadData(String.valueOf(longitude),String.valueOf(latitude));
+            initWebView(longitude,latitude);
 
             BCL(location);
             oldlat = latitude;
@@ -192,7 +190,11 @@ public class TrackService extends IntentService implements LocationListener {
         mContext.stopService(intent);
     }
 
-
+    /**
+     * 将数据上传到服务器
+     * @param lng
+     * @param lat
+     */
     private void uploadData(String lng,String lat)
     {
         OkGo.<String>post(Constants.TRACKRECORDADD_URL)
@@ -226,6 +228,36 @@ public class TrackService extends IntentService implements LocationListener {
                         Log.e("TrackService", "行数: 257  error:" + response.body());
                     }
                 });
+    }
+
+    private WebView locationWebview;
+
+    @SuppressLint("SetJavaScriptEnabled")
+    private void initWebView(double lon,double lat)
+    {
+        //lon:126.633854 lat:45.725934
+        final double[] location = new double[]{Double.valueOf(lon), Double.valueOf(lat)};   //575215.42774951, 5167223.4071475   //
+        locationWebview = new WebView(this);
+        locationWebview.getSettings().setJavaScriptEnabled(true);
+
+        locationWebview.loadUrl("file:///android_asset/gauss-kruger.html");
+        locationWebview.addJavascriptInterface(this,"androidTransform");
+
+        locationWebview.setWebChromeClient(new WebChromeClient() {
+            public void onProgressChanged(WebView view, int progress) {
+                if (progress == 100) {
+                    //progress到一百后就是加载完成，在里边写你要调用的方法就行了
+                    locationWebview.loadUrl("javascript:LonLatToMercator('" + "EPSG:4551" + "'," + location[0] + "," + location[1] + ")");
+                }
+            }
+        });
+    }
+
+    @JavascriptInterface
+    public void LonLatToMercatorCallback(double lon,double lat)
+    {
+        Log.e("tempMapActivity", "行数: 247  lon:" + lon + " lat:" + lat);
+        uploadData(String.valueOf(lon),String.valueOf(lat));
     }
 
 }
