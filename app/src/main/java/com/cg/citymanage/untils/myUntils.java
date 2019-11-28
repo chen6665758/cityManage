@@ -1,6 +1,7 @@
 package com.cg.citymanage.untils;
 
 import android.app.Activity;
+import android.app.ActivityManager;
 import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
@@ -24,6 +25,7 @@ import java.io.IOException;
 import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -353,7 +355,7 @@ public class myUntils {
                 i = 3;
             }
         } catch (Exception e) {
-
+            Log.e("myUntils", "行数: 356  error:" + e.getMessage());
         }
         return i;
     }
@@ -413,6 +415,29 @@ public class myUntils {
         }
         return versionName;
     }
+
+    /**
+     * 判断service服务是否开启
+     *
+     * @return   true是   false否
+     */
+    public static boolean isServiceRunning(Context context, String ServiceName) {
+        if (TextUtils.isEmpty(ServiceName)) {
+            return false;
+        }
+        ActivityManager myManager = (ActivityManager) context
+                .getSystemService(Context.ACTIVITY_SERVICE);
+        ArrayList<ActivityManager.RunningServiceInfo> runningService = (ArrayList<ActivityManager.RunningServiceInfo>) myManager
+                .getRunningServices(30);
+        for (int i = 0; i < runningService.size(); i++) {
+            if (runningService.get(i).service.getClassName().toString()
+                    .equals(ServiceName)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
 
 
 }
