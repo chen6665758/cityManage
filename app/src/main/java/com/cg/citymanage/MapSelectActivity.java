@@ -329,10 +329,9 @@ public class MapSelectActivity extends BaseActivity implements View.OnClickListe
                             for(int j=0;j<features.length;j++)
                             {
                                 Feature feature= features[j];
-                                //Log.e("OneActivity", "行数: 208  网格：" );
                                 for(int k=0;k<feature.fieldNames.length;k++)
                                 {
-                                    Log.e("OneActivity", "行数: 211  网格数据：" + feature.fieldNames[k] + "  value:" + feature.fieldValues[k]);
+                                    //Log.e("MapSelect", "行数: 355  网格数据：" + feature.fieldNames[k] + "  value:" + feature.fieldValues[k]);
                                     if("GridName".equals(feature.fieldNames[k]))
                                     {
                                         //Log.e("MapSelectActivity.java(onQueryStatusChanged)", "行数: 309  没走吗");
@@ -417,7 +416,7 @@ public class MapSelectActivity extends BaseActivity implements View.OnClickListe
             public void onProgressChanged(WebView view, int progress) {
                 if (progress == 100) {
                     //progress到一百后就是加载完成，在里边写你要调用的方法就行了
-                    locationWebview.loadUrl("javascript:MercatorToLonLat('" + "EPSG:4326" + "'," + location[0] + "," + location[1] + ")");
+                    locationWebview.loadUrl("javascript:mMercatorToLonLat('" + "EPSG:4326" + "'," + location[0] + "," + location[1] + ")");
                 }
             }
         });
@@ -427,7 +426,7 @@ public class MapSelectActivity extends BaseActivity implements View.OnClickListe
     public void LonLatToMercatorCallback(double lon,double lat)
     {
         double[] lnglat = CoordinateConversion.wgs84tobd09(lon,lat);
-        LatLng latLng = new LatLng(lnglat[1],lnglat[0] - 3);
+        LatLng latLng = new LatLng(lnglat[1],lnglat[0]);
         geoCoder.reverseGeoCode(new ReverseGeoCodeOption().location(latLng).pageNum(0).pageSize(100));
     }
 
