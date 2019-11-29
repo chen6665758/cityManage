@@ -1,7 +1,6 @@
 package com.cg.citymanage;
 
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
@@ -25,7 +24,6 @@ import com.lzy.okgo.model.Response;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
-import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -178,6 +176,9 @@ public class EventOverviewDetailActivity extends BaseActivity implements View.On
      */
     private void initEvenData(){
         progress_Dialog.show();
+
+        Log.e("EventOverviewDetailActivity.java(initEvenData)", "行数: 182  eventId:" + eventId);
+
         OkGo.<String>post(Constants.EVENTDETAIL_URL)
                 .tag(this)//
                 .params("access_token", appToken)
@@ -188,6 +189,7 @@ public class EventOverviewDetailActivity extends BaseActivity implements View.On
                         //注意这里已经是在主线程了
                         progress_Dialog.dismiss();
                         String data = response.body();//这个就是返回来的结果
+                        Log.e("EventOverviewDetailActivity.java(onSuccess)", "行数: 191  data:" + data);
                         try {
                             JSONObject json = new JSONObject(data);
                             String resultCode = json.getString("code");
@@ -254,7 +256,7 @@ public class EventOverviewDetailActivity extends BaseActivity implements View.On
                         {
                             Log.e("EventPartakeDetail", "行数: 248  ex:" + ex.getMessage());
                             myUntils.showToast(mContext,"请检查网络是否正常链接！");
-                            return;
+
                         }
 
                     }
@@ -319,7 +321,7 @@ public class EventOverviewDetailActivity extends BaseActivity implements View.On
                         {
                             Log.e("EventPartakeDetail", "行数: 314  ex:" + ex.getMessage());
                             myUntils.showToast(mContext,"请检查网络是否正常链接！");
-                            return;
+
                         }
 
                     }
