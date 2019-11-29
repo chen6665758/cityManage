@@ -115,7 +115,7 @@ public class TrackService extends IntentService implements LocationListener {
         //当经纬度坐标不一样时，才传数据
         if(oldlat!=latitude && longitude!=oldlng) {
             //uploadData(String.valueOf(longitude),String.valueOf(latitude));
-            initWebView(longitude,latitude);
+            //initWebView(longitude,latitude);
 
             BCL(location);
             oldlat = latitude;
@@ -207,7 +207,6 @@ public class TrackService extends IntentService implements LocationListener {
                     public void onSuccess(Response<String> response) {
                         //注意这里已经是在主线程了
                         String data = response.body();//这个就是返回来的结果
-                        Log.e("TrackService.java(onSuccess)", "行数: 208  data:" + data);
                         try {
                             JSONObject json = new JSONObject(data);
                             String resultCode = json.getString("code");
@@ -257,7 +256,7 @@ public class TrackService extends IntentService implements LocationListener {
     public void LonLatToMercatorCallback(double lon,double lat)
     {
         Log.e("tempMapActivity", "行数: 247  lon:" + lon + " lat:" + lat);
-        uploadData(String.valueOf(lon),String.valueOf(lat));
+        //uploadData(String.valueOf(lon),String.valueOf(lat));
     }
 
 }

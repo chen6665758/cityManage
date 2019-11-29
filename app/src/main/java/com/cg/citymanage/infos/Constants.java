@@ -146,4 +146,8 @@ public class Constants {
     //数据层图
     //public static String DataMap_URl = "http://60.15.198.193:5128/iserver/services/map-suihuaGrid/rest/maps/habGrid";
     public static String DataMap_URl = "http://221.211.181.10:9013/iserver/services/map-wangge0827/rest/maps/habGrid";
+
+    //百度地图中心点
+    public static double BAIDUCENTERLAT = 48.254931;
+    public static double BAIDUCENTERLNG = 126.512516;
 }

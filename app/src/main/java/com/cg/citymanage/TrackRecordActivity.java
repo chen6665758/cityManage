@@ -232,15 +232,13 @@ public class TrackRecordActivity extends BaseActivity implements View.OnClickLis
         @Override
         public void onReceive(Context context, Intent intent) {
             String lnglat=intent.getStringExtra("DATA");
-            Log.e("TrackRecordActivity", "行数: 256  lnglat:" + lnglat);
-            txt_gps.setText(txt_gps.getText() + "    lnglat:" + lnglat + "\n");
+            //Log.e("TrackRecordActivity", "行数: 256  lnglat:" + lnglat);
+            //txt_gps.setText(txt_gps.getText() + "    lnglat:" + lnglat + "\n");
             if(lnglat.contains(",")) {
                 String[] array = lnglat.split(",");
                 LatLng latLng = new LatLng(Double.valueOf(array[0]),Double.valueOf(array[1]));
 
-                Log.e("TrackRecordActivity", "行数: 238  lon:" + latLng.longitude + " lat:" + latLng.latitude);
-
-
+                //Log.e("TrackRecordActivity", "行数: 238  lon:" + latLng.longitude + " lat:" + latLng.latitude);
                 drawLine(getBaidu(latLng));
             }
 
