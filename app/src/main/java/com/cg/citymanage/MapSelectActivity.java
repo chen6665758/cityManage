@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Handler;
 import android.os.Message;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
@@ -25,7 +24,6 @@ import com.baidu.mapapi.search.geocode.GeoCoder;
 import com.baidu.mapapi.search.geocode.OnGetGeoCoderResultListener;
 import com.baidu.mapapi.search.geocode.ReverseGeoCodeOption;
 import com.baidu.mapapi.search.geocode.ReverseGeoCodeResult;
-import com.baidu.mapapi.utils.CoordinateConverter;
 import com.cg.citymanage.untils.CoordinateConversion;
 import com.cg.citymanage.untils.myUntils;
 import com.supermap.imobilelite.commons.EventStatus;
@@ -47,7 +45,6 @@ import com.supermap.services.components.commontypes.Feature;
 import com.supermap.services.components.commontypes.Geometry;
 import com.supermap.services.components.commontypes.GeometryType;
 
-import static com.baidu.mapapi.utils.CoordinateConverter.CoordType.COMMON;
 import static com.cg.citymanage.infos.Constants.BaseMap_URL;
 import static com.cg.citymanage.infos.Constants.DataMap_URl;
 
@@ -237,6 +234,7 @@ public class MapSelectActivity extends BaseActivity implements View.OnClickListe
                         longTouchGeoPoint = mapView.getProjection().fromPixels(touchX, touchY);
                         lng = String.valueOf(longTouchGeoPoint.x);
                         lat = String.valueOf(longTouchGeoPoint.y);
+                        //Log.e("MapSelectActivity", "行数: 240  lng:" + lng + " lat:" + lat);
                         overlay.clear();
                         OverlayItem overlayItem1 = new OverlayItem(longTouchGeoPoint, "绥化", "绥化");
                         overlay.addItem(overlayItem1);
@@ -446,7 +444,6 @@ public class MapSelectActivity extends BaseActivity implements View.OnClickListe
                 if (reverseGeoCodeResult == null
                         || reverseGeoCodeResult.error != SearchResult.ERRORNO.NO_ERROR) {
                     // 没有检测到结果
-                    Log.e("TrackRecordActivity.java(onGetReverseGeoCodeResult)", "行数: 108  没有取到值");
                     return;
                 }
 

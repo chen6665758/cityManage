@@ -1,10 +1,15 @@
 package com.cg.citymanage;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
+import android.webkit.JavascriptInterface;
+import android.webkit.WebSettings;
+import android.webkit.WebView;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
@@ -15,7 +20,6 @@ import com.baidu.mapapi.map.MapStatus;
 import com.baidu.mapapi.map.MapStatusUpdate;
 import com.baidu.mapapi.map.MapStatusUpdateFactory;
 import com.baidu.mapapi.map.MapView;
-import com.baidu.mapapi.map.Marker;
 import com.baidu.mapapi.map.MarkerOptions;
 import com.baidu.mapapi.map.Overlay;
 import com.baidu.mapapi.map.OverlayOptions;
@@ -26,6 +30,7 @@ import com.bigkoo.pickerview.builder.TimePickerBuilder;
 import com.bigkoo.pickerview.listener.OnTimeSelectListener;
 import com.bigkoo.pickerview.view.TimePickerView;
 import com.cg.citymanage.infos.Constants;
+import com.cg.citymanage.untils.CoordinateConversion;
 import com.cg.citymanage.untils.myUntils;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.callback.StringCallback;
@@ -90,6 +95,9 @@ public class TrackSearchActivity extends BaseActivity implements View.OnClickLis
     private List<LatLng> latLngs;   //点的集合
     public Overlay mPolyline;       //覆盖层
 
+    private WebView locationWebview; //地图坐标转化
+    private int pointSum = 0;        //坐标点总数
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -122,6 +130,8 @@ public class TrackSearchActivity extends BaseActivity implements View.OnClickLis
         initDate();
 
         initMap();
+
+        initWebView();
     }
 
     /**
@@ -156,11 +166,11 @@ public class TrackSearchActivity extends BaseActivity implements View.OnClickLis
         latLngs = new ArrayList<>();
 
         //设置中心点
-        target = new LatLng(45.737774,126.648273);
+        target = new LatLng(Constants.BAIDUCENTERLAT,Constants.BAIDUCENTERLNG);
         latLngs.add(target);
         //设置缩放中点LatLng target，和缩放比例
         MapStatus.Builder builder = new MapStatus.Builder();
-        builder.target(target).zoom(16f);
+        builder.target(target).zoom(18f);
 
         //地图设置缩放状态
         mBaiduMap.animateMapStatus(MapStatusUpdateFactory.newMapStatus(builder.build()));
@@ -191,6 +201,7 @@ public class TrackSearchActivity extends BaseActivity implements View.OnClickLis
 
             case R.id.txt_mapsearch:
                 pvTime.show();
+
                 break;
         }
     }
@@ -216,6 +227,7 @@ public class TrackSearchActivity extends BaseActivity implements View.OnClickLis
                             //注意这里已经是在主线程了
                             progress_Dialog.dismiss();
                             String data = response.body();//这个就是返回来的结果
+                            //Log.e("TrackSearchActivity.java(onSuccess)", "行数: 227  data:" + data);
                             try {
                                 JSONObject json = new JSONObject(data);
                                 String resultCode = json.getString("code");
@@ -224,61 +236,18 @@ public class TrackSearchActivity extends BaseActivity implements View.OnClickLis
                                     JSONArray array = json.getJSONArray("data");
                                     if(array.length() > 0)
                                     {
+                                        pointSum = array.length();
                                         for(int i=0;i<array.length();i++)
                                         {
                                             JSONObject object = array.getJSONObject(i);
                                             if(!"null".equals(object.getString("lng")) && !"null".equals(object.getString("lat")))
                                             {
-                                                LatLng latLng = new LatLng(object.getDouble("lat"),object.getDouble("lng"));
-                                                latLngs.add(latLng);
+
+                                                addWebViewJS(object.getDouble("lng"), object.getDouble("lat"));
+
                                             }
                                         }
 
-                                        if(latLngs.size() > 0)
-                                        {
-                                            //计算中心点，将所有点的中心设置成屏幕的中心点
-                                            LatLng center = new LatLng(latLngs.get(0).latitude,latLngs.get(0).longitude);
-                                            if(latLngs.size() > 2)
-                                            {
-                                                center = new LatLng(latLngs.get(latLngs.size()/2).latitude,latLngs.get(latLngs.size()/2).longitude);
-                                            }
-                                            //将中心点移动到所有点的中心
-                                            MapStatusUpdate mapStatus = MapStatusUpdateFactory.newLatLngZoom(center, 16);
-                                            mBaiduMap.setMapStatus(mapStatus);
-
-                                            //将线画出来
-                                            OverlayOptions ooPolyline = new PolylineOptions().width(8).color(0xAAFF0000).points(latLngs);
-                                            //在地图上画出线条图层，mPolyline：线条图层
-                                            mPolyline = (Polyline) mBaiduMap.addOverlay(ooPolyline);
-                                            mPolyline.setZIndex(3);
-
-
-                                            //添加起始点的坐标
-                                            //始点图层图标
-                                            BitmapDescriptor startBD= BitmapDescriptorFactory
-                                                    .fromResource(R.mipmap.icon_start);
-                                            //终点图层图标
-                                            BitmapDescriptor finishBD= BitmapDescriptorFactory
-                                                    .fromResource(R.mipmap.icon_end);
-                                            MarkerOptions oStart = new MarkerOptions();//地图标记类型的图层参数配置类
-                                            oStart.position(latLngs.get(0));//图层位置点，第一个点为起点
-                                            oStart.icon(startBD);//设置图层图片
-                                            oStart.zIndex(1);//设置图层Index
-
-                                            //添加起点图层
-                                           mBaiduMap.addOverlay(oStart);
-
-                                            if(latLngs.size()>1) {
-                                                //添加终点图层
-                                                MarkerOptions oFinish = new MarkerOptions().position(latLngs.get(latLngs.size() - 1))
-                                                        .icon(finishBD).zIndex(2);
-                                                mBaiduMap.addOverlay(oFinish);
-                                            }
-
-
-                                        }else{
-                                            myUntils.showToast(mContext,"对不起，当天没有轨迹记录点");
-                                        }
                                     }else{
                                         mBaiduMap.clear();
                                         myUntils.showToast(mContext,"对不起，当天没有轨迹记录点");
@@ -301,6 +270,92 @@ public class TrackSearchActivity extends BaseActivity implements View.OnClickLis
                             Log.e("TrackSearch", "行数: 250  error:" + response.body());
                         }
                     });
+        }
+    }
+
+    @SuppressLint("SetJavaScriptEnabled")
+    private void initWebView()
+    {
+        locationWebview = new WebView(this);
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
+        {
+            locationWebview.getSettings().setSafeBrowsingEnabled(false);
+        }
+        WebSettings settings = locationWebview.getSettings();
+        settings.setJavaScriptEnabled(true);
+        //locationWebview.getSettings().setJavaScriptEnabled(true);
+
+        locationWebview.loadUrl("file:///android_asset/gauss-kruger.html");
+        locationWebview.addJavascriptInterface(this,"androidTransform");
+    }
+
+    /**
+     * 加载js的方法，将超图转化为wgs84的值
+     * @param lng                  经度
+     * @param lat                  纬度
+     */
+    private void addWebViewJS(double lng,double lat)
+    {
+        final double[] location = new double[]{lng, lat};   //575215.42774951, 5167223.4071475   //
+        locationWebview.loadUrl("javascript:mMercatorToLonLat('" + "EPSG:4326" + "'," + location[0] + "," + location[1] + ")");
+    }
+
+    @JavascriptInterface
+    public void LonLatToMercatorCallback(double lon,double lat)
+    {
+        //将gs的坐标转化为百度的
+        double[] lnglat = CoordinateConversion.wgs84tobd09(lon,lat);
+        LatLng latLng = new LatLng(lnglat[1],lnglat[0]);
+        latLngs.add(latLng);
+
+        pointSum --;
+        if(pointSum==0)
+        {
+            if(latLngs.size() > 0)
+            {
+                //计算中心点，将所有点的中心设置成屏幕的中心点
+                LatLng center = new LatLng(latLngs.get(0).latitude,latLngs.get(0).longitude);
+                if(latLngs.size() > 2)
+                {
+                    center = new LatLng(latLngs.get(latLngs.size()/2).latitude,latLngs.get(latLngs.size()/2).longitude);
+                }
+                //将中心点移动到所有点的中心
+                MapStatusUpdate mapStatus = MapStatusUpdateFactory.newLatLngZoom(center, 18);
+                mBaiduMap.setMapStatus(mapStatus);
+
+                //将线画出来
+                OverlayOptions ooPolyline = new PolylineOptions().width(8).color(0xAAFF0000).points(latLngs);
+                //在地图上画出线条图层，mPolyline：线条图层
+                mPolyline = (Polyline) mBaiduMap.addOverlay(ooPolyline);
+                mPolyline.setZIndex(3);
+
+
+                //添加起始点的坐标
+                //始点图层图标
+                BitmapDescriptor startBD= BitmapDescriptorFactory
+                        .fromResource(R.mipmap.icon_start);
+                //终点图层图标
+                BitmapDescriptor finishBD= BitmapDescriptorFactory
+                        .fromResource(R.mipmap.icon_end);
+                MarkerOptions oStart = new MarkerOptions();//地图标记类型的图层参数配置类
+                oStart.position(latLngs.get(0));//图层位置点，第一个点为起点
+                oStart.icon(startBD);//设置图层图片
+                oStart.zIndex(1);//设置图层Index
+
+                //添加起点图层
+                mBaiduMap.addOverlay(oStart);
+
+                if(latLngs.size()>1) {
+                    //添加终点图层
+                    MarkerOptions oFinish = new MarkerOptions().position(latLngs.get(latLngs.size() - 1))
+                            .icon(finishBD).zIndex(2);
+                    mBaiduMap.addOverlay(oFinish);
+                }
+
+
+            }else{
+                myUntils.showToast(mContext,"对不起，当天没有轨迹记录点");
+            }
         }
     }
 }

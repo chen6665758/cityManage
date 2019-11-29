@@ -15,6 +15,7 @@ import android.widget.TextView;
 
 import com.baidu.mapapi.map.BaiduMap;
 import com.baidu.mapapi.map.MapStatus;
+import com.baidu.mapapi.map.MapStatusUpdate;
 import com.baidu.mapapi.map.MapStatusUpdateFactory;
 import com.baidu.mapapi.map.MapView;
 import com.baidu.mapapi.map.Overlay;
@@ -23,6 +24,7 @@ import com.baidu.mapapi.map.Polyline;
 import com.baidu.mapapi.map.PolylineOptions;
 import com.baidu.mapapi.model.LatLng;
 import com.baidu.mapapi.utils.CoordinateConverter;
+import com.cg.citymanage.infos.Constants;
 import com.cg.citymanage.services.TrackService;
 import com.cg.citymanage.untils.myUntils;
 
@@ -168,11 +170,11 @@ public class TrackRecordActivity extends BaseActivity implements View.OnClickLis
         latLngs = new ArrayList<>();
 
         //设置中心点
-        target = new LatLng(45.737774,126.648273);
-        latLngs.add(target);
+        target = new LatLng(Constants.BAIDUCENTERLAT,Constants.BAIDUCENTERLNG);
+        //latLngs.add(target);
         //设置缩放中点LatLng target，和缩放比例
         MapStatus.Builder builder = new MapStatus.Builder();
-        builder.target(target).zoom(16f);
+        builder.target(target).zoom(18f);
 
         //地图设置缩放状态
         mBaiduMap.animateMapStatus(MapStatusUpdateFactory.newMapStatus(builder.build()));
@@ -205,7 +207,8 @@ public class TrackRecordActivity extends BaseActivity implements View.OnClickLis
                 {
                     myUntils.showToast(mContext,"您没有打开基站和GPS访问权限，无法进行轨迹记录，请打开相关权限");
                 }else {
-                    if (isStart) {
+
+                    if (!isStart) {
                         TrackService.startServer(mContext, appToken);
                         btn_search.setText("停止记录");
                     } else {
@@ -235,6 +238,9 @@ public class TrackRecordActivity extends BaseActivity implements View.OnClickLis
                 String[] array = lnglat.split(",");
                 LatLng latLng = new LatLng(Double.valueOf(array[0]),Double.valueOf(array[1]));
 
+                Log.e("TrackRecordActivity", "行数: 238  lon:" + latLng.longitude + " lat:" + latLng.latitude);
+
+
                 drawLine(getBaidu(latLng));
             }
 
@@ -248,11 +254,18 @@ public class TrackRecordActivity extends BaseActivity implements View.OnClickLis
     private void drawLine(LatLng latLng)
     {
         latLngs.add(latLng);
-        OverlayOptions ooPolyline = new PolylineOptions().width(8).color(0xAAFF0000).points(latLngs);
+        if(latLngs.size()==1)
+        {
+            //将中心点移动到所有点的中心
+            MapStatusUpdate mapStatus = MapStatusUpdateFactory.newLatLngZoom(latLng, 18);
+            mBaiduMap.setMapStatus(mapStatus);
+        }else {
+            OverlayOptions ooPolyline = new PolylineOptions().width(8).color(0xAAFF0000).points(latLngs);
 
-        //在地图上画出线条图层，mPolyline：线条图层
-        mPolyline = (Polyline) mBaiduMap.addOverlay(ooPolyline);
-        mPolyline.setZIndex(3);
+            //在地图上画出线条图层，mPolyline：线条图层
+            mPolyline = (Polyline) mBaiduMap.addOverlay(ooPolyline);
+            mPolyline.setZIndex(3);
+        }
     }
 
     //初始化坐标转换工具类，指定源坐标类型和坐标数据
