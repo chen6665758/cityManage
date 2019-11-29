@@ -3,9 +3,7 @@ package com.cg.citymanage;
 import android.content.Intent;
 import android.graphics.drawable.AnimationDrawable;
 import android.media.MediaPlayer;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
@@ -28,7 +26,6 @@ import org.yczbj.ycvideoplayerlib.controller.VideoPlayerController;
 import org.yczbj.ycvideoplayerlib.manager.VideoPlayerManager;
 import org.yczbj.ycvideoplayerlib.player.VideoPlayer;
 
-import java.io.File;
 import java.util.ArrayList;
 
 import cn.bingoogolapple.photopicker.activity.BGAPhotoPickerPreviewActivity;
@@ -109,13 +106,12 @@ public class EventPicViewActivity extends BaseActivity implements View.OnClickLi
         mContext = this;
         appToken = mSharedPreferences.getString("appToken","");
         ids = getIntent().getStringExtra("ids");
-        Log.e("EventPicView", "行数: 112  ids:" + ids);
         if(ids.contains(","))
         {
             arrayIds = ids.split(",");
             EnclosureNumber = arrayIds.length;
         }else{
-            arrayIds = new String[]{"ids"};
+            arrayIds = new String[]{ids};
             EnclosureNumber = 1;
         }
         initControls();
@@ -219,7 +215,6 @@ public class EventPicViewActivity extends BaseActivity implements View.OnClickLi
                              loadNumber++;
 
                             String data = response.body();//这个就是返回来的结果
-                            Log.e("EventPicViewActivity.java(onSuccess)", "行数: 222  data:" + data);
                             try {
                                 JSONObject json = new JSONObject(data);
                                 String resultCode = json.getString("code");
@@ -269,17 +264,16 @@ public class EventPicViewActivity extends BaseActivity implements View.OnClickLi
                                 }
 
                             } catch (Exception ex) {
-                                Log.e("EventPartakeDetail", "行数: 248  ex:" + ex.getMessage());
+                                Log.e("EventPicView", "行数: 270  ex:" + ex.getMessage());
                                 myUntils.showToast(mContext, "请检查网络是否正常链接！");
-                                return;
+
                             }
 
                         }
-
                         @Override
                         public void onError(Response<String> response) {
                             super.onError(response);
-                            Log.e("EventPartakeDetail", "行数: 259  error:" + response.body());
+                            Log.e("EventPicView", "行数: 279  error:" + response.body());
                         }
                     });
         }
