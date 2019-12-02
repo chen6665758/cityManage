@@ -152,7 +152,7 @@ public class EventReportActivity extends BaseActivity implements View.OnClickLis
         mContext = this;
         appToken = mSharedPreferences.getString("appToken","");
         //权限的设置
-        myUntils.JudgePermission(this,mContext,"您拒绝了相机功能，拍照等功能将无法使用！",Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA);
+        myUntils.JudgePermission(this,mContext,"您拒绝了相机功能，拍照与录相等功能将无法使用！",Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA);
 
         initControls();
 

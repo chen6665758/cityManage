@@ -20,6 +20,7 @@ import android.widget.Toast;
 
 import com.cg.citymanage.untils.PermissionUntil;
 import com.cg.citymanage.untils.RecordingUntils;
+import com.cg.citymanage.untils.myUntils;
 
 import java.io.File;
 
@@ -81,7 +82,7 @@ public class SoundRecordingActivity extends BaseActivity implements View.OnClick
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        PermissionUntil.JudgePermission(this,mContext,"您拒绝了对文件的读写，可能照片读取功能不可用",
+        PermissionUntil.JudgePermission(this,mContext,"您拒绝了录音功能的开启，无法进行录音",
                 Manifest.permission.RECORD_AUDIO);
 
         playstatus = 0;
@@ -109,39 +110,45 @@ public class SoundRecordingActivity extends BaseActivity implements View.OnClick
         btn_soundstart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(playstatus == 0)
-                {
-                    btn_soundstart.setText("停止录音");
-                    btn_backSound.setVisibility(View.GONE);
-                    playstatus = 1;
-                    //startSound();
-                    if (mMediaRecorder == null) {
-                        mMediaRecorder = new MediaRecorder();
-                        //mMediaRecorder.setOnErrorListener(this);
-                    } else {
-                        mMediaRecorder.reset();
-                    }
-                    try {
-                        mRecAudioFile = File.createTempFile(strTempFile,
-                                ".wav", mRecAudioPath);
 
-                    } catch (Exception e) {
-                        e.printStackTrace();
+                if(myUntils.checkGalleryPermission(mContext, SoundRecordingActivity.this, Manifest.permission.RECORD_AUDIO)) {
+                    if (playstatus == 0) {
+                        btn_soundstart.setText("停止录音");
+                        btn_backSound.setVisibility(View.GONE);
+                        playstatus = 1;
+                        //startSound();
+                        if (mMediaRecorder == null) {
+                            mMediaRecorder = new MediaRecorder();
+                            //mMediaRecorder.setOnErrorListener(this);
+                        } else {
+                            mMediaRecorder.reset();
+                        }
+                        try {
+                            mRecAudioFile = File.createTempFile(strTempFile,
+                                    ".wav", mRecAudioPath);
+
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                        //计时器
+                        if (tv_play != null) {
+                            rectime = SystemClock.elapsedRealtime();
+                            tv_play.setBase(rectime);
+                            tv_play.start();
+                        }
+                        RecordingUntils.startSound(mContext, mMediaRecorder, mRecAudioFile, strTempFile, mRecAudioPath, rectime, tv_play);
+                        animationDrawable = (AnimationDrawable) iv_play.getBackground();
+                        animationDrawable.stop();
+                        animationDrawable.start();
+                    } else {
+                        btn_soundstart.setText("开始录音");
+                        btn_backSound.setVisibility(View.VISIBLE);
+                        stopSound();
                     }
-                    //计时器
-                    if(tv_play!=null) {
-                        rectime = SystemClock.elapsedRealtime();
-                        tv_play.setBase(rectime);
-                        tv_play.start();
-                    }
-                    RecordingUntils.startSound(mContext,mMediaRecorder,mRecAudioFile,strTempFile,mRecAudioPath,rectime,tv_play);
-                    animationDrawable = (AnimationDrawable) iv_play.getBackground();
-                    animationDrawable.stop();
-                    animationDrawable.start();
                 }else{
-                    btn_soundstart.setText("开始录音");
-                    btn_backSound.setVisibility(View.VISIBLE);
-                    stopSound();
+                    myUntils.showToast(mContext,"对不起，请开通录音功能！");
+                    PermissionUntil.JudgePermission(SoundRecordingActivity.this,mContext,"您拒绝了录音功能的开启，无法进行录音",
+                            Manifest.permission.RECORD_AUDIO);
                 }
             }
         });
