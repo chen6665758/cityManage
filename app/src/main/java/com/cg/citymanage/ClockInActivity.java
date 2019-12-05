@@ -1,9 +1,7 @@
 package com.cg.citymanage;
 
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -171,7 +169,7 @@ public class ClockInActivity extends BaseActivity implements View.OnClickListene
                         {
                             Log.e("ClockIn", "行数: 171  ex:" + ex.getMessage());
                             myUntils.showToast(mContext,"请检查网络是否正常链接！");
-                            return;
+
                         }
                     }
 
@@ -211,7 +209,7 @@ public class ClockInActivity extends BaseActivity implements View.OnClickListene
                         {
                             Log.e("ClockIn", "行数: 211  ex:" + ex.getMessage());
                             myUntils.showToast(mContext,"请检查网络是否正常链接！");
-                            return;
+
                         }
                     }
 
@@ -251,7 +249,7 @@ public class ClockInActivity extends BaseActivity implements View.OnClickListene
                         {
                             Log.e("ClockIn", "行数: 251  ex:" + ex.getMessage());
                             myUntils.showToast(mContext,"请检查网络是否正常链接！");
-                            return;
+
                         }
                     }
 
@@ -304,7 +302,7 @@ public class ClockInActivity extends BaseActivity implements View.OnClickListene
                         {
                             Log.e("ClockIn", "行数: 304  ex:" + ex.getMessage());
                             myUntils.showToast(mContext,"请检查网络是否正常链接！");
-                            return;
+
                         }
                     }
 
@@ -383,9 +381,9 @@ public class ClockInActivity extends BaseActivity implements View.OnClickListene
                         }catch (Exception ex)
                         {
                             progress_Dialog.dismiss();
-                            Log.e("MainActivity", "行数: 259  ex:" + ex.getMessage());
+                            Log.e("ClockIn", "行数: 384  ex:" + ex.getMessage());
                             myUntils.showToast(mContext,"请检查网络是否正常链接！");
-                            return;
+
                         }
                     }
 
@@ -393,7 +391,7 @@ public class ClockInActivity extends BaseActivity implements View.OnClickListene
                     public void onError(Response<String> response) {
                         super.onError(response);
                         progress_Dialog.dismiss();
-                        Log.e("MainActivity", "行数: 122  error:" + response.body());
+                        Log.e("ClockIn", "行数: 394  error:" + response.body());
                     }
                 });
     }
