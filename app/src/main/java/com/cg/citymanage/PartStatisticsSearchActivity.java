@@ -1,7 +1,6 @@
 package com.cg.citymanage;
 
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
@@ -119,9 +118,7 @@ public class PartStatisticsSearchActivity extends BaseActivity implements View.O
                 mapIntent.putExtra("mapclass","partsearch");
                 startActivityForResult(mapIntent,MAP_CODE);
                 break;
-            /**
-             * 查询
-              */
+            //查询
             case R.id.btn_partSearch:
                 if(TextUtils.isEmpty(gridId) && TextUtils.isEmpty(edit_deptKeep.getText().toString()) &&
                         TextUtils.isEmpty(edit_deptMain.getText().toString()) && TextUtils.isEmpty(edit_deptOwner.getText().toString()))
