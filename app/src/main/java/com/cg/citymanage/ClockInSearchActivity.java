@@ -1,7 +1,6 @@
 package com.cg.citymanage;
 
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -185,7 +184,6 @@ public class ClockInSearchActivity extends BaseActivity implements View.OnClickL
                         //注意这里已经是在主线程了
                         progress_Dialog.dismiss();
                         String data = response.body();//这个就是返回来的结果
-                        Log.e("ClockInSearchActivity.java(onSuccess)", "行数: 188  data:" + data);
                         try {
                             JSONObject json = new JSONObject(data);
                             String resultCode = json.getString("code");
@@ -245,7 +243,7 @@ public class ClockInSearchActivity extends BaseActivity implements View.OnClickL
                         {
                             Log.e("ClockInSearch", "行数: 245  ex:" + ex.getMessage());
                             myUntils.showToast(mContext,"请检查网络是否正常链接！");
-                            return;
+
                         }
                     }
 
