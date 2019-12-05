@@ -270,7 +270,6 @@ public class EventImpatientDetailActivity extends BaseActivity implements View.O
                                     linear_event.setVisibility(View.GONE);
                                 }
 
-//                                EventFlowListModel
                             }else{
                                 myUntils.showToast(mContext,json.getString("message"));
                             }
@@ -278,9 +277,9 @@ public class EventImpatientDetailActivity extends BaseActivity implements View.O
 
                         }catch (Exception ex)
                         {
-                            Log.e("EventImpatient", "行数: 274  ex:" + ex.getMessage());
+                            Log.e("EventImpatientDetail", "行数: 274  ex:" + ex.getMessage());
                             myUntils.showToast(mContext,"请检查网络是否正常链接！");
-                            return;
+
                         }
 
                     }
@@ -289,7 +288,7 @@ public class EventImpatientDetailActivity extends BaseActivity implements View.O
                     public void onError(Response<String> response) {
                         super.onError(response);
                         progress_Dialog.dismiss();
-                        Log.e("EventImpatient", "行数: 285  error:" + response.body());
+                        Log.e("EventImpatientDetail", "行数: 285  error:" + response.body());
                     }
                 });
     }
@@ -345,7 +344,7 @@ public class EventImpatientDetailActivity extends BaseActivity implements View.O
                         {
                             Log.e("EventImpatient", "行数: 339  ex:" + ex.getMessage());
                             myUntils.showToast(mContext,"请检查网络是否正常链接！");
-                            return;
+
                         }
 
                     }
@@ -465,7 +464,7 @@ public class EventImpatientDetailActivity extends BaseActivity implements View.O
                         {
                             Log.e("EventImpatientDetail", "行数: 459  ex:" + ex.getMessage());
                             myUntils.showToast(mContext,"请检查网络是否正常链接！");
-                            return;
+
                         }
 
                     }
