@@ -3,7 +3,6 @@ package com.cg.citymanage;
 import android.arch.lifecycle.Observer;
 import android.content.Intent;
 import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
@@ -156,7 +155,7 @@ public class EventImpatientActivity extends BaseActivity implements View.OnClick
         //无数据时显示
         rela_NoData = (RelativeLayout)findViewById(R.id.rela_NoData);
 
-        //tempData();
+
         initData();
     }
 
@@ -257,19 +256,4 @@ public class EventImpatientActivity extends BaseActivity implements View.OnClick
         }
     }
 
-    public void tempData()
-    {
-        for(int i=0;i<10;i++)
-        {
-            EventListModel model = new EventListModel();
-            model.setEventId(String.valueOf(i+1));
-            model.setEventName("催办第" + i + "事件");
-            model.setEventTime("2019-10-" + (i+1));
-            model.setEventLink("结果反馈" + i);
-            model.setEventInfo("203032019102100"+i+":施工废弃料");
-            list_data.add(model);
-        }
-
-        eAdapter.notifyDataSetChanged();
-    }
 }
