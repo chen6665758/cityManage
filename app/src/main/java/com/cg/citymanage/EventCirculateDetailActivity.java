@@ -1,7 +1,6 @@
 package com.cg.citymanage;
 
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
@@ -152,7 +151,7 @@ public class EventCirculateDetailActivity extends BaseActivity implements View.O
 
         lv_eventdetail = (ListViewForScrollView)findViewById(R.id.lv_eventdetail);
         list_data = new ArrayList<>();
-        //temp();
+
         eAdapter = new EventDetaiFlowListAdapter(mContext,list_data);
         lv_eventdetail.setAdapter(eAdapter);
         initEvenData();
@@ -164,7 +163,7 @@ public class EventCirculateDetailActivity extends BaseActivity implements View.O
 
         lv_eventImpatientdetail = (ListViewForScrollView)findViewById(R.id.lv_eventImpatientdetail);
         list_idata = new ArrayList<>();
-        //temp1();
+
         eiAdapter = new EventDetailImpatientListAdpater(mContext,list_idata);
         lv_eventImpatientdetail.setAdapter(eiAdapter);
         initImpatientData();
@@ -251,7 +250,7 @@ public class EventCirculateDetailActivity extends BaseActivity implements View.O
                         {
                             Log.e("EventCirculate", "行数: 246  ex:" + ex.getMessage());
                             myUntils.showToast(mContext,"请检查网络是否正常链接！");
-                            return;
+
                         }
 
                     }
@@ -313,9 +312,9 @@ public class EventCirculateDetailActivity extends BaseActivity implements View.O
 
                         }catch (Exception ex)
                         {
-                            Log.e("EventCirculate", "行数: 311  ex:" + ex.getMessage());
+                            Log.e("EventCirculateDetail", "行数: 315  ex:" + ex.getMessage());
                             myUntils.showToast(mContext,"请检查网络是否正常链接！");
-                            return;
+
                         }
 
                     }
@@ -323,7 +322,7 @@ public class EventCirculateDetailActivity extends BaseActivity implements View.O
                     @Override
                     public void onError(Response<String> response) {
                         super.onError(response);
-                        Log.e("EventCirculate", "行数: 321  error:" + response.body());
+                        Log.e("EventCirculateDetail", "行数: 325  error:" + response.body());
                     }
                 });
     }
@@ -393,32 +392,5 @@ public class EventCirculateDetailActivity extends BaseActivity implements View.O
         }
     }
 
-    public void temp()
-    {
-        for(int i=0;i<5;i++)
-        {
-            EventFlowListModel model = new EventFlowListModel();
-            model.setEventFlowId(String.valueOf(i+1));
-            model.setEventFlowLink("环节" + i);
-            model.setEventFlowHandler("处理人" + i);
-            model.setEventStreet("处理街巷" + i);
-            model.setEventFlowHandleTime("处理时间" + i);
-            model.setEventFlowInfo("处理意见" + i);
-            list_data.add(model);
-        }
-    }
 
-    public void temp1(){
-        for(int i = 0;i<5;i++)
-        {
-            EventImpatientListModel model = new EventImpatientListModel();
-            model.setEventImpatientId(String.valueOf(i+1));
-            model.setEventImpatientLink("催办环节" + i);
-            model.setEventImpatienter("催办人" + i);
-            model.setEventpImpatienter("被催办人" + i);
-            model.setEventImpatientTime("催办时间" + i);
-            model.setEventImpatientInfo("处理意见" + i);
-            list_idata.add(model);
-        }
-    }
 }
