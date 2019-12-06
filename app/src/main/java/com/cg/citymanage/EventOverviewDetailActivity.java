@@ -177,8 +177,6 @@ public class EventOverviewDetailActivity extends BaseActivity implements View.On
     private void initEvenData(){
         progress_Dialog.show();
 
-        Log.e("EventOverviewDetailActivity.java(initEvenData)", "行数: 182  eventId:" + eventId);
-
         OkGo.<String>post(Constants.EVENTDETAIL_URL)
                 .tag(this)//
                 .params("access_token", appToken)
@@ -189,7 +187,6 @@ public class EventOverviewDetailActivity extends BaseActivity implements View.On
                         //注意这里已经是在主线程了
                         progress_Dialog.dismiss();
                         String data = response.body();//这个就是返回来的结果
-                        Log.e("EventOverviewDetailActivity.java(onSuccess)", "行数: 191  data:" + data);
                         try {
                             JSONObject json = new JSONObject(data);
                             String resultCode = json.getString("code");

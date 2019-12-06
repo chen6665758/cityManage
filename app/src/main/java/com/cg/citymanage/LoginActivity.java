@@ -95,9 +95,9 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
         switch (v.getId())
         {
             case R.id.txt_login:
-
+                //myUntils.showToast(mContext,"登录点击");
                 if(isInternetPresent) {
-
+                    //myUntils.showToast(mContext,"网络可用");
                     String userName = edit_userName.getText().toString();
                     String userPassword = edit_userPassword.getText().toString();
 
@@ -106,7 +106,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                         return;
                     }
 
-
+                    //myUntils.showToast(mContext,"读取网络");
                     OkGo.<String>post(LOGIN_URL)
                             .tag(this)//
                             .params("client_id", "digital-urban-management")
@@ -119,6 +119,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                                 public void onSuccess(Response<String> response) {
                                     //注意这里已经是在主线程了
                                     String data = response.body();//这个就是返回来的结果
+                                    //myUntils.showToast(mContext,"取得数据");
                                     try {
                                         JSONObject json = new JSONObject(data);
                                         String resultCode = json.getString("code");
@@ -133,7 +134,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                                     }catch (Exception ex)
                                     {
                                         Log.e("LoginActivity", "行数: 135  ex:" + ex.getMessage());
-                                        myUntils.showToast(mContext,"请检查网络是否正常链接！");
+                                        //myUntils.showToast(mContext,"请检查网络是否正常链接！");
 
                                     }
                                 }
@@ -142,6 +143,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                                 public void onError(Response<String> response) {
                                     super.onError(response);
                                     Log.e("LoginActivity", "行数: 143  error:" + response.body());
+                                    myUntils.showToast(mContext,"网络请求失败");
                                 }
                             });
                 }else{
