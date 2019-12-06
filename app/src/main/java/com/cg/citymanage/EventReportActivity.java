@@ -7,8 +7,8 @@ import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Environment;
 import android.provider.MediaStore;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.InputFilter;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -22,13 +22,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.cg.citymanage.infos.Constants;
+import com.cg.citymanage.untils.EmojiExcludeFilter;
 import com.cg.citymanage.untils.myUntils;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.callback.StringCallback;
 import com.lzy.okgo.model.Response;
 
 import org.json.JSONObject;
-import org.w3c.dom.Text;
 import org.yczbj.ycvideoplayerlib.constant.ConstantKeys;
 import org.yczbj.ycvideoplayerlib.controller.VideoPlayerController;
 import org.yczbj.ycvideoplayerlib.manager.VideoPlayerManager;
@@ -224,8 +224,11 @@ public class EventReportActivity extends BaseActivity implements View.OnClickLis
         txt_gridValue = (TextView)findViewById(R.id.txt_gridValue);
 
         txt_addressValue = (EditText)findViewById(R.id.txt_addressValue);
+        txt_addressValue.setFilters(new InputFilter[]{new EmojiExcludeFilter()});
         txt_titleValue = (EditText)findViewById(R.id.txt_titleValue);
+        txt_titleValue.setFilters(new InputFilter[]{new EmojiExcludeFilter()});
         txt_contentValue = (EditText)findViewById(R.id.txt_contentValue);
+        txt_contentValue.setFilters(new InputFilter[]{new EmojiExcludeFilter()});
 
         //添加图片
         linear_pic = (LinearLayout)findViewById(R.id.linear_pic);
