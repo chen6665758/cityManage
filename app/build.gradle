@@ -10,6 +10,19 @@ android {
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
+
+
+    // 自定义输出配置，格式：版本名称 + 版本号 + 渠道名称(如果不用渠道打包，可以去掉_${variant.productFlavors[0].name}) + 时间
+    android.applicationVariants.all {
+        variant ->
+            variant.outputs.all {
+
+                def fileName = "v" + defaultConfig.versionName + "_"  + "cityManage_" + defaultConfig.versionCode + ".apk"
+                outputFileName = fileName
+            }
+    }
+
+
     buildTypes {
         release {
             buildConfigField "boolean", "LOG_DEBUG", "false"// 不显示Log
@@ -17,6 +30,7 @@ android {
             zipAlignEnabled true//Zipalign优化
             shrinkResources false// 移除无用的re`source文件
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+
         }
     }
 }
