@@ -70,6 +70,7 @@
                 android:layout_marginRight="@dimen/ListItemMarginLeftRight"
                 android:layout_toRightOf="@+id/txt_deptMain"
                 android:gravity="center_vertical"
+                android:textSize="14sp"
                 android:background="@null"/>
 
         </RelativeLayout>
