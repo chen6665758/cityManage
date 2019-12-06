@@ -7,8 +7,8 @@ import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Environment;
 import android.provider.MediaStore;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.InputFilter;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -22,6 +22,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.cg.citymanage.infos.Constants;
+import com.cg.citymanage.untils.EmojiExcludeFilter;
 import com.cg.citymanage.untils.LiveDataBus;
 import com.cg.citymanage.untils.myUntils;
 import com.lzy.okgo.OkGo;
@@ -209,6 +210,7 @@ public class InformationReplyActivity extends BaseActivity implements View.OnCli
 
         //信息填写
         txt_infoTitle = (EditText) findViewById(R.id.txt_infoTitle);
+        txt_infoTitle.setFilters(new InputFilter[]{new EmojiExcludeFilter()});
         txt_receiverName = (TextView)findViewById(R.id.txt_receiverName);
         if("1".equals(status))
         {
@@ -217,7 +219,7 @@ public class InformationReplyActivity extends BaseActivity implements View.OnCli
             txt_receiverName.setOnClickListener(this);
         }
         txt_infoContent = (EditText)findViewById(R.id.txt_infoContent);
-
+        txt_infoContent.setFilters(new InputFilter[]{new EmojiExcludeFilter()});
         //添加图片
         linear_pic = (LinearLayout)findViewById(R.id.linear_pic);
         linear_pic.setOnClickListener(this);
@@ -510,7 +512,7 @@ public class InformationReplyActivity extends BaseActivity implements View.OnCli
 
         } else {
             Toast.makeText(mContext, "文件不存在", Toast.LENGTH_LONG).show();
-            return;
+
         }
 
     }
@@ -641,9 +643,12 @@ public class InformationReplyActivity extends BaseActivity implements View.OnCli
 
                         String data = response.body();//这个就是返回来的结果
 
+
                         try {
                             JSONObject json = new JSONObject(data);
                             String resultCode = json.getString("code");
+
+
 
                             if(resultCode.equals("2000"))
                             {
@@ -660,7 +665,7 @@ public class InformationReplyActivity extends BaseActivity implements View.OnCli
                         {
                             Log.e("EventWaitSubmit", "行数: 671  ex:" + ex.getMessage());
                             myUntils.showToast(mContext,"请检查网络是否正常链接！");
-                            return;
+
                         }
 
                     }
