@@ -202,21 +202,23 @@ public class TrackRecordActivity extends BaseActivity implements View.OnClickLis
                 break;
 
             case R.id.btn_search:
-                if(!myUntils.checkGalleryPermission(mContext,this,Manifest.permission.ACCESS_COARSE_LOCATION) ||
-                        !myUntils.checkGalleryPermission(mContext,this, Manifest.permission.ACCESS_FINE_LOCATION))
-                {
-                    myUntils.showToast(mContext,"您没有打开基站和GPS访问权限，无法进行轨迹记录，请打开相关权限");
-                }else {
 
-                    if (!isStart) {
-                        TrackService.startServer(mContext, appToken);
-                        btn_search.setText("停止记录");
-                    } else {
-                        TrackService.stopServer(mContext);
-                        btn_search.setText("点击开始\n记录");
-                    }
-                    isStart = !isStart;
-                }
+                myUntils.showToast(mContext,"暂未开通！");
+//                if(!myUntils.checkGalleryPermission(mContext,this,Manifest.permission.ACCESS_COARSE_LOCATION) ||
+//                        !myUntils.checkGalleryPermission(mContext,this, Manifest.permission.ACCESS_FINE_LOCATION))
+//                {
+//                    myUntils.showToast(mContext,"您没有打开基站和GPS访问权限，无法进行轨迹记录，请打开相关权限");
+//                }else {
+//
+//                    if (!isStart) {
+//                        TrackService.startServer(mContext, appToken);
+//                        btn_search.setText("停止记录");
+//                    } else {
+//                        TrackService.stopServer(mContext);
+//                        btn_search.setText("点击开始\n记录");
+//                    }
+//                    isStart = !isStart;
+//                }
                 break;
             //跳转到查询页面
             case R.id.title_right_btn:

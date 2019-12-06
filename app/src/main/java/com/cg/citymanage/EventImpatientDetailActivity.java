@@ -2,6 +2,7 @@ package com.cg.citymanage;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.InputFilter;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -19,6 +20,7 @@ import com.cg.citymanage.customs.ListViewForScrollView;
 import com.cg.citymanage.infos.Constants;
 import com.cg.citymanage.models.EventFlowListModel;
 import com.cg.citymanage.models.EventImpatientListModel;
+import com.cg.citymanage.untils.EmojiExcludeFilter;
 import com.cg.citymanage.untils.LiveDataBus;
 import com.cg.citymanage.untils.myUntils;
 import com.lzy.okgo.OkGo;
@@ -184,6 +186,7 @@ public class EventImpatientDetailActivity extends BaseActivity implements View.O
         //接收人
         rela_Opinion = (RelativeLayout)findViewById(R.id.rela_Opinion);
         edit_HandlingOpinions = (EditText)findViewById(R.id.edit_HandlingOpinions);
+        edit_HandlingOpinions.setFilters(new InputFilter[]{new EmojiExcludeFilter()});
 
         //提交事件
         linear_add = (LinearLayout)findViewById(R.id.linear_add);

@@ -8,6 +8,7 @@ import android.net.Uri;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.os.Bundle;
+import android.text.InputFilter;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -21,6 +22,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.cg.citymanage.infos.Constants;
+import com.cg.citymanage.untils.EmojiExcludeFilter;
 import com.cg.citymanage.untils.LiveDataBus;
 import com.cg.citymanage.untils.myUntils;
 import com.lzy.okgo.OkGo;
@@ -205,6 +207,7 @@ public class EventWaitSubmitActivity extends BaseActivity implements View.OnClic
         txt_processingDepartment = (TextView)findViewById(R.id.txt_processingDepartment);
         txt_processingDepartment.setOnClickListener(this);
         edit_processDescribe = (EditText)findViewById(R.id.edit_processDescribe);
+        edit_processDescribe.setFilters(new InputFilter[]{new EmojiExcludeFilter()});
 
         //添加图片
         linear_pic = (LinearLayout)findViewById(R.id.linear_pic);
@@ -526,7 +529,7 @@ public class EventWaitSubmitActivity extends BaseActivity implements View.OnClic
 
         } else {
             Toast.makeText(mContext, "文件不存在", Toast.LENGTH_LONG).show();
-            return;
+
         }
 
     }
@@ -566,7 +569,7 @@ public class EventWaitSubmitActivity extends BaseActivity implements View.OnClic
 
             }else{
                 myUntils.showToast(mContext,"没有采集到音频文件，请重新采集！");
-                return;
+
             }
         }
     }
@@ -592,7 +595,6 @@ public class EventWaitSubmitActivity extends BaseActivity implements View.OnClic
                         try {
                             JSONObject json = new JSONObject(data);
                             String resultCode = json.getString("code");
-
 
                             if(resultCode.equals("2000"))
                             {

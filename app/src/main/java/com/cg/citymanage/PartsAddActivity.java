@@ -1,8 +1,8 @@
 package com.cg.citymanage;
 
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.InputFilter;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -12,6 +12,7 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.cg.citymanage.infos.Constants;
+import com.cg.citymanage.untils.EmojiExcludeFilter;
 import com.cg.citymanage.untils.myUntils;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.callback.StringCallback;
@@ -142,18 +143,25 @@ public class PartsAddActivity extends BaseActivity implements View.OnClickListen
         btn_objId = (Button)findViewById(R.id.btn_objId);
         btn_objId.setOnClickListener(this);
         edit_objState = (EditText)findViewById(R.id.edit_objState);
+        edit_objState.setFilters(new InputFilter[]{new EmojiExcludeFilter()});
         edit_deptName1 = (EditText)findViewById(R.id.edit_deptName1);
+        edit_deptName1.setFilters(new InputFilter[]{new EmojiExcludeFilter()});
         edit_deptName2 = (EditText)findViewById(R.id.edit_deptName2);
+        edit_deptName2.setFilters(new InputFilter[]{new EmojiExcludeFilter()});
         edit_deptName3 = (EditText)findViewById(R.id.edit_deptName3);
+        edit_deptName3.setFilters(new InputFilter[]{new EmojiExcludeFilter()});
 
         txt_gridValue = (TextView)findViewById(R.id.txt_gridValue);
         txt_gridValue.setOnClickListener(this);
         edit_address = (EditText)findViewById(R.id.edit_address);
         edit_areas = (EditText)findViewById(R.id.edit_areas);
         edit_dataSource = (EditText)findViewById(R.id.edit_dataSource);
+        edit_dataSource.setFilters(new InputFilter[]{new EmojiExcludeFilter()});
 
         edit_photoAddr = (EditText)findViewById(R.id.edit_photoAddr);
+        edit_photoAddr.setFilters(new InputFilter[]{new EmojiExcludeFilter()});
         edit_note = (EditText)findViewById(R.id.edit_note);
+        edit_note.setFilters(new InputFilter[]{new EmojiExcludeFilter()});
 
 
         //提交取消按钮
@@ -300,7 +308,7 @@ public class PartsAddActivity extends BaseActivity implements View.OnClickListen
                             progress_Dialog.dismiss();
                             Log.e("PartsAdd", "行数: 191  ex:" + ex.getMessage());
                             myUntils.showToast(mContext,"请检查网络是否正常链接！");
-                            return;
+
                         }
 
                     }
@@ -369,7 +377,7 @@ public class PartsAddActivity extends BaseActivity implements View.OnClickListen
                         {
                             Log.e("PartsAdd", "行数: 339  ex:" + ex.getMessage());
                             myUntils.showToast(mContext,"请检查网络是否正常链接！");
-                            return;
+
                         }
 
                     }
