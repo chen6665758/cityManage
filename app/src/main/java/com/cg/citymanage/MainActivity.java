@@ -42,7 +42,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -128,8 +127,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     private LinearLayout lin_update;
     private TextView go_update;
     private TextView tv_ver;
-    private Type verType;
-    private String DownUrl;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
