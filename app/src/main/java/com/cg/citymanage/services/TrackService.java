@@ -115,7 +115,7 @@ public class TrackService extends IntentService implements LocationListener {
         //当经纬度坐标不一样时，才传数据
         if(oldlat!=latitude && longitude!=oldlng) {
             //uploadData(String.valueOf(longitude),String.valueOf(latitude));
-            //initWebView(longitude,latitude);
+            initWebView(longitude,latitude);
 
             BCL(location);
             oldlat = latitude;
