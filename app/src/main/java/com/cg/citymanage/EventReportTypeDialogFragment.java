@@ -8,7 +8,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -189,7 +188,7 @@ public class EventReportTypeDialogFragment extends DialogFragment {
                         {
                             Log.e("EventReportDialog", "行数: 187  ex:" + ex.getMessage());
                             myUntils.showToast(getContext(),"请检查网络是否正常链接！");
-                            return;
+
                         }
 
                     }
@@ -248,7 +247,7 @@ public class EventReportTypeDialogFragment extends DialogFragment {
                         {
                             Log.e("EventReportDialog", "行数: 187  ex:" + ex.getMessage());
                             myUntils.showToast(getContext(),"请检查网络是否正常链接！");
-                            return;
+
                         }
 
                     }
@@ -306,7 +305,7 @@ public class EventReportTypeDialogFragment extends DialogFragment {
                         {
                             Log.e("EventReportDialog", "行数: 187  ex:" + ex.getMessage());
                             myUntils.showToast(getContext(),"请检查网络是否正常链接！");
-                            return;
+                           ;
                         }
 
                     }
@@ -314,6 +313,8 @@ public class EventReportTypeDialogFragment extends DialogFragment {
                     @Override
                     public void onError(Response<String> response) {
                         super.onError(response);
+                        dismiss();
+                        myUntils.showToast(getContext(),"数据请求失败，请检查网络连接！");
                         Log.e("EventReportDialog", "行数: 196  error:" + response.body());
                     }
                 });
@@ -352,69 +353,4 @@ public class EventReportTypeDialogFragment extends DialogFragment {
         this.mOnItemClickLitener = mOnItemClickLitener;
     }
 
-    private void tempData()
-    {
-        if("0".equals(ertype)) {
-            EventTypeModel model1 = new EventTypeModel();
-            model1.setEventTypeId("1");
-            model1.setEventTypeName("部件");
-            list_data.add(model1);
-
-            EventTypeModel model2 = new EventTypeModel();
-            model2.setEventTypeId("2");
-            model2.setEventTypeName("事件");
-            list_data.add(model2);
-
-        }else if("1".equals(ertype)){
-            EventTypeModel model1 = new EventTypeModel();
-            model1.setEventTypeId("1");
-            model1.setEventTypeName("市政公用设施");
-            list_data.add(model1);
-
-            EventTypeModel model2 = new EventTypeModel();
-            model2.setEventTypeId("2");
-            model2.setEventTypeName("道路交通设施");
-            list_data.add(model2);
-
-            EventTypeModel model3 = new EventTypeModel();
-            model3.setEventTypeId("3");
-            model3.setEventTypeName("市容环境");
-            list_data.add(model3);
-
-            EventTypeModel model4 = new EventTypeModel();
-            model4.setEventTypeId("4");
-            model4.setEventTypeName("园林绿化");
-            list_data.add(model4);
-
-            EventTypeModel model5 = new EventTypeModel();
-            model5.setEventTypeId("5");
-            model5.setEventTypeName("其他设置");
-            list_data.add(model5);
-        }else if("2".equals(ertype)) {
-            EventTypeModel model1 = new EventTypeModel();
-            model1.setEventTypeId("1");
-            model1.setEventTypeName("上水井盖");
-            list_data.add(model1);
-
-            EventTypeModel model2 = new EventTypeModel();
-            model2.setEventTypeId("2");
-            model2.setEventTypeName("污水井盖");
-            list_data.add(model2);
-
-            EventTypeModel model3 = new EventTypeModel();
-            model3.setEventTypeId("3");
-            model3.setEventTypeName("雨水井盖");
-            list_data.add(model3);
-
-            EventTypeModel model4 = new EventTypeModel();
-            model4.setEventTypeId("4");
-            model4.setEventTypeName("雨水算子");
-            list_data.add(model4);
-
-            EventTypeModel model5 = new EventTypeModel();
-            model5.setEventTypeId("5");
-            model5.setEventTypeName("电力井盖");
-            list_data.add(model5);
-        }
-    }
 }
